@@ -1,0 +1,11 @@
+{
+    "access_token": "string",
+    "refresh_token": "string",
+    "user": {
+        "pk": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "username": "string",
+        "email": "user@example.com",
+        "first_name": "string",
+        "last_name": "string"
+    }
+}

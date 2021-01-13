@@ -1,0 +1,8 @@
+{
+    "username": [
+        "user with this username already exists."
+    ],
+    "email": [
+        "user with this email already exists."
+    ]
+}
