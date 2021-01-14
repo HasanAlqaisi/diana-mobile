@@ -441,9 +441,27 @@ void main() {
         },
       )).thenAnswer((_) async => http.Response(fixture('refresh.json'), 200));
 
-      final result = await remoteSource.requestToken('');
+      final result = await remoteSource.requestToken('string');
 
       expect(result, refreshInfo);
+    });
+
+    test('should throw [UnAuthException] if response code is 401', () async {
+      when(client.post(
+        '$baseUrl/accounts/token/refresh/',
+        body: {
+          {
+            "refresh": "string",
+          }
+        },
+      )).thenAnswer((_) async => http.Response(fixture('detail.json'), 401));
+
+      final result = remoteSource.requestToken;
+
+      expect(
+        result('string'),
+        throwsA(isA<UnAuthException>()),
+      );
     });
 
     test('should throw [UnknownException] if response code is none of above',
@@ -460,7 +478,7 @@ void main() {
       final result = remoteSource.requestToken;
 
       expect(
-        result(''),
+        result('string'),
         throwsA(isA<UnknownException>()),
       );
     });
