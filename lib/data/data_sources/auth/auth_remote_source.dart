@@ -202,16 +202,17 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
       '$baseUrl/accounts/token/refresh/',
       body: {
         {
-          "refresh": "string",
+          "refresh": refreshToken,
         }
       },
     );
 
-    //TODO: Check what the response if the refresh token expired
     if (response.statusCode == 200) {
       return RefreshInfo.fromJson(json.decode(response.body));
+    } else if (response.statusCode == 401) {
+      throw UnAuthException();
     } else {
-      throw UnknownException(message: response.body);
+      throw UnknownException();
     }
   }
 }
