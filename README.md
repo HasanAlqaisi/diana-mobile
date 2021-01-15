@@ -14,4 +14,4 @@ If you have an idea to improve **Diana** and makes life easier, don't hesitate t
 
 ## Other links
 
-- [Diana server side](https://github.com/softshape-team/diana-server)
+- [Diana server](https://github.com/softshape-team/diana-server)
