@@ -6,7 +6,7 @@
 
 This is the way that our database is designed
 
-![Diana DB](./Diana-db.png)
+![Diana-db](https://user-images.githubusercontent.com/57685540/104759920-a8368b80-5771-11eb-8f8e-09600efff33d.png)
 
 ## Contribution
 
