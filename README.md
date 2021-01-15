@@ -1,12 +1,12 @@
 # Diana - A Task Assistant
 
-**Diana** is An open source mobile application for task assisting. It aims to help you live a better day by tracking your tasks and helps you have better habits.
+**Diana** is an open source mobile application for task assisting. It aims to help you live a better day by tracking your tasks and helps you have better habits.
 
 ## Database
 
 This is the way that our database is designed
 
-![Diana-db](https://user-images.githubusercontent.com/57685540/104759920-a8368b80-5771-11eb-8f8e-09600efff33d.png)
+![1c265ef0-f670-47a5-9035-d1bd864ce4ee](https://user-images.githubusercontent.com/57685540/104775608-a678c200-5789-11eb-9cbe-aa5d47291f2e.jpeg)
 
 ## Contribution
 
