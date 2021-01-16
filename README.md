@@ -10,7 +10,9 @@ This is the way that our database is designed
 
 ## Contribution
 
-If you have an idea to improve **Diana** and makes life easier, don't hesitate to do so!
+All contributions are very **welcomed!**
+
+And even if you have an idea to improve **Diana** and makes life easier, don't hesitate to do so!
 
 ## Other links
 
