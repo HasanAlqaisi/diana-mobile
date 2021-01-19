@@ -17,3 +17,5 @@ class UnknownException implements Exception {
 }
 
 class UnAuthException implements Exception {}
+
+class NotFoundException implements Exception {}
