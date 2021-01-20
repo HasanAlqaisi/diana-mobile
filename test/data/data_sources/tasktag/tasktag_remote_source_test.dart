@@ -1,10 +1,7 @@
 import 'dart:convert';
 
 import 'package:diana/core/constants/_constants.dart';
-import 'package:diana/data/data_sources/task/task_remote_source.dart';
 import 'package:diana/data/data_sources/tasktag/tasktag_remote_source.dart';
-import 'package:diana/data/remote_models/task/task_response.dart';
-import 'package:diana/data/remote_models/task/task_result.dart';
 import 'package:diana/data/remote_models/tasktag/tasktag.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
