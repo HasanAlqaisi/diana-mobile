@@ -2,83 +2,47 @@ import 'dart:convert';
 
 import 'package:diana/core/constants/_constants.dart';
 import 'package:diana/core/errors/exception.dart';
-import 'package:diana/data/remote_models/tag/tag_response.dart';
-import 'package:diana/data/remote_models/tag/tag_result.dart';
+import 'package:diana/data/remote_models/subtask/subtask_response.dart';
+import 'package:diana/data/remote_models/subtask/subtask_result.dart';
 import 'package:http/http.dart' as http;
 
-abstract class TagRemoteSource {
-  Future<TagResponse> getTags(int offset);
-  Future<TagResult> insertTags(String name, int color);
-  Future<TagResult> editTag(String id, String name, int color);
-  Future<bool> deleteTag(String id);
+abstract class SubtaskRemoteSource {
+  Future<SubtaskResponse> getSubtasks(String taskId, int offset);
+
+  Future<SubtaskResult> insertSubtask(
+    String name,
+    bool isDone,
+    String taskId,
+  );
+
+  Future<SubtaskResult> editSubtask(
+    String subtaskId,
+    String name,
+    bool isDone,
+    String taskId,
+  );
+
+  Future<bool> deleteSubtask(String subtaskId);
 }
 
-class TagRemoteSourceImpl extends TagRemoteSource {
+class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
   final http.Client client;
 
-  TagRemoteSourceImpl({this.client});
+  SubtaskRemoteSourceImpl({this.client});
 
   @override
-  Future<TagResponse> getTags(int offset) async {
+  Future<SubtaskResponse> getSubtasks(String taskId, int offset) async {
     final response = await client.get(
-      '$baseUrl/tag/?limit=10&offset=$offset',
+      '$baseUrl/subtask/$taskId/?limit=10&offset=$offset',
       headers: {
         'Authorization': 'Bearer $token',
       },
     );
 
     if (response.statusCode == 200) {
-      return TagResponse.fromJson(json.decode(response.body));
+      return SubtaskResponse.fromJson(json.decode(response.body));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
-    } else {
-      throw UnknownException(message: response.body);
-    }
-  }
-
-  @override
-  Future<TagResult> insertTags(String name, int color) async {
-    final response = await client.post(
-      '$baseUrl/tag/',
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-      body: {
-        "name": name,
-        "color": color,
-      },
-    );
-
-    if (response.statusCode == 201) {
-      return TagResult.fromJson(json.decode(response.body));
-    } else if (response.statusCode == 401) {
-      throw UnAuthException();
-    } else if (response.statusCode == 400) {
-      throw FieldsException(body: response.body);
-    } else {
-      throw UnknownException(message: response.body);
-    }
-  }
-
-  @override
-  Future<TagResult> editTag(String id, String name, int color) async {
-    final response = await client.put(
-      '$baseUrl/tag/$id/',
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-      body: {
-        "name": name,
-        "color": color,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      return TagResult.fromJson(json.decode(response.body));
-    } else if (response.statusCode == 401) {
-      throw UnAuthException();
-    } else if (response.statusCode == 400) {
-      throw FieldsException(body: response.body);
     } else if (response.statusCode == 404) {
       throw NotFoundException();
     } else {
@@ -87,9 +51,63 @@ class TagRemoteSourceImpl extends TagRemoteSource {
   }
 
   @override
-  Future<bool> deleteTag(String id) async {
+  Future<SubtaskResult> insertSubtask(
+      String name, bool isDone, String taskId) async {
+    final response = await client.post(
+      '$baseUrl/subtask/',
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+      body: {
+        "name": name,
+        "done": isDone,
+        "task": taskId,
+      },
+    );
+
+    if (response.statusCode == 201) {
+      return SubtaskResult.fromJson(json.decode(response.body));
+    } else if (response.statusCode == 400) {
+      throw FieldsException(body: response.body);
+    } else if (response.statusCode == 401) {
+      throw UnAuthException();
+    } else {
+      throw UnknownException(message: response.body);
+    }
+  }
+
+  @override
+  Future<SubtaskResult> editSubtask(
+      String subtaskId, String name, bool isDone, String taskId) async {
+    final response = await client.put(
+      '$baseUrl/subtask/$subtaskId/',
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+      body: {
+        "name": name,
+        "done": isDone,
+        "task": taskId,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return SubtaskResult.fromJson(json.decode(response.body));
+    } else if (response.statusCode == 400) {
+      throw FieldsException(body: response.body);
+    } else if (response.statusCode == 401) {
+      throw UnAuthException();
+    } else if (response.statusCode == 404) {
+      throw NotFoundException();
+    } else {
+      throw UnknownException(message: response.body);
+    }
+  }
+
+  @override
+  Future<bool> deleteSubtask(String subtaskId) async {
     final response = await client.delete(
-      '$baseUrl/tag/$id/',
+      '$baseUrl/subtask/$subtaskId/',
       headers: {
         'Authorization': 'Bearer $token',
       },
