@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:diana/core/constants/_constants.dart';
-import 'package:diana/data/data_sources/tag/tag_remote_source.dart';
+import 'package:diana/core/errors/exception.dart';
+import 'package:diana/data/data_sources/subtask/subtask_remote_source.dart';
+import 'package:diana/data/remote_models/subtask/subtask_response.dart';
+import 'package:diana/data/remote_models/subtask/subtask_result.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:diana/core/errors/exception.dart';
 import 'package:http/http.dart' as http;
-import 'package:diana/data/remote_models/tag/tag_response.dart';
-import 'package:diana/data/remote_models/tag/tag_result.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 
@@ -15,280 +15,295 @@ class MockHttpClient extends Mock implements http.Client {}
 
 void main() {
   MockHttpClient client;
-  TagRemoteSourceImpl remoteSource;
-  final tagResponse = TagResponse.fromJson(json.decode(fixture('tag.json')));
-  final tagResult = TagResult.fromJson(json.decode(fixture('tag_result.json')));
+  SubtaskRemoteSourceImpl remoteSource;
+  final subtaskResponse =
+      SubtaskResponse.fromJson(json.decode(fixture('subtask.json')));
+  final subtaskResult =
+      SubtaskResult.fromJson(json.decode(fixture('subtask_result.json')));
   int offset = 0;
 
   setUp(() {
     client = MockHttpClient();
-    remoteSource = TagRemoteSourceImpl(client: client);
+    remoteSource = SubtaskRemoteSourceImpl(client: client);
   });
 
-  group('getTags', () {
-    test('should return [TagResponse] if response code is 200', () async {
+  group('getSubtasks', () {
+    test('should return [SubtaskResponse] if response code is 200', () async {
       when(client.get(
-        '$baseUrl/tag/?limit=10&offset=$offset',
+        '$baseUrl/subtask//?limit=10&offset=$offset',
         headers: {
           'Authorization': 'Bearer $token',
         },
-      )).thenAnswer((_) async => http.Response(fixture('tag.json'), 200));
+      )).thenAnswer((_) async => http.Response(fixture('subtask.json'), 200));
 
-      final result = await remoteSource.getTags(offset);
+      final result = await remoteSource.getSubtasks('', offset);
 
-      expect(result, tagResponse);
+      expect(result, subtaskResponse);
     });
 
     test('should throw UnAuthException if response code is 401', () {
       when(client.get(
-        '$baseUrl/tag/?limit=10&offset=$offset',
+        '$baseUrl/subtask//?limit=10&offset=$offset',
         headers: {
           'Authorization': 'Bearer $token',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 401));
 
-      final result = remoteSource.getTags;
+      final result = remoteSource.getSubtasks;
 
-      expect(result(offset), throwsA(isA<UnAuthException>()));
+      expect(result('', offset), throwsA(isA<UnAuthException>()));
+    });
+
+    test('should throw NotFoundException if response code is 404', () {
+      when(client.get(
+        '$baseUrl/subtask//?limit=10&offset=$offset',
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      )).thenAnswer((_) async => http.Response(fixture('detail.json'), 404));
+
+      final result = remoteSource.getSubtasks;
+
+      expect(result('', offset), throwsA(isA<NotFoundException>()));
     });
 
     test('should throw UnknownException if response code is not listed above',
         () {
       when(client.get(
-        '$baseUrl/tag/?limit=10&offset=$offset',
+        '$baseUrl/subtask//?limit=10&offset=$offset',
         headers: {
           'Authorization': 'Bearer $token',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 500));
 
-      final result = remoteSource.getTags;
+      final result = remoteSource.getSubtasks;
 
-      expect(result(offset), throwsA(isA<UnknownException>()));
+      expect(result('', offset), throwsA(isA<UnknownException>()));
     });
   });
 
-  group('insertTag', () {
-    test('should return [TagResult] if response code is 201', () async {
+  group('insertSubtask', () {
+    test('should return [SubtaskResult] if response code is 201', () async {
       when(client.post(
-        '$baseUrl/tag/',
+        '$baseUrl/subtask/',
         headers: {
           'Authorization': 'Bearer $token',
         },
         body: {
-          "name": "string",
-          "color": 0,
+          "name": "",
+          "done": true,
+          "task": "",
         },
       )).thenAnswer(
-          (_) async => http.Response(fixture('tag_result.json'), 201));
+          (_) async => http.Response(fixture('subtask_result.json'), 201));
 
-      final result = await remoteSource.insertTags('string', 0);
+      final result = await remoteSource.insertSubtask('', true, '');
 
-      expect(result, tagResult);
+      expect(result, subtaskResult);
     });
 
     test('should throw UnAuthException if response code is 401', () {
       when(client.post(
-        '$baseUrl/tag/',
+        '$baseUrl/subtask/',
         headers: {
           'Authorization': 'Bearer $token',
         },
         body: {
-          "name": "string",
-          "color": 0,
+          "name": "",
+          "done": true,
+          "task": "",
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 401));
 
-      final result = remoteSource.insertTags;
+      final result = remoteSource.insertSubtask;
 
-      expect(result('string', 0), throwsA(isA<UnAuthException>()));
+      expect(result('', true, ''), throwsA(isA<UnAuthException>()));
     });
 
     test('should throw FieldsException if response code is 400', () {
       when(client.post(
-        '$baseUrl/tag/',
+        '$baseUrl/subtask/',
         headers: {
           'Authorization': 'Bearer $token',
         },
         body: {
-          "name": "string",
-          "color": 0,
+          "name": "",
+          "done": true,
+          "task": "",
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 400));
 
-      final result = remoteSource.insertTags;
+      final result = remoteSource.insertSubtask;
 
-      expect(result('string', 0), throwsA(isA<FieldsException>()));
+      expect(result('', true, ''), throwsA(isA<FieldsException>()));
     });
 
     test('should throw UnknownException if response code is not listed above',
         () {
       when(client.post(
-        '$baseUrl/tag/',
+        '$baseUrl/subtask/',
         headers: {
           'Authorization': 'Bearer $token',
         },
         body: {
-          "name": "string",
-          "color": 0,
+          "name": "",
+          "done": true,
+          "task": "",
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 500));
 
-      final result = remoteSource.insertTags;
+      final result = remoteSource.insertSubtask;
 
-      expect(result('string', 0), throwsA(isA<UnknownException>()));
+      expect(result('', true, ''), throwsA(isA<UnknownException>()));
     });
   });
 
-  group('editTag', () {
-    test('should return [TagResult] if response code is 200', () async {
+  group('editSubtask', () {
+    test('should return [SubtaskResult] if response code is 200', () async {
       when(client.put(
-        '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
+        '$baseUrl/subtask//',
         headers: {
           'Authorization': 'Bearer $token',
         },
         body: {
-          "name": "string",
-          "color": 0,
+          "name": "",
+          "done": true,
+          "task": "",
         },
       )).thenAnswer(
-          (_) async => http.Response(fixture('tag_result.json'), 200));
+          (_) async => http.Response(fixture('subtask_result.json'), 200));
 
-      final result = await remoteSource.editTag(
-          '3fa85f64-5717-4562-b3fc-2c963f66afa6', 'string', 0);
+      final result = await remoteSource.editSubtask('', '', true, '');
 
-      expect(result, tagResult);
+      expect(result, subtaskResult);
     });
 
     test('should throw UnAuthException if response code is 401', () {
       when(client.put(
-        '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
+        '$baseUrl/subtask//',
         headers: {
           'Authorization': 'Bearer $token',
         },
         body: {
-          "name": "string",
-          "color": 0,
+          "name": "",
+          "done": true,
+          "task": "",
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 401));
 
-      final result = remoteSource.editTag;
+      final result = remoteSource.editSubtask;
 
-      expect(result('3fa85f64-5717-4562-b3fc-2c963f66afa6', 'string', 0),
-          throwsA(isA<UnAuthException>()));
+      expect(result('', '', true, ''), throwsA(isA<UnAuthException>()));
     });
 
     test('should throw NotFoundException if response code is 404', () {
       when(client.put(
-        '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
+        '$baseUrl/subtask//',
         headers: {
           'Authorization': 'Bearer $token',
         },
         body: {
-          "name": "string",
-          "color": 0,
+          "name": "",
+          "done": true,
+          "task": "",
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 404));
 
-      final result = remoteSource.editTag;
+      final result = remoteSource.editSubtask;
 
-      expect(result('3fa85f64-5717-4562-b3fc-2c963f66afa6', 'string', 0),
-          throwsA(isA<NotFoundException>()));
+      expect(result('', '', true, ''), throwsA(isA<NotFoundException>()));
     });
 
     test('should throw FieldsException if response code is 400', () {
       when(client.put(
-        '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
+        '$baseUrl/subtask//',
         headers: {
           'Authorization': 'Bearer $token',
         },
         body: {
-          "name": "string",
-          "color": 0,
+          "name": "",
+          "done": true,
+          "task": "",
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 400));
 
-      final result = remoteSource.editTag;
+      final result = remoteSource.editSubtask;
 
-      expect(result('3fa85f64-5717-4562-b3fc-2c963f66afa6', 'string', 0),
-          throwsA(isA<FieldsException>()));
+      expect(result('', '', true, ''), throwsA(isA<FieldsException>()));
     });
 
     test('should throw UnknownException if response code is not listed above',
         () {
       when(client.put(
-        '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
+        '$baseUrl/subtask//',
         headers: {
           'Authorization': 'Bearer $token',
         },
         body: {
-          "name": "string",
-          "color": 0,
+          "name": "",
+          "done": true,
+          "task": "",
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 500));
 
-      final result = remoteSource.editTag;
+      final result = remoteSource.editSubtask;
 
-      expect(result('3fa85f64-5717-4562-b3fc-2c963f66afa6', 'string', 0),
-          throwsA(isA<UnknownException>()));
+      expect(result('', '', true, ''), throwsA(isA<UnknownException>()));
     });
   });
 
-  group('deleteTag', () {
+  group('deleteSubtask', () {
     test('should return [true] if response code is 204', () async {
       when(client.delete(
-        '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
+        '$baseUrl/subtask//',
         headers: {
           'Authorization': 'Bearer $token',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 204));
 
-      final result =
-          await remoteSource.deleteTag('3fa85f64-5717-4562-b3fc-2c963f66afa6');
+      final result = await remoteSource.deleteSubtask('');
 
       expect(result, true);
     });
 
     test('should throw UnAuthException if response code is 401', () {
       when(client.delete(
-        '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
+        '$baseUrl/subtask//',
         headers: {
           'Authorization': 'Bearer $token',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 401));
 
-      final result = remoteSource.deleteTag;
+      final result = remoteSource.deleteSubtask;
 
-      expect(result('3fa85f64-5717-4562-b3fc-2c963f66afa6'),
-          throwsA(isA<UnAuthException>()));
+      expect(result(''), throwsA(isA<UnAuthException>()));
     });
 
     test('should throw NotFoundException if response code is 404', () {
       when(client.delete(
-        '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
+        '$baseUrl/subtask//',
         headers: {
           'Authorization': 'Bearer $token',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 404));
 
-      final result = remoteSource.deleteTag;
+      final result = remoteSource.deleteSubtask;
 
-      expect(result('3fa85f64-5717-4562-b3fc-2c963f66afa6'),
-          throwsA(isA<NotFoundException>()));
+      expect(result(''), throwsA(isA<NotFoundException>()));
     });
 
     test('should throw UnknownException if response code is not listed above',
         () {
       when(client.delete(
-        '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
+        '$baseUrl/subtask//',
         headers: {
           'Authorization': 'Bearer $token',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 500));
 
-      final result = remoteSource.deleteTag;
+      final result = remoteSource.deleteSubtask;
 
-      expect(result('3fa85f64-5717-4562-b3fc-2c963f66afa6'),
-          throwsA(isA<UnknownException>()));
+      expect(result(''), throwsA(isA<UnknownException>()));
     });
   });
 }
