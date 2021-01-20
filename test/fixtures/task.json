@@ -1,0 +1,19 @@
+{
+    "count": 123,
+    "next": "http://api.example.org/accounts/?offset=400&limit=100",
+    "previous": "http://api.example.org/accounts/?offset=200&limit=100",
+    "results": [
+      {
+        "user": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "name": "string",
+        "note": "string",
+        "tags": [
+          "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        ],
+        "reminder": "2021-01-20T14:58:47.648Z",
+        "deadline": "2021-01-20T14:58:47.648Z",
+        "done_at": "2021-01-20T14:58:47.648Z",
+        "priority": 0
+      }
+    ]
+  }
