@@ -14,9 +14,9 @@ class TaskTagResponse extends Equatable {
   TaskTagResponse({this.id, this.taskId, this.tagId});
 
   factory TaskTagResponse.fromJson(Map<String, dynamic> json) =>
-      _$TaskTagFromJson(json);
+      _$TaskTagResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$TaskTagToJson(this);
+  Map<String, dynamic> toJson() => _$TaskTagResponseToJson(this);
 
   @override
   List<Object> get props => [id, taskId, tagId];
