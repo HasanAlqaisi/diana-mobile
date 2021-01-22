@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:diana/core/errors/days_errors.dart';
+
 abstract class Failure {}
 
 class UnAuthFailure extends Equatable implements Failure {
@@ -14,6 +16,11 @@ class UnknownFailure extends Equatable implements Failure {
 
   @override
   List<Object> get props => [message];
+}
+
+class NotFoundFailure extends Equatable implements Failure {
+  @override
+  List<Object> get props => [];
 }
 
 class ChangePassFieldsFailure extends Equatable implements Failure {
@@ -95,4 +102,50 @@ class NonFieldsFailure extends Equatable implements Failure {
 
   @override
   List<Object> get props => [errors];
+}
+
+class HabitFieldsFailure extends Equatable implements Failure {
+  final List<String> name;
+  final DaysError days;
+  final List<String> time;
+
+  HabitFieldsFailure({
+    this.name,
+    this.days,
+    this.time,
+  });
+
+  factory HabitFieldsFailure.fromFieldsException(Map<String, dynamic> body) {
+    return HabitFieldsFailure(
+      name: body['name']?.cast<String>() as List<String> ?? null,
+      days: body['days'] != null ? DaysError.fromJson(body['days']) : null,
+      time: body['time']?.cast<String>() as List<String> ?? null,
+    );
+  }
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object> get props => [name, days, time];
+}
+
+class HabitlogFieldsFailure extends Equatable implements Failure {
+  final List<String> habitlogId;
+
+  HabitlogFieldsFailure({
+    this.habitlogId,
+  });
+
+  factory HabitlogFieldsFailure.fromFieldsException(Map<String, dynamic> body) {
+    return HabitlogFieldsFailure(
+      habitlogId: body['habit']?.cast<String>() as List<String> ?? null,
+    );
+  }
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object> get props => [habitlogId];
 }
