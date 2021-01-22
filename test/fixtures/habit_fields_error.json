@@ -1,0 +1,10 @@
+{
+    "days": {
+        "0": [
+            "1,2,3 is not a valid choice."
+        ],
+        "3": [
+            "array is not a valid choice."
+        ]
+    }
+}
