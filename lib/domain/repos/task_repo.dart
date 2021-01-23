@@ -9,14 +9,13 @@ import 'package:diana/data/remote_models/task/task_result.dart';
 import 'package:diana/data/remote_models/tasktag/tasktag.dart';
 
 abstract class TaskRepo {
-  Future<Either<Failure, TagResponse>> getTags(int offset);
+  Future<Either<Failure, TagResponse>> getTags();
 
   Future<Either<Failure, TagResult>> insertTag(String name, int color);
 
   Future<Either<Failure, TagResult>> editTag(String id, String name, int color);
 
-  Future<Either<Failure, SubtaskResponse>> getSubtasks(
-      String taskId, int offset);
+  Future<Either<Failure, SubtaskResponse>> getSubtasks(String taskId);
 
   Future<Either<Failure, SubtaskResult>> insertSubtask(
     String name,
@@ -33,7 +32,7 @@ abstract class TaskRepo {
 
   Future<Either<Failure, bool>> deleteSubtask(String subtaskId);
 
-  Future<Either<Failure, TaskResponse>> getTasks(int offset);
+  Future<Either<Failure, TaskResponse>> getTasks();
 
   Future<Either<Failure, TaskResult>> insertTask(
     String name,

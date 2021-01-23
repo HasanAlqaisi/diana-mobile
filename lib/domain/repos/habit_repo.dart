@@ -6,7 +6,7 @@ import 'package:diana/data/remote_models/habitlog/habitlog_response.dart';
 import 'package:diana/data/remote_models/habitlog/habitlog_result.dart';
 
 abstract class HabitRepo {
-  Future<Either<Failure, HabitResponse>> getHabits(int offset);
+  Future<Either<Failure, HabitResponse>> getHabits();
 
   Future<Either<Failure, HabitResult>> insertHabit(
     String name,
@@ -24,7 +24,6 @@ abstract class HabitRepo {
   Future<Either<Failure, bool>> deleteHabit(String habitId);
 
   Future<Either<Failure, HabitlogResponse>> getHabitlogs(
-    int offset,
     String habitId,
   );
 

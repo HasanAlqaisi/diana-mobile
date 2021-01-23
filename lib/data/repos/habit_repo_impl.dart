@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:diana/core/api_helpers/api.dart';
 import 'package:diana/core/errors/exception.dart';
 import 'package:diana/core/network/network_info.dart';
 import 'package:diana/data/data_sources/habit/habit_remote_source.dart';
@@ -16,15 +17,24 @@ class HabitRepoImpl extends HabitRepo {
   final NetWorkInfo netWorkInfo;
   final HabitRemoteSource habitRemoteSource;
   final HabitlogRemoteSource habitlogRemoteSource;
+  int habitOffset = 0, habitlogOffset = 0;
 
-  HabitRepoImpl(
-      {this.netWorkInfo, this.habitRemoteSource, this.habitlogRemoteSource});
+  HabitRepoImpl({
+    this.netWorkInfo,
+    this.habitRemoteSource,
+    this.habitlogRemoteSource,
+  });
 
   @override
-  Future<Either<Failure, HabitResponse>> getHabits(int offset) async {
+  Future<Either<Failure, HabitResponse>> getHabits() async {
     if (await netWorkInfo.isConnected()) {
       try {
-        final result = await habitRemoteSource.getHabits(offset);
+        final result = await habitRemoteSource.getHabits(habitOffset);
+
+        final offset = API.offsetExtractor(result.next);
+
+        habitOffset = offset;
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -100,11 +110,16 @@ class HabitRepoImpl extends HabitRepo {
   }
 
   @override
-  Future<Either<Failure, HabitlogResponse>> getHabitlogs(
-      int offset, String habitId) async {
+  Future<Either<Failure, HabitlogResponse>> getHabitlogs(String habitId) async {
     if (await netWorkInfo.isConnected()) {
       try {
-        final result = await habitlogRemoteSource.getHabitlogs(offset, habitId);
+        final result =
+            await habitlogRemoteSource.getHabitlogs(habitlogOffset, habitId);
+
+        final offset = API.offsetExtractor(result.next);
+
+        habitlogOffset = offset;
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());

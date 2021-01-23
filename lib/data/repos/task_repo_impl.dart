@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
+import 'package:diana/core/api_helpers/api.dart';
 
 import 'package:diana/core/errors/exception.dart';
 import 'package:diana/core/errors/failure.dart';
@@ -24,6 +25,7 @@ class TaskRepoImpl extends TaskRepo {
   final SubtaskRemoteSource subtaskRemoteSource;
   final TagRemoteSource tagRemoteSource;
   final TaskTagRemoteSource taskTagRemoteSource;
+  int taskOffset = 0, subtaskOffset = 0, tagOffset = 0;
 
   TaskRepoImpl({
     this.netWorkInfo,
@@ -189,11 +191,16 @@ class TaskRepoImpl extends TaskRepo {
   }
 
   @override
-  Future<Either<Failure, SubtaskResponse>> getSubtasks(
-      String taskId, int offset) async {
+  Future<Either<Failure, SubtaskResponse>> getSubtasks(String taskId) async {
     if (await netWorkInfo.isConnected()) {
       try {
-        final result = await subtaskRemoteSource.getSubtasks(taskId, offset);
+        final result =
+            await subtaskRemoteSource.getSubtasks(taskId, subtaskOffset);
+
+        final offset = API.offsetExtractor(result.next);
+
+        subtaskOffset = offset;
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -206,10 +213,15 @@ class TaskRepoImpl extends TaskRepo {
   }
 
   @override
-  Future<Either<Failure, TagResponse>> getTags(int offset) async {
+  Future<Either<Failure, TagResponse>> getTags() async {
     if (await netWorkInfo.isConnected()) {
       try {
-        final result = await tagRemoteSource.getTags(offset);
+        final result = await tagRemoteSource.getTags(tagOffset);
+
+        final offset = API.offsetExtractor(result.next);
+
+        tagOffset = offset;
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -222,10 +234,15 @@ class TaskRepoImpl extends TaskRepo {
   }
 
   @override
-  Future<Either<Failure, TaskResponse>> getTasks(int offset) async {
+  Future<Either<Failure, TaskResponse>> getTasks() async {
     if (await netWorkInfo.isConnected()) {
       try {
-        final result = await taskRemoteSource.getTasks(offset);
+        final result = await taskRemoteSource.getTasks(taskOffset);
+
+        final offset = API.offsetExtractor(result.next);
+
+        taskOffset = offset;
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
