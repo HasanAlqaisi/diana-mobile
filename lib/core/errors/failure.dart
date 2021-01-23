@@ -149,3 +149,135 @@ class HabitlogFieldsFailure extends Equatable implements Failure {
   @override
   List<Object> get props => [habitlogId];
 }
+
+class SubtaskFieldsFailure extends Equatable implements Failure {
+  final List<String> id;
+  final List<String> name;
+  final List<String> done;
+  final List<String> task;
+
+  SubtaskFieldsFailure({
+    this.id,
+    this.name,
+    this.done,
+    this.task,
+  });
+
+  factory SubtaskFieldsFailure.fromFieldsException(Map<String, dynamic> body) {
+    return SubtaskFieldsFailure(
+      id: body['id']?.cast<String>() as List<String> ?? null,
+      name: body['name']?.cast<String>() as List<String> ?? null,
+      done: body['done']?.cast<String>() as List<String> ?? null,
+      task: body['task']?.cast<String>() as List<String> ?? null,
+    );
+  }
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object> get props => [id, name, done, task];
+}
+
+class TagFieldsFailure extends Equatable implements Failure {
+  final List<String> id;
+  final List<String> name;
+  final List<String> color;
+  final List<String> user;
+
+  TagFieldsFailure({
+    this.id,
+    this.name,
+    this.color,
+    this.user,
+  });
+
+  factory TagFieldsFailure.fromFieldsException(Map<String, dynamic> body) {
+    return TagFieldsFailure(
+      id: body['id']?.cast<String>() as List<String> ?? null,
+      name: body['name']?.cast<String>() as List<String> ?? null,
+      color: body['color']?.cast<String>() as List<String> ?? null,
+      user: body['user']?.cast<String>() as List<String> ?? null,
+    );
+  }
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object> get props => [id, name, color, user];
+}
+
+class TaskFieldsFailure extends Equatable implements Failure {
+  final List<String> name;
+  final List<String> note;
+  final List<String> reminder;
+  final List<String> deadline;
+  final List<String> priority;
+  final List<String> done;
+  final List<String> nonFields;
+
+  TaskFieldsFailure({
+    this.name,
+    this.note,
+    this.reminder,
+    this.deadline,
+    this.priority,
+    this.done,
+    this.nonFields,
+  });
+
+  factory TaskFieldsFailure.fromFieldsException(Map<String, dynamic> body) {
+    return TaskFieldsFailure(
+        name: body['name']?.cast<String>() as List<String> ?? null,
+        note: body['note']?.cast<String>() as List<String> ?? null,
+        reminder: body['reminder']?.cast<String>() as List<String> ?? null,
+        deadline: body['deadline']?.cast<String>() as List<String> ?? null,
+        priority: body['priority']?.cast<String>() as List<String> ?? null,
+        done: body['done']?.cast<String>() as List<String> ?? null,
+        nonFields:
+            body['non_field_errors']?.cast<String>() as List<String> ?? null);
+  }
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object> get props {
+    return [
+      name,
+      note,
+      reminder,
+      deadline,
+      priority,
+      done,
+      nonFields,
+    ];
+  }
+}
+
+class TaskTagFieldsFailure extends Equatable implements Failure {
+  final List<String> id;
+  final List<String> taskId;
+  final List<String> tagId;
+
+  TaskTagFieldsFailure({
+    this.id,
+    this.taskId,
+    this.tagId,
+  });
+
+  factory TaskTagFieldsFailure.fromFieldsException(Map<String, dynamic> body) {
+    return TaskTagFieldsFailure(
+      id: body['id']?.cast<String>() as List<String> ?? null,
+      taskId: body['task']?.cast<String>() as List<String> ?? null,
+      tagId: body['tag']?.cast<String>() as List<String> ?? null,
+    );
+  }
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object> get props => [id, taskId, tagId];
+}
