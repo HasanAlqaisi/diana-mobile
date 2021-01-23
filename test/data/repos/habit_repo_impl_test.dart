@@ -40,7 +40,8 @@ void main() {
       HabitlogResult.fromJson(json.decode(fixture('habitlog_result.json')));
 
   final habitFieldsFailure = HabitFieldsFailure(
-    days: DaysError.fromJson(json.decode(fixture('habit_fields_error.json'))['days']),
+    days: DaysError.fromJson(
+        json.decode(fixture('habit_fields_error.json'))['days']),
   );
 
   final habitlogFieldsFailure = HabitlogFieldsFailure(
@@ -65,7 +66,9 @@ void main() {
 
     group('getHabits', () {
       test('should user has an internet connection', () async {
-        await repo.getHabits(0);
+        when(habitRemoteSource.getHabits(0))
+            .thenAnswer((_) async => habitResponse);
+        await repo.getHabits();
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), true);
       });
@@ -74,16 +77,25 @@ void main() {
         when(habitRemoteSource.getHabits(0))
             .thenAnswer((_) async => habitResponse);
 
-        final result = await repo.getHabits(0);
+        final result = await repo.getHabits();
 
         expect(result, Right(habitResponse));
+      });
+
+      test('should cache the offset', () async {
+        when(habitRemoteSource.getHabits(repo.habitOffset))
+            .thenAnswer((_) async => habitResponse);
+
+        await repo.getHabits();
+
+        expect(repo.habitOffset, 400);
       });
 
       test(
           'shuold return [UnAuthFailure] if remote call throws [UnAuthException]',
           () async {
         when(habitRemoteSource.getHabits(0)).thenThrow(UnAuthException());
-        final result = await repo.getHabits(0);
+        final result = await repo.getHabits();
         expect(result, Left(UnAuthFailure()));
       });
 
@@ -91,7 +103,7 @@ void main() {
           'shuold return [UnknownFailure] if remote call throws [UnknownException]',
           () async {
         when(habitRemoteSource.getHabits(0)).thenThrow(UnknownException());
-        final result = await repo.getHabits(0);
+        final result = await repo.getHabits();
         expect(result, Left(UnknownFailure()));
       });
     });
@@ -119,7 +131,7 @@ void main() {
             FieldsException(body: fixture('habit_fields_error.json')));
 
         final result = await repo.insertHabit('', [], '');
-        
+
         expect(result, Left(habitFieldsFailure));
       });
 
@@ -255,7 +267,9 @@ void main() {
 
     group('getHabitlogs', () {
       test('should user has an internet connection', () async {
-        await repo.getHabitlogs(0, '');
+        when(habitlogRemoteSource.getHabitlogs(0, ''))
+            .thenAnswer((_) async => habitlogResponse);
+        await repo.getHabitlogs('');
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), true);
       });
@@ -264,9 +278,18 @@ void main() {
         when(habitlogRemoteSource.getHabitlogs(0, ''))
             .thenAnswer((_) async => habitlogResponse);
 
-        final result = await repo.getHabitlogs(0, '');
+        final result = await repo.getHabitlogs('');
 
         expect(result, Right(habitlogResponse));
+      });
+
+      test('should cache the offset', () async {
+        when(habitlogRemoteSource.getHabitlogs(repo.habitlogOffset, ''))
+            .thenAnswer((_) async => habitlogResponse);
+
+        await repo.getHabitlogs('');
+
+        expect(repo.habitlogOffset, 400);
       });
 
       test(
@@ -275,7 +298,7 @@ void main() {
         when(habitlogRemoteSource.getHabitlogs(0, ''))
             .thenThrow(UnAuthException());
 
-        final result = await repo.getHabitlogs(0, '');
+        final result = await repo.getHabitlogs('');
 
         expect(result, Left(UnAuthFailure()));
       });
@@ -286,7 +309,7 @@ void main() {
         when(habitlogRemoteSource.getHabitlogs(0, ''))
             .thenThrow(UnknownException());
 
-        final result = await repo.getHabitlogs(0, '');
+        final result = await repo.getHabitlogs('');
 
         expect(result, Left(UnknownFailure()));
       });
@@ -350,14 +373,14 @@ void main() {
 
     group('getHabits', () {
       test('should return false if user has no internet connection', () async {
-        await repo.getHabits(0);
+        await repo.getHabits();
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), false);
       });
       test(
           'should return [NoInternetFailure] if user has no internet connection',
           () async {
-        final result = await repo.getHabits(0);
+        final result = await repo.getHabits();
         expect(result, Left(NoInternetFailure()));
       });
     });
@@ -406,14 +429,14 @@ void main() {
 
     group('getHabitlogs', () {
       test('should return false if user has no internet connection', () async {
-        await repo.getHabitlogs(0, '');
+        await repo.getHabitlogs('');
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), false);
       });
       test(
           'should return [NoInternetFailure] if user has no internet connection',
           () async {
-        final result = await repo.getHabitlogs(0, '');
+        final result = await repo.getHabitlogs('');
         expect(result, Left(NoInternetFailure()));
       });
     });

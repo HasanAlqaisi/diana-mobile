@@ -475,7 +475,9 @@ void main() {
 
     group('getSubtasks', () {
       test('should user has an internet connection', () async {
-        await repo.getSubtasks('', 0);
+        when(subtaskRemoteSource.getSubtasks('', 0))
+            .thenAnswer((_) async => subtaskResponse);
+        await repo.getSubtasks('');
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), true);
       });
@@ -484,9 +486,18 @@ void main() {
         when(subtaskRemoteSource.getSubtasks('', 0))
             .thenAnswer((_) async => subtaskResponse);
 
-        final result = await repo.getSubtasks('', 0);
+        final result = await repo.getSubtasks('');
 
         expect(result, Right(subtaskResponse));
+      });
+
+      test('should cache the offset', () async {
+        when(subtaskRemoteSource.getSubtasks('', repo.subtaskOffset))
+            .thenAnswer((_) async => subtaskResponse);
+
+        await repo.getSubtasks('');
+
+        expect(repo.subtaskOffset, 400);
       });
 
       test(
@@ -494,7 +505,7 @@ void main() {
           () async {
         when(subtaskRemoteSource.getSubtasks('', 0))
             .thenThrow(UnAuthException());
-        final result = await repo.getSubtasks('', 0);
+        final result = await repo.getSubtasks('');
         expect(result, Left(UnAuthFailure()));
       });
 
@@ -503,14 +514,15 @@ void main() {
           () async {
         when(subtaskRemoteSource.getSubtasks('', 0))
             .thenThrow(UnknownException());
-        final result = await repo.getSubtasks('', 0);
+        final result = await repo.getSubtasks('');
         expect(result, Left(UnknownFailure()));
       });
     });
 
     group('getTags', () {
       test('should user has an internet connection', () async {
-        await repo.getTags(0);
+        when(tagRemoteSource.getTags(0)).thenAnswer((_) async => tagResponse);
+        await repo.getTags();
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), true);
       });
@@ -518,16 +530,25 @@ void main() {
       test('should return [TagResponse] if remote call succeed', () async {
         when(tagRemoteSource.getTags(0)).thenAnswer((_) async => tagResponse);
 
-        final result = await repo.getTags(0);
+        final result = await repo.getTags();
 
         expect(result, Right(tagResponse));
+      });
+
+      test('should cache the offset', () async {
+        when(tagRemoteSource.getTags(repo.tagOffset))
+            .thenAnswer((_) async => tagResponse);
+
+        await repo.getTags();
+
+        expect(repo.tagOffset, 400);
       });
 
       test(
           'shuold return [UnAuthFailure] if remote call throws [UnAuthException]',
           () async {
         when(tagRemoteSource.getTags(0)).thenThrow(UnAuthException());
-        final result = await repo.getTags(0);
+        final result = await repo.getTags();
         expect(result, Left(UnAuthFailure()));
       });
 
@@ -535,14 +556,16 @@ void main() {
           'shuold return [UnknownFailure] if remote call throws [UnknownException]',
           () async {
         when(tagRemoteSource.getTags(0)).thenThrow(UnknownException());
-        final result = await repo.getTags(0);
+        final result = await repo.getTags();
         expect(result, Left(UnknownFailure()));
       });
     });
 
     group('getTasks', () {
       test('should user has an internet connection', () async {
-        await repo.getTasks(0);
+        when(taskRemoteSource.getTasks(0))
+            .thenAnswer((_) async => taskResponse);
+        await repo.getTasks();
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), true);
       });
@@ -551,16 +574,25 @@ void main() {
         when(taskRemoteSource.getTasks(0))
             .thenAnswer((_) async => taskResponse);
 
-        final result = await repo.getTasks(0);
+        final result = await repo.getTasks();
 
         expect(result, Right(taskResponse));
+      });
+
+      test('should cache the offset', () async {
+        when(taskRemoteSource.getTasks(repo.taskOffset))
+            .thenAnswer((_) async => taskResponse);
+
+        await repo.getTasks();
+
+        expect(repo.taskOffset, 400);
       });
 
       test(
           'shuold return [UnAuthFailure] if remote call throws [UnAuthException]',
           () async {
         when(taskRemoteSource.getTasks(0)).thenThrow(UnAuthException());
-        final result = await repo.getTasks(0);
+        final result = await repo.getTasks();
         expect(result, Left(UnAuthFailure()));
       });
 
@@ -568,7 +600,7 @@ void main() {
           'shuold return [UnknownFailure] if remote call throws [UnknownException]',
           () async {
         when(taskRemoteSource.getTasks(0)).thenThrow(UnknownException());
-        final result = await repo.getTasks(0);
+        final result = await repo.getTasks();
         expect(result, Left(UnknownFailure()));
       });
     });
@@ -877,42 +909,42 @@ void main() {
 
     group('getSubtasks', () {
       test('should return false if user has no internet connection', () async {
-        await repo.getSubtasks('', 0);
+        await repo.getSubtasks('');
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), false);
       });
       test(
           'should return [NoInternetFailure] if user has no internet connection',
           () async {
-        final result = await repo.getSubtasks('', 0);
+        final result = await repo.getSubtasks('');
         expect(result, Left(NoInternetFailure()));
       });
     });
 
     group('getTags', () {
       test('should return false if user has no internet connection', () async {
-        await repo.getTags(0);
+        await repo.getTags();
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), false);
       });
       test(
           'should return [NoInternetFailure] if user has no internet connection',
           () async {
-        final result = await repo.getTags(0);
+        final result = await repo.getTags();
         expect(result, Left(NoInternetFailure()));
       });
     });
 
     group('getTasks', () {
       test('should return false if user has no internet connection', () async {
-        await repo.getTasks(0);
+        await repo.getTasks();
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), false);
       });
       test(
           'should return [NoInternetFailure] if user has no internet connection',
           () async {
-        final result = await repo.getTasks(0);
+        final result = await repo.getTasks();
         expect(result, Left(NoInternetFailure()));
       });
     });
