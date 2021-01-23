@@ -70,6 +70,59 @@ void main() {
     expect(result, habitlogFieldsFailure);
   });
 
+  test('should convert FieldsException to TaskFieldsFailure in a correct way',
+      () {
+    final taskFieldsBody = json.decode(fixture('task_fields_error.json'));
+
+    final taskFieldsFailure = TaskFieldsFailure(
+      name: ['name is not valid!'],
+    );
+
+    final result = TaskFieldsFailure.fromFieldsException(taskFieldsBody);
+
+    expect(result, taskFieldsFailure);
+  });
+
+  test(
+      'should convert FieldsException to TaskTagFieldsFailure in a correct way',
+      () {
+    final tasktagFieldsBody = json.decode(fixture('tasktag_fields_error.json'));
+
+    final tasktagFieldsFailure = TaskTagFieldsFailure(
+      taskId: ['task id not valid!'],
+    );
+
+    final result = TaskTagFieldsFailure.fromFieldsException(tasktagFieldsBody);
+
+    expect(result, tasktagFieldsFailure);
+  });
+
+  test(
+      'should convert FieldsException to SubtaskFieldsFailure in a correct way',
+      () {
+    final subtaskFieldsBody = json.decode(fixture('subtask_fields_error.json'));
+
+    final subtaskFieldsFailure = SubtaskFieldsFailure(
+      done: ['done shoud not be true!'],
+    );
+
+    final result = SubtaskFieldsFailure.fromFieldsException(subtaskFieldsBody);
+
+    expect(result, subtaskFieldsFailure);
+  });
+
+  test('should convert FieldsException to TagFieldsFailure in a correct way',
+      () {
+    final tagFieldsBody = json.decode(fixture('tag_fields_error.json'));
+
+    final tagFieldsFailure =
+        TagFieldsFailure(color: ['Color is not in the range!']);
+
+    final result = TagFieldsFailure.fromFieldsException(tagFieldsBody);
+
+    expect(result, tagFieldsFailure);
+  });
+
   test('should convert NonFieldsException to NonFieldsFailure in a correct way',
       () {
     final nonFieldsBody = json.decode(fixture('non_field_errors.json'));
