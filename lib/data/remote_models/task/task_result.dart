@@ -5,6 +5,8 @@ part 'task_result.g.dart';
 
 @JsonSerializable()
 class TaskResult extends Equatable {
+  @JsonKey(name: 'pk')
+  final String taskId;
   @JsonKey(name: 'user')
   final String userId;
   final String name;
@@ -20,6 +22,7 @@ class TaskResult extends Equatable {
   final int priority;
 
   TaskResult({
+    this.taskId,
     this.userId,
     this.name,
     this.note,
@@ -38,6 +41,7 @@ class TaskResult extends Equatable {
   @override
   List<Object> get props {
     return [
+      taskId,
       userId,
       name,
       note,
