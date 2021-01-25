@@ -1,14 +1,23 @@
-## Setup
-- Clone the project
-- to make the code compile add _constants.dart file to lib/core/constants
-- write in that file the baseUrl, token, refreshToken 
-- run the (flutter run) command, that's it!
-
 ## Contribution
 
 All contributions are very **welcomed!**
 
 And even if you have an idea to improve **Diana** and makes life easier, don't hesitate to do so!
+
+## Setup
+- Clone the project
+- to make the code compile add _constants.dart file to lib/core/constants
+- write in that file
+
+```
+const baseUrl = 'WRITE_BASE_URL_VALUE';
+
+String token;
+
+String refreshToken;
+```
+
+- run the (flutter run) command, that's it!
 
 ## Database
 
