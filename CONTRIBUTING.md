@@ -1,7 +1,7 @@
 ## Setup
 - Clone the project
 - to make the code compile add _constants.dart file to lib/core/constants
-- write in that folder the baseUrl, token, refreshToken 
+- write in that file the baseUrl, token, refreshToken 
 - run the (flutter run) command, that's it!
 
 ## Contribution
