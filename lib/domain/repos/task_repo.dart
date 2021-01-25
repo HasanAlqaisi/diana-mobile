@@ -65,4 +65,6 @@ abstract class TaskRepo {
   );
 
   Future<Either<Failure, bool>> deleteTaskTag(String id);
+
+  //TODO: Add the missing deleteTag func
 }
