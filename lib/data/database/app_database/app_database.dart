@@ -1,3 +1,4 @@
+import 'package:diana/data/database/models/habit/days_table.dart';
 import 'package:diana/data/database/models/habit/habit_table.dart';
 import 'package:diana/data/database/models/habit_log/habitlog_table.dart';
 import 'package:diana/data/database/models/subtask/subtask_table.dart';
@@ -13,6 +14,7 @@ part 'app_database.g.dart';
   tables: [
     HabitTable,
     HabitlogTable,
+    DaysTable,
     SubTaskTable,
     TagTable,
     TaskTable,
