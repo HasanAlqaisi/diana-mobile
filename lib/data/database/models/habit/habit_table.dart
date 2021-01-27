@@ -1,5 +1,4 @@
 import 'package:diana/data/database/app_database/app_database.dart';
-import 'package:diana/data/database/models/habit/days.dart';
 import 'package:diana/data/remote_models/habit/habit_result.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
@@ -9,7 +8,7 @@ class HabitTable extends Table {
   TextColumn get userId =>
       text().customConstraint('REFERENCES user_table(id)')();
   TextColumn get name => text()();
-  TextColumn get days => text().map(DaysConverter())();
+  // TextColumn get days => text().map(DaysConverter())();
   TextColumn get time => text()();
 
   @override
@@ -20,12 +19,12 @@ class HabitTable extends Table {
 
   static List<HabitTableCompanion> fromHabitResponse(List<HabitResult> habits) {
     return habits.map((habit) {
-      final days = Days(days: habit.days);
+      // final days = Day(days: habit.days);
       return HabitTableCompanion(
         id: Value(habit.habitId),
         userId: Value(habit.userId),
         name: Value(habit.name),
-        days: Value(DaysConverter().mapToSql(days)),
+        // days: Value(days),
         time: Value(habit.time),
       );
     }).toList();
