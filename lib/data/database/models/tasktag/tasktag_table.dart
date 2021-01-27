@@ -1,10 +1,9 @@
 import 'package:diana/data/database/app_database/app_database.dart';
-import 'package:diana/data/remote_models/tasktag/tasktag.dart';
+import 'package:diana/data/remote_models/task/task_result.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 @DataClassName('TaskTagData')
 class TaskTagTable extends Table {
-  TextColumn get id => text()();
   TextColumn get taskId =>
       text().customConstraint('REFERENCES task_table(id)')();
   TextColumn get tagId => text().customConstraint('REFERENCES tag_table(id)')();
@@ -13,13 +12,12 @@ class TaskTagTable extends Table {
   String get tableName => 'tasktag_table';
 
   @override
-  Set<Column> get primaryKey => {id};
+  Set<Column> get primaryKey => {taskId, tagId};
 
-  static TaskTagTableCompanion fromTaskTagResposne(TaskTagResponse tasktag) {
+  static TaskTagTableCompanion fromTaskResult(TaskResult task, String tagId) {
     return TaskTagTableCompanion(
-      id: Value(tasktag.id),
-      taskId: Value(tasktag.taskId),
-      tagId: Value(tasktag.tagId),
+      taskId: Value(task.taskId),
+      tagId: Value(tagId),
     );
   }
 }
