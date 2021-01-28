@@ -17,4 +17,13 @@ class DateHelper {
     else
       return null;
   }
+
+  static DateTime getFirstDayOfWeek(DateTime currentDate) {
+    return currentDate.subtract(Duration(days: currentDate.weekday - 1));
+  }
+
+  static DateTime getLastDayOfWeek(DateTime currentDate) {
+    return currentDate
+        .add(Duration(days: DateTime.daysPerWeek - currentDate.weekday));
+  }
 }
