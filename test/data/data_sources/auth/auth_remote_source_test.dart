@@ -147,7 +147,7 @@ void main() {
       when(client.post(
         '$baseUrl/accounts/logout/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 200));
 
@@ -161,7 +161,7 @@ void main() {
       when(client.post(
         '$baseUrl/accounts/logout/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 500));
 
@@ -179,7 +179,7 @@ void main() {
       when(client.post(
         '$baseUrl/accounts/password/change/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "new_password1": '',
@@ -196,7 +196,7 @@ void main() {
       when(client.post(
         '$baseUrl/accounts/password/change/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "new_password1": '',
@@ -216,7 +216,7 @@ void main() {
       when(client.post(
         '$baseUrl/accounts/password/change/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "new_password1": '',
@@ -237,7 +237,7 @@ void main() {
       when(client.post(
         '$baseUrl/accounts/password/change/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "new_password1": '',
@@ -259,7 +259,7 @@ void main() {
       when(client.patch(
         '$baseUrl/accounts/user/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "first_name": "string",
@@ -281,7 +281,7 @@ void main() {
       when(client.patch(
         '$baseUrl/accounts/user/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "first_name": "string",
@@ -306,7 +306,7 @@ void main() {
       when(client.patch(
         '$baseUrl/accounts/user/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "first_name": "string",
@@ -332,7 +332,7 @@ void main() {
       when(client.patch(
         '$baseUrl/accounts/user/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "first_name": "string",
@@ -359,7 +359,7 @@ void main() {
       when(client.get(
         '$baseUrl/accounts/user/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('user.json'), 200));
 
@@ -372,7 +372,7 @@ void main() {
       when(client.get(
         '$baseUrl/accounts/user/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 401));
 
@@ -389,7 +389,7 @@ void main() {
       when(client.get(
         '$baseUrl/accounts/user/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 500));
 

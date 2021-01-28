@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:diana/core/network/network_info.dart';
+import 'package:diana/data/data_sources/auth/auth_local_source.dart';
 import 'package:diana/data/data_sources/auth/auth_remote_source.dart';
 import 'package:diana/data/remote_models/auth/login_info.dart';
 import 'package:diana/data/remote_models/auth/refresh_info.dart';
@@ -18,15 +19,23 @@ class MockNetworkInfo extends Mock implements NetWorkInfo {}
 
 class MockRemoteSource extends Mock implements AuthRemoteSource {}
 
+class MockLocalSource extends Mock implements AuthLocalSource {}
+
 void main() {
   MockNetworkInfo netWorkInfo;
   MockRemoteSource remoteSource;
+  MockLocalSource localSource;
   AuthRepoImpl repo;
 
   setUp(() {
     netWorkInfo = MockNetworkInfo();
     remoteSource = MockRemoteSource();
-    repo = AuthRepoImpl(netWorkInfo: netWorkInfo, remoteSource: remoteSource);
+    localSource = MockLocalSource();
+    repo = AuthRepoImpl(
+      netWorkInfo: netWorkInfo,
+      remoteSource: remoteSource,
+      authLocalSource: localSource,
+    );
   });
 
   group('device is online', () {
@@ -90,13 +99,22 @@ void main() {
         expect(await netWorkInfo.isConnected(), true);
       });
 
-      test('should return [true] if remote call succeed', () async {
+      test('should return [user] if remote call succeed', () async {
         when(remoteSource.editUser('', '', '', '', '', ''))
             .thenAnswer((_) async => user);
 
         final result = await repo.editUser('', '', '', '', '', '');
 
         expect(result, Right(user));
+      });
+
+      test('should insert new row to db', () async {
+        when(remoteSource.editUser('', '', '', '', '', ''))
+            .thenAnswer((_) async => user);
+
+        await repo.editUser('', '', '', '', '', '');
+
+        verify(localSource.insertUser(any));
       });
 
       test(
@@ -142,6 +160,8 @@ void main() {
       final user = User.fromJson(json.decode(fixture('user.json')));
 
       test('should user has an internet connection', () async {
+        when(remoteSource.getUser()).thenAnswer((_) async => user);
+
         await repo.getUser();
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), true);
@@ -153,6 +173,22 @@ void main() {
         final result = await repo.getUser();
 
         expect(result, Right(user));
+      });
+
+      test('should insert new row to db', () async {
+        when(remoteSource.getUser()).thenAnswer((_) async => user);
+
+        await repo.getUser();
+
+        verify(localSource.insertUser(any));
+      });
+
+      test('should cache the token', () async {
+        when(remoteSource.getUser()).thenAnswer((_) async => user);
+
+        await repo.getUser();
+
+        verify(localSource.cacheToken(any));
       });
 
       test(
@@ -180,6 +216,7 @@ void main() {
       final loginInfo = LoginInfo.fromJson(json.decode(fixture('login.json')));
 
       test('should user has an internet connection', () async {
+        when(remoteSource.loginUser('', '')).thenAnswer((_) async => loginInfo);
         await repo.loginUser('', '');
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), true);
@@ -191,6 +228,30 @@ void main() {
         final result = await repo.loginUser('', '');
 
         expect(result, Right(loginInfo));
+      });
+
+      test('should cache the token', () async {
+        when(remoteSource.loginUser('', '')).thenAnswer((_) async => loginInfo);
+
+        await repo.loginUser('', '');
+
+        verify(localSource.cacheToken(any));
+      });
+
+      test('should cache the refresh token', () async {
+        when(remoteSource.loginUser('', '')).thenAnswer((_) async => loginInfo);
+
+        await repo.loginUser('', '');
+
+        verify(localSource.cacheRefreshToken(any));
+      });
+
+      test('should cache user id', () async {
+        when(remoteSource.loginUser('', '')).thenAnswer((_) async => loginInfo);
+
+        await repo.loginUser('', '');
+
+        verify(localSource.cacheUserId(any));
       });
 
       test(
@@ -250,6 +311,8 @@ void main() {
           RefreshInfo.fromJson(json.decode(fixture('refresh.json')));
 
       test('should user has an internet connection', () async {
+        when(remoteSource.requestToken(''))
+            .thenAnswer((_) async => refreshInfo);
         await repo.requestToken('');
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), true);
@@ -262,6 +325,24 @@ void main() {
         final result = await repo.requestToken('');
 
         expect(result, Right(refreshInfo));
+      });
+
+      test('should cache the token', () async {
+        when(remoteSource.requestToken(''))
+            .thenAnswer((_) async => refreshInfo);
+
+        await repo.requestToken('');
+
+        verify(localSource.cacheToken(any));
+      });
+
+      test('should cache the refresh token', () async {
+        when(remoteSource.requestToken(''))
+            .thenAnswer((_) async => refreshInfo);
+
+        await repo.requestToken('');
+
+        verify(localSource.cacheRefreshToken(any));
       });
 
       test(
@@ -327,6 +408,15 @@ void main() {
         final result = await repo.registerUser('', '', '', '', '', '');
 
         expect(result, Right(user));
+      });
+
+      test('should insert new row to db', () async {
+        when(remoteSource.registerUser('', '', '', '', '', ''))
+            .thenAnswer((_) async => user);
+
+        await repo.registerUser('', '', '', '', '', '');
+
+        verify(localSource.insertUser(any));
       });
 
       test(

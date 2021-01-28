@@ -28,7 +28,7 @@ void main() {
       when(client.post(
         '$baseUrl/tasktag/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "task": "",
@@ -45,7 +45,7 @@ void main() {
       when(client.post(
         '$baseUrl/tasktag/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "task": "",
@@ -62,7 +62,7 @@ void main() {
       when(client.post(
         '$baseUrl/tasktag/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "task": "",
@@ -80,7 +80,7 @@ void main() {
       when(client.post(
         '$baseUrl/tasktag/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "task": "",
@@ -99,7 +99,7 @@ void main() {
       when(client.put(
         '$baseUrl/tasktag//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "task": "",
@@ -116,7 +116,7 @@ void main() {
       when(client.put(
         '$baseUrl/tasktag//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "task": "",
@@ -133,7 +133,7 @@ void main() {
       when(client.put(
         '$baseUrl/tasktag//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "task": "",
@@ -150,7 +150,7 @@ void main() {
       when(client.put(
         '$baseUrl/tasktag//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "task": "",
@@ -168,7 +168,7 @@ void main() {
       when(client.put(
         '$baseUrl/tasktag//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "task": "",
@@ -187,7 +187,7 @@ void main() {
       when(client.delete(
         '$baseUrl/tasktag//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 204));
 
@@ -200,7 +200,7 @@ void main() {
       when(client.delete(
         '$baseUrl/tasktag//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 401));
 
@@ -213,7 +213,7 @@ void main() {
       when(client.delete(
         '$baseUrl/tasktag//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 404));
 
@@ -227,7 +227,7 @@ void main() {
       when(client.delete(
         '$baseUrl/tasktag//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 500));
 

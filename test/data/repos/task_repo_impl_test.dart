@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:diana/core/network/network_info.dart';
 import 'package:diana/data/data_sources/subtask/subtask_remote_source.dart';
 import 'package:diana/data/data_sources/tag/tag_remote_source.dart';
+import 'package:diana/data/data_sources/task/task_local_source.dart';
 import 'package:diana/data/data_sources/task/task_remote_source.dart';
 import 'package:diana/data/data_sources/tasktag/tasktag_remote_source.dart';
 import 'package:diana/data/remote_models/subtask/subtask_response.dart';
@@ -25,6 +26,8 @@ class MockNetworkInfo extends Mock implements NetWorkInfo {}
 
 class MockTaskRemoteSource extends Mock implements TaskRemoteSource {}
 
+class MockTaskLocalSource extends Mock implements TaskLocalSource {}
+
 class MockSubtaskRemoteSource extends Mock implements SubtaskRemoteSource {}
 
 class MockTagRemoteSource extends Mock implements TagRemoteSource {}
@@ -36,6 +39,7 @@ void main() {
   MockSubtaskRemoteSource subtaskRemoteSource;
   MockTagRemoteSource tagRemoteSource;
   MockTaskRemoteSource taskRemoteSource;
+  MockTaskLocalSource taskLocalSource;
   MockTaskTagRemoteSource taskTagRemoteSource;
   TaskRepoImpl repo;
 
@@ -68,6 +72,7 @@ void main() {
   setUp(() {
     netWorkInfo = MockNetworkInfo();
     taskRemoteSource = MockTaskRemoteSource();
+    taskLocalSource = MockTaskLocalSource();
     subtaskRemoteSource = MockSubtaskRemoteSource();
     tagRemoteSource = MockTagRemoteSource();
     taskTagRemoteSource = MockTaskTagRemoteSource();
@@ -78,6 +83,7 @@ void main() {
       tagRemoteSource: tagRemoteSource,
       taskRemoteSource: taskRemoteSource,
       taskTagRemoteSource: taskTagRemoteSource,
+      taskLocalSource: taskLocalSource,
     );
   });
 
@@ -100,6 +106,15 @@ void main() {
         final result = await repo.deleteSubtask('');
 
         expect(result, Right(true));
+      });
+
+      test('should delete habit from db', () async {
+        when(subtaskRemoteSource.deleteSubtask(''))
+            .thenAnswer((_) async => true);
+
+        await repo.deleteSubtask('');
+
+        verify(taskLocalSource.deleteSubTask(any));
       });
 
       test(
@@ -149,6 +164,14 @@ void main() {
         final result = await repo.deleteTask('');
 
         expect(result, Right(true));
+      });
+
+      test('should delete task from db', () async {
+        when(taskRemoteSource.deleteTask('')).thenAnswer((_) async => true);
+
+        await repo.deleteTask('');
+
+        verify(taskLocalSource.deleteTask(any));
       });
 
       test(
@@ -248,6 +271,15 @@ void main() {
         expect(result, Right(subtaskResult));
       });
 
+      test('should insert new row to db', () async {
+        when(subtaskRemoteSource.insertSubtask('', true, ''))
+            .thenAnswer((_) async => subtaskResult);
+
+        await repo.insertSubtask('', true, '');
+
+        verify(taskLocalSource.insertSubTask(any));
+      });
+
       test(
           'shuold return [SubtaskFieldsFailure] if remote call throws [FieldsException]',
           () async {
@@ -309,6 +341,15 @@ void main() {
         expect(result, Right(tagResult));
       });
 
+      test('should insert new row to db', () async {
+        when(tagRemoteSource.editTag('', '', 0))
+            .thenAnswer((_) async => tagResult);
+
+        await repo.editTag('', '', 0);
+
+        verify(taskLocalSource.insertTag(any));
+      });
+
       test(
           'shuold return [TagFieldsFailure] if remote call throws [FieldsException]',
           () async {
@@ -365,6 +406,15 @@ void main() {
         final result = await repo.editTask('', '', '', '', '', 0, true);
 
         expect(result, Right(taskResult));
+      });
+
+      test('should insert new row to db', () async {
+        when(taskRemoteSource.editTask('', '', '', '', '', 0, true))
+            .thenAnswer((_) async => taskResult);
+
+        await repo.editTask('', '', '', '', '', 0, true);
+
+        verify(taskLocalSource.insertTask(any));
       });
 
       test(
@@ -491,6 +541,29 @@ void main() {
         expect(result, Right(subtaskResponse));
       });
 
+      test('should delete and insert new rows to db if offset is zero',
+          () async {
+        repo.subtaskOffset = 0;
+
+        when(subtaskRemoteSource.getSubtasks('', repo.subtaskOffset))
+            .thenAnswer((_) async => subtaskResponse);
+
+        await repo.getSubtasks('');
+
+        verify(taskLocalSource.deleteAndInsertSubTasks(any));
+      });
+
+      test('should insert new rows to db if offset is not zero', () async {
+        repo.subtaskOffset = 500;
+
+        when(subtaskRemoteSource.getSubtasks('', repo.subtaskOffset))
+            .thenAnswer((_) async => subtaskResponse);
+
+        await repo.getSubtasks('');
+
+        verify(taskLocalSource.insertSubTasks(any));
+      });
+
       test('should cache the offset', () async {
         when(subtaskRemoteSource.getSubtasks('', repo.subtaskOffset))
             .thenAnswer((_) async => subtaskResponse);
@@ -535,6 +608,29 @@ void main() {
         expect(result, Right(tagResponse));
       });
 
+      test('should delete and insert new rows to db if offset is zero',
+          () async {
+        repo.tagOffset = 0;
+
+        when(tagRemoteSource.getTags(repo.tagOffset))
+            .thenAnswer((_) async => tagResponse);
+
+        await repo.getTags();
+
+        verify(taskLocalSource.deleteAndInsertTags(any));
+      });
+
+      test('should insert new rows to db if offset is not zero', () async {
+        repo.tagOffset = 500;
+
+        when(tagRemoteSource.getTags(repo.tagOffset))
+            .thenAnswer((_) async => tagResponse);
+
+        await repo.getTags();
+
+        verify(taskLocalSource.insertTags(any));
+      });
+
       test('should cache the offset', () async {
         when(tagRemoteSource.getTags(repo.tagOffset))
             .thenAnswer((_) async => tagResponse);
@@ -563,7 +659,7 @@ void main() {
 
     group('getTasks', () {
       test('should user has an internet connection', () async {
-        when(taskRemoteSource.getTasks(0))
+        when(taskRemoteSource.getTasks(repo.taskOffset))
             .thenAnswer((_) async => taskResponse);
         await repo.getTasks();
         verify(netWorkInfo.isConnected());
@@ -571,12 +667,35 @@ void main() {
       });
 
       test('should return [TaskResponse] if remote call succeed', () async {
-        when(taskRemoteSource.getTasks(0))
+        when(taskRemoteSource.getTasks(repo.taskOffset))
             .thenAnswer((_) async => taskResponse);
 
         final result = await repo.getTasks();
 
         expect(result, Right(taskResponse));
+      });
+
+      test('should delete and insert new rows to db if offset is zero',
+          () async {
+        repo.taskOffset = 0;
+
+        when(taskRemoteSource.getTasks(repo.taskOffset))
+            .thenAnswer((_) async => taskResponse);
+
+        await repo.getTasks();
+
+        verify(taskLocalSource.deleteAndinsertTasks(any));
+      });
+
+      test('should insert new rows to db if offset is not zero', () async {
+        repo.taskOffset = 500;
+
+        when(taskRemoteSource.getTasks(repo.taskOffset))
+            .thenAnswer((_) async => taskResponse);
+
+        await repo.getTasks();
+
+        verify(taskLocalSource.insertTasks(any));
       });
 
       test('should cache the offset', () async {
@@ -591,7 +710,8 @@ void main() {
       test(
           'shuold return [UnAuthFailure] if remote call throws [UnAuthException]',
           () async {
-        when(taskRemoteSource.getTasks(0)).thenThrow(UnAuthException());
+        when(taskRemoteSource.getTasks(repo.taskOffset))
+            .thenThrow(UnAuthException());
         final result = await repo.getTasks();
         expect(result, Left(UnAuthFailure()));
       });
@@ -599,7 +719,8 @@ void main() {
       test(
           'shuold return [UnknownFailure] if remote call throws [UnknownException]',
           () async {
-        when(taskRemoteSource.getTasks(0)).thenThrow(UnknownException());
+        when(taskRemoteSource.getTasks(repo.taskOffset))
+            .thenThrow(UnknownException());
         final result = await repo.getTasks();
         expect(result, Left(UnknownFailure()));
       });
@@ -619,6 +740,15 @@ void main() {
         final result = await repo.insertSubtask('', true, '');
 
         expect(result, Right(subtaskResult));
+      });
+
+      test('should insert new row to db', () async {
+        when(subtaskRemoteSource.insertSubtask('', true, ''))
+            .thenAnswer((_) async => subtaskResult);
+
+        await repo.insertSubtask('', true, '');
+
+        verify(taskLocalSource.insertSubTask(any));
       });
 
       test(
@@ -671,6 +801,15 @@ void main() {
         expect(result, Right(tagResult));
       });
 
+      test('should insert new row to db', () async {
+        when(tagRemoteSource.insertTags('', 0))
+            .thenAnswer((_) async => tagResult);
+
+        await repo.insertTag('', 0);
+
+        verify(taskLocalSource.insertTag(any));
+      });
+
       test(
           'shuold return [TagFieldsFailure] if remote call throws [FieldsException]',
           () async {
@@ -717,6 +856,15 @@ void main() {
         final result = await repo.insertTask('', '', '', '', 0, true);
 
         expect(result, Right(taskResult));
+      });
+
+      test('should t new row to db', () async {
+        when(taskRemoteSource.insertTask('', '', '', '', 0, true))
+            .thenAnswer((_) async => taskResult);
+
+        await repo.insertTask('', '', '', '', 0, true);
+
+        verify(taskLocalSource.insertTask(any));
       });
 
       test(

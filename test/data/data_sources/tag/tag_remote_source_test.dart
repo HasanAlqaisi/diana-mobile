@@ -30,7 +30,7 @@ void main() {
       when(client.get(
         '$baseUrl/tag/?limit=10&offset=$offset',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('tag.json'), 200));
 
@@ -43,7 +43,7 @@ void main() {
       when(client.get(
         '$baseUrl/tag/?limit=10&offset=$offset',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 401));
 
@@ -57,7 +57,7 @@ void main() {
       when(client.get(
         '$baseUrl/tag/?limit=10&offset=$offset',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 500));
 
@@ -72,7 +72,7 @@ void main() {
       when(client.post(
         '$baseUrl/tag/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "string",
@@ -90,7 +90,7 @@ void main() {
       when(client.post(
         '$baseUrl/tag/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "string",
@@ -107,7 +107,7 @@ void main() {
       when(client.post(
         '$baseUrl/tag/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "string",
@@ -125,7 +125,7 @@ void main() {
       when(client.post(
         '$baseUrl/tag/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "string",
@@ -144,7 +144,7 @@ void main() {
       when(client.put(
         '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "string",
@@ -163,7 +163,7 @@ void main() {
       when(client.put(
         '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "string",
@@ -181,7 +181,7 @@ void main() {
       when(client.put(
         '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "string",
@@ -199,7 +199,7 @@ void main() {
       when(client.put(
         '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "string",
@@ -218,7 +218,7 @@ void main() {
       when(client.put(
         '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "string",
@@ -238,7 +238,7 @@ void main() {
       when(client.delete(
         '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 204));
 
@@ -252,7 +252,7 @@ void main() {
       when(client.delete(
         '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 401));
 
@@ -266,7 +266,7 @@ void main() {
       when(client.delete(
         '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 404));
 
@@ -281,7 +281,7 @@ void main() {
       when(client.delete(
         '$baseUrl/tag/3fa85f64-5717-4562-b3fc-2c963f66afa6/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 500));
 

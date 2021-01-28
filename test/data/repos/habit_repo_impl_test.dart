@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:diana/core/errors/days_errors.dart';
 import 'package:diana/core/network/network_info.dart';
+import 'package:diana/data/data_sources/habit/habit_local_source.dart';
 import 'package:diana/data/data_sources/habit/habit_remote_source.dart';
 import 'package:diana/data/data_sources/habitlog/habitlog_remote_source.dart';
 import 'package:diana/data/remote_models/habit/habit_response.dart';
@@ -21,11 +22,14 @@ class MockNetworkInfo extends Mock implements NetWorkInfo {}
 
 class MockHabitRemoteSource extends Mock implements HabitRemoteSource {}
 
+class MockHabitLocalSource extends Mock implements HabitLocalSource {}
+
 class MockHabitlogRemoteSource extends Mock implements HabitlogRemoteSource {}
 
 void main() {
   MockNetworkInfo netWorkInfo;
   MockHabitRemoteSource habitRemoteSource;
+  MockHabitLocalSource habitLocalSource;
   MockHabitlogRemoteSource habitlogRemoteSource;
   HabitRepoImpl repo;
 
@@ -52,10 +56,12 @@ void main() {
     netWorkInfo = MockNetworkInfo();
     habitRemoteSource = MockHabitRemoteSource();
     habitlogRemoteSource = MockHabitlogRemoteSource();
+    habitLocalSource = MockHabitLocalSource();
     repo = HabitRepoImpl(
       netWorkInfo: netWorkInfo,
       habitRemoteSource: habitRemoteSource,
       habitlogRemoteSource: habitlogRemoteSource,
+      habitLocalSource: habitLocalSource,
     );
   });
 
@@ -66,7 +72,7 @@ void main() {
 
     group('getHabits', () {
       test('should user has an internet connection', () async {
-        when(habitRemoteSource.getHabits(0))
+        when(habitRemoteSource.getHabits(repo.habitOffset))
             .thenAnswer((_) async => habitResponse);
         await repo.getHabits();
         verify(netWorkInfo.isConnected());
@@ -74,12 +80,35 @@ void main() {
       });
 
       test('should return [HabitResponse] if remote call succeed', () async {
-        when(habitRemoteSource.getHabits(0))
+        when(habitRemoteSource.getHabits(repo.habitOffset))
             .thenAnswer((_) async => habitResponse);
 
         final result = await repo.getHabits();
 
         expect(result, Right(habitResponse));
+      });
+
+      test('should delete and insert new rows to db if offset is zero',
+          () async {
+        repo.habitOffset = 0;
+
+        when(habitRemoteSource.getHabits(repo.habitOffset))
+            .thenAnswer((_) async => habitResponse);
+
+        await repo.getHabits();
+
+        verify(habitLocalSource.deleteAndinsertHabits(any));
+      });
+
+      test('should insert new rows to db if offset is not zero', () async {
+        repo.habitOffset = 500;
+
+        when(habitRemoteSource.getHabits(repo.habitOffset))
+            .thenAnswer((_) async => habitResponse);
+
+        await repo.getHabits();
+
+        verify(habitLocalSource.insertHabits(any));
       });
 
       test('should cache the offset', () async {
@@ -94,7 +123,8 @@ void main() {
       test(
           'shuold return [UnAuthFailure] if remote call throws [UnAuthException]',
           () async {
-        when(habitRemoteSource.getHabits(0)).thenThrow(UnAuthException());
+        when(habitRemoteSource.getHabits(repo.habitOffset))
+            .thenThrow(UnAuthException());
         final result = await repo.getHabits();
         expect(result, Left(UnAuthFailure()));
       });
@@ -102,7 +132,8 @@ void main() {
       test(
           'shuold return [UnknownFailure] if remote call throws [UnknownException]',
           () async {
-        when(habitRemoteSource.getHabits(0)).thenThrow(UnknownException());
+        when(habitRemoteSource.getHabits(repo.habitOffset))
+            .thenThrow(UnknownException());
         final result = await repo.getHabits();
         expect(result, Left(UnknownFailure()));
       });
@@ -122,6 +153,17 @@ void main() {
         final result = await repo.insertHabit('', [], '');
 
         expect(result, Right(habitResult));
+      });
+
+      test('should insert new row to db if offset is not zero', () async {
+        repo.habitOffset = 500;
+
+        when(habitRemoteSource.insertHabit('', [], ''))
+            .thenAnswer((_) async => habitResult);
+
+        await repo.insertHabit('', [], '');
+
+        verify(habitLocalSource.insertHabit(any));
       });
 
       test(
@@ -172,6 +214,17 @@ void main() {
         final result = await repo.editHabit('', '', [], '');
 
         expect(result, Right(habitResult));
+      });
+
+      test('should insert new row to db if offset is not zero', () async {
+        repo.habitOffset = 500;
+
+        when(habitRemoteSource.editHabit('', '', [], ''))
+            .thenAnswer((_) async => habitResult);
+
+        await repo.editHabit('', '', [], '');
+
+        verify(habitLocalSource.insertHabit(any));
       });
 
       test(
@@ -234,6 +287,14 @@ void main() {
         expect(result, Right(true));
       });
 
+      test('should delete habit from db', () async {
+        when(habitRemoteSource.deleteHabit('')).thenAnswer((_) async => true);
+
+        await repo.deleteHabit('');
+
+        verify(habitLocalSource.deleteHabit(any));
+      });
+
       test(
           'shuold return [UnAuthFailure] if remote call throws [UnAuthException]',
           () async {
@@ -283,6 +344,29 @@ void main() {
         expect(result, Right(habitlogResponse));
       });
 
+      test('should delete and insert new rows to db if offset is zero',
+          () async {
+        repo.habitlogOffset = 0;
+
+        when(habitlogRemoteSource.getHabitlogs(repo.habitlogOffset, ''))
+            .thenAnswer((_) async => habitlogResponse);
+
+        await repo.getHabitlogs('');
+
+        verify(habitLocalSource.deleteAndinsertHabitlogs(any));
+      });
+
+      test('should insert new rows to db if offset is not zero', () async {
+        repo.habitlogOffset = 500;
+
+        when(habitlogRemoteSource.getHabitlogs(repo.habitlogOffset, ''))
+            .thenAnswer((_) async => habitlogResponse);
+
+        await repo.getHabitlogs('');
+
+        verify(habitLocalSource.insertHabitlogs(any));
+      });
+
       test('should cache the offset', () async {
         when(habitlogRemoteSource.getHabitlogs(repo.habitlogOffset, ''))
             .thenAnswer((_) async => habitlogResponse);
@@ -329,6 +413,17 @@ void main() {
         final result = await repo.insertHabitlog('');
 
         expect(result, Right(habitlogResult));
+      });
+
+      test('should insert new row to db', () async {
+        repo.habitOffset = 500;
+
+        when(habitlogRemoteSource.insertHabitlog(''))
+            .thenAnswer((_) async => habitlogResult);
+
+        await repo.insertHabitlog('');
+
+        verify(habitLocalSource.insertHabitlog(any));
       });
 
       test(

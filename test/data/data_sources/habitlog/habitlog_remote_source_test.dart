@@ -32,7 +32,7 @@ void main() {
       when(client.get(
         '$baseUrl/habitlog/?limit=10&offset=$offset&habit=null/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('habitlog.json'), 200));
 
@@ -45,7 +45,7 @@ void main() {
       when(client.get(
         '$baseUrl/habitlog/?limit=10&offset=$offset&habit=null/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 401));
 
@@ -59,7 +59,7 @@ void main() {
       when(client.get(
         '$baseUrl/habitlog/?limit=10&offset=$offset&habit=null/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 500));
 
@@ -74,7 +74,7 @@ void main() {
       when(client.post(
         '$baseUrl/habitlog/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "habit": "",
@@ -91,7 +91,7 @@ void main() {
       when(client.post(
         '$baseUrl/habitlog/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "habit": "",
@@ -107,7 +107,7 @@ void main() {
       when(client.post(
         '$baseUrl/habitlog/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "habit": "",
@@ -124,7 +124,7 @@ void main() {
       when(client.post(
         '$baseUrl/habitlog/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "habit": "",

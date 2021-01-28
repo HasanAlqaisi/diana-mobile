@@ -31,7 +31,7 @@ void main() {
       when(client.get(
         '$baseUrl/task/?limit=10&offset=$offset',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('task.json'), 200));
 
@@ -44,7 +44,7 @@ void main() {
       when(client.get(
         '$baseUrl/task/?limit=10&offset=$offset',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 401));
 
@@ -58,7 +58,7 @@ void main() {
       when(client.get(
         '$baseUrl/task/?limit=10&offset=$offset',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 500));
 
@@ -73,7 +73,7 @@ void main() {
       when(client.post(
         '$baseUrl/task/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "",
@@ -95,7 +95,7 @@ void main() {
       when(client.post(
         '$baseUrl/task/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "",
@@ -116,7 +116,7 @@ void main() {
       when(client.post(
         '$baseUrl/task/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "",
@@ -138,7 +138,7 @@ void main() {
       when(client.post(
         '$baseUrl/task/',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "",
@@ -162,7 +162,7 @@ void main() {
       when(client.put(
         '$baseUrl/task//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "",
@@ -184,7 +184,7 @@ void main() {
       when(client.put(
         '$baseUrl/task//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "",
@@ -206,7 +206,7 @@ void main() {
       when(client.put(
         '$baseUrl/task//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "",
@@ -228,7 +228,7 @@ void main() {
       when(client.put(
         '$baseUrl/task//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "",
@@ -251,7 +251,7 @@ void main() {
       when(client.put(
         '$baseUrl/task//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
         body: {
           "name": "",
@@ -275,7 +275,7 @@ void main() {
       when(client.delete(
         '$baseUrl/task//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 204));
 
@@ -288,7 +288,7 @@ void main() {
       when(client.delete(
         '$baseUrl/task//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 401));
 
@@ -301,7 +301,7 @@ void main() {
       when(client.delete(
         '$baseUrl/task//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 404));
 
@@ -315,7 +315,7 @@ void main() {
       when(client.delete(
         '$baseUrl/task//',
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $kToken',
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 500));
 
