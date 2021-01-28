@@ -27,4 +27,13 @@ class SubTaskTable extends Table {
             ))
         .toList();
   }
+
+  static SubTaskTableCompanion fromSubTaskResult(SubtaskResult subtask) {
+    return SubTaskTableCompanion(
+      id: Value(subtask.id),
+      taskId: Value(subtask.taskId),
+      name: Value(subtask.name),
+      done: Value(subtask.done),
+    );
+  }
 }

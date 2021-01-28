@@ -1,14 +1,16 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
-import 'package:diana/core/api_helpers/api.dart';
 
+import 'package:diana/core/api_helpers/api.dart';
 import 'package:diana/core/errors/exception.dart';
 import 'package:diana/core/errors/failure.dart';
 import 'package:diana/core/network/network_info.dart';
 import 'package:diana/data/data_sources/subtask/subtask_remote_source.dart';
 import 'package:diana/data/data_sources/tag/tag_remote_source.dart';
+import 'package:diana/data/data_sources/task/task_local_source.dart';
 import 'package:diana/data/data_sources/task/task_remote_source.dart';
+import 'package:diana/data/data_sources/tasktag/tasktag_local_source.dart';
 import 'package:diana/data/data_sources/tasktag/tasktag_remote_source.dart';
 import 'package:diana/data/remote_models/subtask/subtask_response.dart';
 import 'package:diana/data/remote_models/subtask/subtask_result.dart';
@@ -22,17 +24,22 @@ import 'package:diana/domain/repos/task_repo.dart';
 class TaskRepoImpl extends TaskRepo {
   final NetWorkInfo netWorkInfo;
   final TaskRemoteSource taskRemoteSource;
+  final TaskLocalSource taskLocalSource;
   final SubtaskRemoteSource subtaskRemoteSource;
   final TagRemoteSource tagRemoteSource;
   final TaskTagRemoteSource taskTagRemoteSource;
+  final TaskTagLocalSoucre taskTagLocalSoucre;
   int taskOffset = 0, subtaskOffset = 0, tagOffset = 0;
 
   TaskRepoImpl({
     this.netWorkInfo,
     this.taskRemoteSource,
+    this.taskLocalSource,
     this.subtaskRemoteSource,
     this.tagRemoteSource,
     this.taskTagRemoteSource,
+    this.taskTagLocalSoucre,
+    this.taskOffset,
   });
 
   @override
@@ -40,6 +47,9 @@ class TaskRepoImpl extends TaskRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await subtaskRemoteSource.deleteSubtask(subtaskId);
+
+        await taskLocalSource.deleteSubTask(subtaskId);
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -58,6 +68,9 @@ class TaskRepoImpl extends TaskRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await taskRemoteSource.deleteTask(taskId);
+
+        await taskLocalSource.deleteTask(taskId);
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -71,6 +84,7 @@ class TaskRepoImpl extends TaskRepo {
     }
   }
 
+  //TODO: MODIFY THESE Parameters
   @override
   Future<Either<Failure, bool>> deleteTaskTag(String id) async {
     if (await netWorkInfo.isConnected()) {
@@ -96,6 +110,9 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await subtaskRemoteSource.editSubtask(
             subtaskId, name, isDone, taskId);
+
+        await taskLocalSource.insertSubTask(result);
+
         return Right(result);
       } on FieldsException catch (error) {
         return Left(
@@ -119,6 +136,9 @@ class TaskRepoImpl extends TaskRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await tagRemoteSource.editTag(id, name, color);
+
+        await taskLocalSource.insertTag(result);
+
         return Right(result);
       } on FieldsException catch (error) {
         return Left(
@@ -150,6 +170,9 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await taskRemoteSource.editTask(
             taskId, name, note, reminder, deadline, priority, done);
+
+        await taskLocalSource.insertTask(result);
+
         return Right(result);
       } on FieldsException catch (error) {
         return Left(
@@ -167,6 +190,7 @@ class TaskRepoImpl extends TaskRepo {
     }
   }
 
+  /// TODO: DELETE THIS
   @override
   Future<Either<Failure, TaskTagResponse>> editTaskTag(
       String id, String taskId, String tagId) async {
@@ -197,6 +221,12 @@ class TaskRepoImpl extends TaskRepo {
         final result =
             await subtaskRemoteSource.getSubtasks(taskId, subtaskOffset);
 
+        if (subtaskOffset == 0) {
+          await taskLocalSource.deleteAndInsertSubTasks(result);
+        } else {
+          await taskLocalSource.insertSubTasks(result);
+        }
+
         final offset = API.offsetExtractor(result.next);
 
         subtaskOffset = offset;
@@ -218,6 +248,12 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await tagRemoteSource.getTags(tagOffset);
 
+        if (tagOffset == 0) {
+          await taskLocalSource.deleteAndInsertTags(result);
+        } else {
+          await taskLocalSource.insertTags(result);
+        }
+
         final offset = API.offsetExtractor(result.next);
 
         tagOffset = offset;
@@ -238,6 +274,12 @@ class TaskRepoImpl extends TaskRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await taskRemoteSource.getTasks(taskOffset);
+
+        if (taskOffset == 0) {
+          await taskLocalSource.deleteAndinsertTasks(result);
+        } else {
+          await taskLocalSource.insertTasks(result); 
+        }
 
         final offset = API.offsetExtractor(result.next);
 
@@ -261,6 +303,9 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result =
             await subtaskRemoteSource.insertSubtask(name, isDone, taskId);
+
+        await taskLocalSource.insertSubTask(result);
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -281,6 +326,9 @@ class TaskRepoImpl extends TaskRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await tagRemoteSource.insertTags(name, color);
+
+        await taskLocalSource.insertTag(result);
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -303,6 +351,9 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await taskRemoteSource.insertTask(
             name, note, reminder, deadline, priority, done);
+
+        await taskLocalSource.insertTask(result);
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -318,6 +369,7 @@ class TaskRepoImpl extends TaskRepo {
     }
   }
 
+  //TODO: DELETE THIS
   @override
   Future<Either<Failure, TaskTagResponse>> insertTaskTag(
       String taskId, String tagId) async {

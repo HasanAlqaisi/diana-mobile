@@ -29,4 +29,14 @@ class HabitTable extends Table {
       );
     }).toList();
   }
+
+  static HabitTableCompanion fromHabitResult(HabitResult habit) {
+    return HabitTableCompanion(
+      id: Value(habit.habitId),
+      userId: Value(habit.userId),
+      name: Value(habit.name),
+      // days: Value(days),
+      time: Value(habit.time),
+    );
+  }
 }

@@ -9,7 +9,7 @@ import 'package:diana/data/remote_models/task/task_result.dart';
 import 'package:diana/data/remote_models/tasktag/tasktag.dart';
 
 abstract class TaskRepo {
-  Future<Either<Failure, TagResponse>> getTags();
+  Future<Either<Failure, TagResponse>> getTags(); 
 
   Future<Either<Failure, TagResult>> insertTag(String name, int color);
 

@@ -23,7 +23,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
     final response = await client.get(
       '$baseUrl/tag/?limit=10&offset=$offset',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
     );
 
@@ -41,7 +41,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
     final response = await client.post(
       '$baseUrl/tag/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
       body: {
         "name": name,
@@ -65,7 +65,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
     final response = await client.put(
       '$baseUrl/tag/$id/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
       body: {
         "name": name,
@@ -91,7 +91,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
     final response = await client.delete(
       '$baseUrl/tag/$id/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
     );
 

@@ -100,7 +100,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     final response = await client.post(
       '$baseUrl/accounts/logout/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
     );
 
@@ -116,7 +116,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     final response = await client.post(
       '$baseUrl/accounts/password/change/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
       body: {
         "new_password1": newPass1,
@@ -141,7 +141,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     final response = await client.patch(
       '$baseUrl/accounts/user/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
       body: {
         "first_name": firstName,
@@ -169,7 +169,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     final response = await client.get(
       '$baseUrl/accounts/user/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
     );
 

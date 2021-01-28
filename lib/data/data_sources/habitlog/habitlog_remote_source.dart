@@ -27,7 +27,7 @@ class HabitlogRemoteSourceImpl extends HabitlogRemoteSource {
     final response = await client.get(
       '$baseUrl/habitlog/?limit=10&offset=$offset&habit=$habitId/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
     );
 
@@ -45,7 +45,7 @@ class HabitlogRemoteSourceImpl extends HabitlogRemoteSource {
     final response = await client.post(
       '$baseUrl/habitlog/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
       body: {
         "habit": habitId,

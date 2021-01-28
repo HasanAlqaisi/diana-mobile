@@ -39,4 +39,20 @@ class TaskTable extends Table {
             ))
         .toList();
   }
+
+  static TaskTableCompanion fromTaskResult(TaskResult task) {
+    return TaskTableCompanion(
+      id: Value(task.taskId),
+      userId: Value(task.userId),
+      name: Value(task.name),
+      note: Value(task.note),
+      reminder: Value(
+          task.reminder != null ? DateTime.tryParse(task.reminder) : null),
+      deadline: Value(
+          task.deadline != null ? DateTime.tryParse(task.deadline) : null),
+      priority: Value(task.priority),
+      doneAt:
+          Value(task.doneAt != null ? DateTime.tryParse(task.doneAt) : null),
+    );
+  }
 }

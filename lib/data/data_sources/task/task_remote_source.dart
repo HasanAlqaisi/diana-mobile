@@ -41,7 +41,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     final response = await client.get(
       '$baseUrl/task/?limit=10&offset=$offset',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
     );
 
@@ -60,7 +60,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     final response = await client.post(
       '$baseUrl/task/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
       body: {
         "name": name,
@@ -89,7 +89,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     final response = await client.put(
       '$baseUrl/task/$taskId/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
       body: {
         "name": name,
@@ -119,7 +119,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     final response = await client.delete(
       '$baseUrl/task/$taskId/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
     );
 

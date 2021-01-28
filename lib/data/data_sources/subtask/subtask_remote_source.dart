@@ -35,7 +35,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
     final response = await client.get(
       '$baseUrl/subtask/$taskId/?limit=10&offset=$offset',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
     );
 
@@ -56,7 +56,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
     final response = await client.post(
       '$baseUrl/subtask/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
       body: {
         "name": name,
@@ -82,7 +82,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
     final response = await client.put(
       '$baseUrl/subtask/$subtaskId/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
       body: {
         "name": name,
@@ -109,7 +109,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
     final response = await client.delete(
       '$baseUrl/subtask/$subtaskId/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
     );
 

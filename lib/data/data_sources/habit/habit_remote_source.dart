@@ -35,7 +35,7 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
     final response = await client.get(
       '$baseUrl/habit/?limit=10&offset=$offset',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
     );
 
@@ -54,7 +54,7 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
     final response = await client.post(
       '$baseUrl/habit/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
       body: {
         "name": name,
@@ -80,7 +80,7 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
     final response = await client.put(
       '$baseUrl/habit/$habitId/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
       body: {
         "name": name,
@@ -107,7 +107,7 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
     final response = await client.delete(
       '$baseUrl/habit/$habitId/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
     );
 

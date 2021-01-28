@@ -4,9 +4,8 @@ import 'package:diana/data/database/models/tag/tag_table.dart';
 import 'package:diana/data/database/models/task/task_table.dart';
 import 'package:diana/data/database/models/tasktag/tasktag_table.dart';
 import 'package:diana/data/database/relations/task_with_subtasks/task_with_subtasks.dart';
-import 'package:diana/data/remote_models/subtask/subtask_response.dart';
 import 'package:diana/data/remote_models/task/task_response.dart';
-import 'package:diana/data/remote_models/tag/tag_response.dart';
+import 'package:diana/data/remote_models/task/task_result.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 part 'task_dao.g.dart';
@@ -17,25 +16,15 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
 
   Future<void> deleteAndinsertTasks(
     TaskResponse taskResponse,
-    TagResponse tagResopnse,
-    SubtaskResponse subtaskResponse,
   ) async {
     return transaction(() async {
       // Clear the tables associated with task
       await delete(taskTable).go();
-      await delete(subTaskTable).go();
       await delete(taskTagTable).go();
-      await delete(tagTable).go();
-      // Insert data for task, tag, subtask, tasktag
+      // Insert data for task, tasktag
       await batch((batch) {
         batch.insertAllOnConflictUpdate(
             taskTable, TaskTable.fromTaskResponse(taskResponse.results));
-
-        batch.insertAllOnConflictUpdate(subTaskTable,
-            SubTaskTable.fromSubTaskResponse(subtaskResponse.results));
-
-        batch.insertAllOnConflictUpdate(
-            tagTable, TagTable.fromTagResponse(tagResopnse.results));
 
         taskResponse.results.forEach(
           (task) => task.tags.forEach(
@@ -50,22 +39,12 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
     });
   }
 
-  Future<void> insertTasks(
-    TaskResponse taskResponse,
-    TagResponse tagResponse,
-    SubtaskResponse subtaskResponse,
-  ) async {
+  Future<void> insertTasks(TaskResponse taskResponse) async {
     return transaction(() async {
-      // Insert data for task, tag, subtask, tasktag
+      // Insert data for task, tasktag
       await batch((batch) {
         batch.insertAllOnConflictUpdate(
             taskTable, TaskTable.fromTaskResponse(taskResponse.results));
-
-        batch.insertAllOnConflictUpdate(subTaskTable,
-            SubTaskTable.fromSubTaskResponse(subtaskResponse.results));
-
-        batch.insertAllOnConflictUpdate(
-            tagTable, TagTable.fromTagResponse(tagResponse.results));
 
         taskResponse.results.forEach(
           (task) => task.tags.forEach(
@@ -180,5 +159,14 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
               TaskWithSubtasks(task: entry.key, subtasks: entry.value)
           ];
         });
+  }
+
+  Future<int> deleteTask(String taskId) {
+    return (delete(taskTable)..where((tbl) => tbl.id.equals(taskId))).go();
+  }
+
+  Future<int> insertTask(TaskResult taskResult) {
+    return into(taskTable)
+        .insertOnConflictUpdate(TaskTable.fromTaskResult(taskResult));
   }
 }

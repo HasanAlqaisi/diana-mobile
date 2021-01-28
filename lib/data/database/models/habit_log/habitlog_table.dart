@@ -15,7 +15,8 @@ class HabitlogTable extends Table {
   @override
   Set<Column> get primaryKey => {id};
 
-  static List<HabitlogTableCompanion> fromHabitlogResponse(List<HabitlogResult> habitlogs) {
+  static List<HabitlogTableCompanion> fromHabitlogResponse(
+      List<HabitlogResult> habitlogs) {
     return habitlogs
         .map((habitlog) => HabitlogTableCompanion(
               id: Value(habitlog.habitlogId),
@@ -25,5 +26,14 @@ class HabitlogTable extends Table {
                   : null),
             ))
         .toList();
+  }
+
+  static HabitlogTableCompanion fromHabitlogResult(HabitlogResult habitlog) {
+    return HabitlogTableCompanion(
+      id: Value(habitlog.habitlogId),
+      habitId: Value(habitlog.habitId),
+      doneAt: Value(
+          habitlog.doneAt != null ? DateTime.tryParse(habitlog.doneAt) : null),
+    );
   }
 }

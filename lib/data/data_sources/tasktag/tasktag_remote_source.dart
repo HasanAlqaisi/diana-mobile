@@ -27,7 +27,7 @@ class TaskTagRemoteSourceImpl extends TaskTagRemoteSource {
     final response = await client.post(
       '$baseUrl/tasktag/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
       body: {
         "task": taskId,
@@ -52,7 +52,7 @@ class TaskTagRemoteSourceImpl extends TaskTagRemoteSource {
     final response = await client.put(
       '$baseUrl/tasktag/$id/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
       body: {
         "task": taskId,
@@ -78,7 +78,7 @@ class TaskTagRemoteSourceImpl extends TaskTagRemoteSource {
     final response = await client.delete(
       '$baseUrl/tasktag/$id/',
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $kToken',
       },
     );
 

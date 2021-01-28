@@ -100,4 +100,10 @@ class TaskTagDao extends DatabaseAccessor<AppDatabase> with _$TaskTagDaoMixin {
         (TagData tag, List<TaskData> tasks) =>
             TagWithTasks(tag: tag, tasks: tasks));
   }
+
+  Future<int> deleteTaskTag(String taskId, tagId) {
+    return (delete(taskTagTable)
+          ..where((tbl) => tbl.taskId.equals(taskId) & tbl.tagId.equals(tagId)))
+        .go();
+  }
 }

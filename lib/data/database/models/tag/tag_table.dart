@@ -26,4 +26,13 @@ class TagTable extends Table {
             ))
         .toList();
   }
+
+  static TagTableCompanion fromTagResult(TagResult tag) {
+    return TagTableCompanion(
+      id: Value(tag.id),
+      userId: Value(tag.userId),
+      name: Value(tag.name),
+      color: Value(tag.color),
+    );
+  }
 }

@@ -1,28 +1,33 @@
 import 'dart:convert';
 
+import 'package:dartz/dartz.dart';
+
 import 'package:diana/core/api_helpers/api.dart';
 import 'package:diana/core/errors/exception.dart';
+import 'package:diana/core/errors/failure.dart';
 import 'package:diana/core/network/network_info.dart';
+import 'package:diana/data/data_sources/habit/habit_local_source.dart';
 import 'package:diana/data/data_sources/habit/habit_remote_source.dart';
 import 'package:diana/data/data_sources/habitlog/habitlog_remote_source.dart';
-import 'package:diana/data/remote_models/habit/habit_result.dart';
 import 'package:diana/data/remote_models/habit/habit_response.dart';
-import 'package:diana/data/remote_models/habitlog/habitlog_result.dart';
+import 'package:diana/data/remote_models/habit/habit_result.dart';
 import 'package:diana/data/remote_models/habitlog/habitlog_response.dart';
-import 'package:diana/core/errors/failure.dart';
-import 'package:dartz/dartz.dart';
+import 'package:diana/data/remote_models/habitlog/habitlog_result.dart';
 import 'package:diana/domain/repos/habit_repo.dart';
 
 class HabitRepoImpl extends HabitRepo {
   final NetWorkInfo netWorkInfo;
   final HabitRemoteSource habitRemoteSource;
   final HabitlogRemoteSource habitlogRemoteSource;
+  final HabitLocalSource habitLocalSource;
   int habitOffset = 0, habitlogOffset = 0;
 
   HabitRepoImpl({
     this.netWorkInfo,
     this.habitRemoteSource,
     this.habitlogRemoteSource,
+    this.habitLocalSource,
+    this.habitOffset,
   });
 
   @override
@@ -30,6 +35,12 @@ class HabitRepoImpl extends HabitRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await habitRemoteSource.getHabits(habitOffset);
+
+        if (habitOffset == 0) {
+          await habitLocalSource.deleteAndinsertHabits(result);
+        } else {
+          await habitLocalSource.insertHabits(result);
+        }
 
         final offset = API.offsetExtractor(result.next);
 
@@ -52,6 +63,9 @@ class HabitRepoImpl extends HabitRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await habitRemoteSource.insertHabit(name, days, time);
+
+        await habitLocalSource.insertHabit(result);
+
         return Right(result);
       } on FieldsException catch (error) {
         return Left(
@@ -74,6 +88,9 @@ class HabitRepoImpl extends HabitRepo {
       try {
         final result =
             await habitRemoteSource.editHabit(habitId, name, days, time);
+
+        await habitLocalSource.insertHabit(result);
+
         return Right(result);
       } on FieldsException catch (error) {
         return Left(
@@ -96,6 +113,9 @@ class HabitRepoImpl extends HabitRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await habitRemoteSource.deleteHabit(habitId);
+
+        await habitLocalSource.deleteHabit(habitId);
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -115,6 +135,12 @@ class HabitRepoImpl extends HabitRepo {
       try {
         final result =
             await habitlogRemoteSource.getHabitlogs(habitlogOffset, habitId);
+
+        if (habitlogOffset == 0) {
+          await habitLocalSource.deleteAndinsertHabitlogs(result);
+        } else {
+          await habitLocalSource.insertHabitlogs(result);
+        }
 
         final offset = API.offsetExtractor(result.next);
 
@@ -136,6 +162,9 @@ class HabitRepoImpl extends HabitRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await habitlogRemoteSource.insertHabitlog(habitId);
+
+        await habitLocalSource.insertHabitlog(result);
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
