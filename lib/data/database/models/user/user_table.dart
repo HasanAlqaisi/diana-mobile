@@ -28,6 +28,7 @@ class UserTable extends Table {
       username: Value(user.username),
       email: Value(user.email),
       // picture: Value(user.picture),
+      birthdate: Value(user.birthdate),
       timeZone: Value(user.timeZone),
       dailyTaskProgress: Value(user.dailyProgress),
     );

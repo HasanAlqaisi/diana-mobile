@@ -11,6 +11,7 @@ import 'package:diana/data/remote_models/auth/login_info.dart';
 import 'package:diana/data/remote_models/auth/refresh_info.dart';
 import 'package:diana/data/remote_models/auth/user.dart';
 import 'package:diana/domain/repos/auth_repo.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 
 class AuthRepoImpl extends AuthRepo {
   final NetWorkInfo netWorkInfo;
@@ -133,12 +134,17 @@ class AuthRepoImpl extends AuthRepo {
       String username, String email, String birthdate, String password) async {
     if (await netWorkInfo.isConnected()) {
       try {
-        final result = await remoteSource.registerUser(
+        final user = await remoteSource.registerUser(
             firstName, lastName, username, email, birthdate, password);
 
-        await authLocalSource.insertUser(result);
+        user.timeZone = await FlutterNativeTimezone.getLocalTimezone();
 
-        return Right(result);
+        return (await loginUser(username, password)).fold((failure) => null,
+            (result) async {
+          user.userId = result.user.userId;
+          await authLocalSource.insertUser(user);
+          return Right(user);
+        });
       } on FieldsException catch (error) {
         return Left(
             UserFieldsFailure.fromFieldsException(json.decode(error.body)));
