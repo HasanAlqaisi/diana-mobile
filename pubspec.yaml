@@ -36,6 +36,10 @@ dependencies:
   path: ^1.7.0
   moor_ffi: ^0.8.0
   rxdart: ^0.25.0
+  get: ^3.24.0
+  fluttertoast: ^7.1.6
+  get_it: ^5.0.6
+  flutter_native_timezone: ^1.0.4
 
 dev_dependencies:
   flutter_test:
