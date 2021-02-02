@@ -7,6 +7,7 @@ And even if you have an idea to improve **Diana** and makes life easier, don't h
 ## Setup
 - Clone the project
 - run (flutter pub get) command
+- run (flutter pub run build_runner build) to get auto generated files
 - to make the code compile add _constants.dart file to lib/core/constants
 - write in that file
 
