@@ -11,11 +11,21 @@ And even if you have an idea to improve **Diana** and makes life easier, don't h
 - write in that file
 
 ```
+import 'package:diana/data/remote_models/auth/refresh_info.dart';
+
 const baseUrl = 'WRITE_BASE_URL_VALUE';
+const refreshKey = 'REFRESH_KEY';
+const tokenKey = 'TOKEN_KEY';
+const userIdKey = 'USER_ID_KEY';
+String kToken;
+String kRefreshToken;
+String kUserId;
 
-String token;
+void updateToken(RefreshInfo info) {
+  kToken = info.access;
+  kRefreshToken = info.refresh;
+}
 
-String refreshToken;
 ```
 
 - run the (flutter run) command, that's it!
