@@ -14,7 +14,7 @@ And even if you have an idea to improve **Diana** and makes life easier, don't h
 ```
 import 'package:diana/data/remote_models/auth/refresh_info.dart';
 
-const baseUrl = 'WRITE_BASE_URL_VALUE';
+const baseUrl = 'https://diana.opensource.softshape.org';
 const refreshKey = 'REFRESH_KEY';
 const tokenKey = 'TOKEN_KEY';
 const userIdKey = 'USER_ID_KEY';
@@ -40,3 +40,4 @@ This is the way that our database is designed
 ## Other links
 
 - [Diana server](https://github.com/softshape-team/diana-server)
+- [API DOC](https://diana.opensource.softshape.org/dev/api/schema/swagger-ui)
