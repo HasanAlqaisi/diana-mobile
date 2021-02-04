@@ -1,7 +1,10 @@
 import 'package:diana/core/errors/failure.dart';
 import 'package:diana/core/mappers/failure_to_string.dart';
 import 'package:diana/domain/usecases/auth/login_user_usecase.dart';
+import 'package:diana/presentation/nav.dart';
+import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 class LoginController extends GetxController {
@@ -23,6 +26,6 @@ class LoginController extends GetxController {
 
     result.fold((failure) {
       Fluttertoast.showToast(msg: failureToString(failure));
-    }, (_) => null);
+    }, (_) => Get.offAndToNamed(Nav.route));
   }
 }

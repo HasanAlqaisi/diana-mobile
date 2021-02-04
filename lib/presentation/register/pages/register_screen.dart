@@ -60,9 +60,11 @@ class RegisterForm extends StatelessWidget {
                   isObsecure: false,
                   labelText: 'First name',
                   keyboardType: TextInputType.name,
-                  errorText: (controller.failure as UserFieldsFailure)
-                      ?.firstName
-                      ?.first,
+                  errorText: controller.failure is UserFieldsFailure
+                      ? (controller.failure as UserFieldsFailure)
+                          ?.firstName
+                          ?.first
+                      : null,
                   validateRules: (value) {
                     controller.firstName = value;
                     if (value.isEmpty) {
@@ -78,9 +80,11 @@ class RegisterForm extends StatelessWidget {
                   isObsecure: false,
                   labelText: 'Last name',
                   keyboardType: TextInputType.name,
-                  errorText: (controller.failure as UserFieldsFailure)
-                      ?.lastName
-                      ?.first,
+                  errorText: controller.failure is UserFieldsFailure
+                      ? (controller.failure as UserFieldsFailure)
+                          ?.lastName
+                          ?.first
+                      : null,
                   validateRules: (value) {
                     controller.lastName = value;
                     if (value.isEmpty) {
@@ -97,9 +101,11 @@ class RegisterForm extends StatelessWidget {
                   labelText: 'username',
                   hintText: 'John203',
                   keyboardType: TextInputType.name,
-                  errorText: (controller.failure as UserFieldsFailure)
-                      ?.username
-                      ?.first,
+                  errorText: controller.failure is UserFieldsFailure
+                      ? (controller.failure as UserFieldsFailure)
+                          ?.username
+                          ?.first
+                      : null,
                   validateRules: (value) {
                     controller.username = value;
                     if (value.isEmpty) {
@@ -116,8 +122,9 @@ class RegisterForm extends StatelessWidget {
                   isObsecure: false,
                   labelText: 'email',
                   hintText: 'example@email.com',
-                  errorText:
-                      (controller.failure as UserFieldsFailure)?.email?.first,
+                  errorText: controller.failure is UserFieldsFailure
+                      ? (controller.failure as UserFieldsFailure)?.email?.first
+                      : null,
                   validateRules: (value) {
                     controller.email = value;
                     return LocalValidators.emailValidation(value);
@@ -150,9 +157,11 @@ class RegisterForm extends StatelessWidget {
                   labelText: 'Password',
                   hintText: '********',
                   keyboardType: TextInputType.text,
-                  errorText: (controller.failure as UserFieldsFailure)
-                      ?.password
-                      ?.first,
+                  errorText: controller.failure is UserFieldsFailure
+                      ? (controller.failure as UserFieldsFailure)
+                          ?.password
+                          ?.first
+                      : null,
                   validateRules: (value) {
                     controller.password = value;
                     if (value.isEmpty) {
@@ -205,5 +214,12 @@ class RegisterForm extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Failure userFieldsFailureCasting(Failure failure) {
+    if (failure is UserFieldsFailure) {
+      return failure;
+    }
+    return null;
   }
 }
