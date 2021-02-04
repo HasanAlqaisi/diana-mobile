@@ -201,9 +201,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     final response = await client.post(
       '$baseUrl/accounts/token/refresh/',
       body: {
-        {
-          "refresh": refreshToken,
-        }
+        "refresh": refreshToken,
       },
     );
 

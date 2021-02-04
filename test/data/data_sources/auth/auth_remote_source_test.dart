@@ -435,9 +435,7 @@ void main() {
       when(client.post(
         '$baseUrl/accounts/token/refresh/',
         body: {
-          {
-            "refresh": "string",
-          }
+          "refresh": "string",
         },
       )).thenAnswer((_) async => http.Response(fixture('refresh.json'), 200));
 
@@ -450,9 +448,7 @@ void main() {
       when(client.post(
         '$baseUrl/accounts/token/refresh/',
         body: {
-          {
-            "refresh": "string",
-          }
+          "refresh": "string",
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 401));
 
@@ -469,9 +465,7 @@ void main() {
       when(client.post(
         '$baseUrl/accounts/token/refresh/',
         body: {
-          {
-            "refresh": "string",
-          }
+          "refresh": "string",
         },
       )).thenAnswer((_) async => http.Response(fixture('detail.json'), 500));
 
