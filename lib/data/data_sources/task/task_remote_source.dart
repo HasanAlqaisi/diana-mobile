@@ -12,6 +12,8 @@ abstract class TaskRemoteSource {
   Future<TaskResult> insertTask(
     String name,
     String note,
+    List<String> tags,
+    String date,
     String reminder,
     String deadline,
     int priority,
@@ -22,6 +24,8 @@ abstract class TaskRemoteSource {
     String taskId,
     String name,
     String note,
+    List<String> tags,
+    String date,
     String reminder,
     String deadline,
     int priority,
@@ -55,22 +59,44 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
   }
 
   @override
-  Future<TaskResult> insertTask(String name, String note, String reminder,
-      String deadline, int priority, bool done) async {
-    final response = await client.post(
-      '$baseUrl/task/',
-      headers: {
-        'Authorization': 'Bearer $kToken',
-      },
-      body: {
-        "name": name,
-        "note": note,
-        "reminder": reminder,
-        "deadline": deadline,
-        "priority": priority,
-        "done": done,
-      },
-    );
+  Future<TaskResult> insertTask(
+    String name,
+    String note,
+    List<String> tags,
+    String date,
+    String reminder,
+    String deadline,
+    int priority,
+    bool done,
+  ) async {
+    print("""
+            name: $name,
+        note: $note,
+        with_tags: $tags,
+        date: $date,
+        reminder: $reminder,
+        deadline: $deadline,
+        priority: $priority,
+        done: $done,
+    """);
+    final response = await client.post('$baseUrl/task/',
+        headers: {
+          'Authorization': 'Bearer $kToken',
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(
+          {
+            "name": name,
+            "note": note,
+            "with_tags": tags,
+            "date": date,
+            "reminder": reminder,
+            "deadline": deadline,
+            "priority": priority,
+            "done": done,
+          },
+        ));
 
     if (response.statusCode == 201) {
       return TaskResult.fromJson(json.decode(response.body));
@@ -84,8 +110,17 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
   }
 
   @override
-  Future<TaskResult> editTask(String taskId, String name, String note,
-      String reminder, String deadline, int priority, bool done) async {
+  Future<TaskResult> editTask(
+    String taskId,
+    String name,
+    String note,
+    List<String> tags,
+    String date,
+    String reminder,
+    String deadline,
+    int priority,
+    bool done,
+  ) async {
     final response = await client.put(
       '$baseUrl/task/$taskId/',
       headers: {
@@ -94,6 +129,8 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
       body: {
         "name": name,
         "note": note,
+        "with_tags": tags,
+        "date": date,
         "reminder": reminder,
         "deadline": deadline,
         "priority": priority,
