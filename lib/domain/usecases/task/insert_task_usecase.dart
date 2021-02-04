@@ -11,11 +11,14 @@ class InsertTaskUseCase {
   Future<Either<Failure, TaskResult>> call(
     String name,
     String note,
+    String date,
+    List<String> tags,
     String reminder,
     String deadline,
     int priority,
     bool done,
   ) {
-    return taskRepo.insertTask(name, note, reminder, deadline, priority, done);
+    return taskRepo.insertTask(
+        name, note, date, tags, reminder, deadline, priority, done);
   }
 }

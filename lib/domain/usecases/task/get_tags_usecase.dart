@@ -8,7 +8,7 @@ class GetTagsUseCase {
 
   GetTagsUseCase({this.taskRepo});
 
-  Future<Either<Failure, TagResponse>> call(String habitId) {
+  Future<Either<Failure, TagResponse>> call() {
     return taskRepo.getTags();
   }
 }

@@ -12,12 +12,14 @@ class EditTaskUseCase {
     String taskId,
     String name,
     String note,
+    String date,
+    List<String> tags,
     String reminder,
     String deadline,
     int priority,
     bool done,
   ) {
     return taskRepo.editTask(
-        taskId, name, note, reminder, deadline, priority, done);
+        taskId, name, note, date, tags, reminder, deadline, priority, done);
   }
 }
