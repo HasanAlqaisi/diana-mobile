@@ -1,3 +1,5 @@
+import 'package:diana/data/database/app_database/app_database.dart';
+import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
 import 'package:diana/data/remote_models/subtask/subtask_result.dart';
 import 'package:diana/data/remote_models/task/task_result.dart';
 import 'package:moor_flutter/moor_flutter.dart';
@@ -18,13 +20,15 @@ abstract class TaskLocalSource {
 
   Future<void> insertTasks(TaskResponse taskResponse);
 
-  Future<Stream<List<TaskWithSubtasks>>> watchTodayTasks(String userId);
+  Stream<List<TaskWithSubtasks>> watchTodayTasks(String userId);
 
-  Future<Stream<List<TaskWithSubtasks>>> watchAllTasks(String userId);
+  Stream<List<TaskWithSubtasks>> watchAllTasks(String userId);
 
-  Future<Stream<List<TaskWithSubtasks>>> watchCompletedTasks(String userId);
+  Stream<List<TaskWithSubtasks>> watchCompletedTasks(String userId);
 
-  Future<Stream<List<TaskWithSubtasks>>> watchMissedTasks(String userId);
+  Stream<List<TaskWithSubtasks>> watchMissedTasks(String userId);
+
+  Stream<List<TagData>> watchAllTags(String userId);
 
   Future<int> deleteTag(String tagId);
 
@@ -45,6 +49,8 @@ abstract class TaskLocalSource {
   Future<void> deleteAndInsertTags(TagResponse tagResponse);
 
   Future<void> insertTags(TagResponse tagResponse);
+
+  Stream<TaskWithTags> watchTagsForTask(String userId, String taskId);
 }
 
 class TaskLocalSourceImpl extends TaskLocalSource {
@@ -79,22 +85,22 @@ class TaskLocalSourceImpl extends TaskLocalSource {
   }
 
   @override
-  Future<Stream<List<TaskWithSubtasks>>> watchAllTasks(String userId) {
+  Stream<List<TaskWithSubtasks>> watchAllTasks(String userId) {
     return taskDao.watchAllTasks(userId);
   }
 
   @override
-  Future<Stream<List<TaskWithSubtasks>>> watchCompletedTasks(String userId) {
+  Stream<List<TaskWithSubtasks>> watchCompletedTasks(String userId) {
     return taskDao.watchCompletedTasks(userId);
   }
 
   @override
-  Future<Stream<List<TaskWithSubtasks>>> watchMissedTasks(String userId) {
+  Stream<List<TaskWithSubtasks>> watchMissedTasks(String userId) {
     return taskDao.watchMissedTasks(userId);
   }
 
   @override
-  Future<Stream<List<TaskWithSubtasks>>> watchTodayTasks(String userId) {
+  Stream<List<TaskWithSubtasks>> watchTodayTasks(String userId) {
     return taskDao.watchTodayTasks(userId);
   }
 
@@ -166,5 +172,15 @@ class TaskLocalSourceImpl extends TaskLocalSource {
     } on InvalidDataException {
       rethrow;
     }
+  }
+
+  @override
+  Stream<List<TagData>> watchAllTags(String userId) {
+    return taskDao.watchAllTags(userId);
+  }
+
+  @override
+  Stream<TaskWithTags> watchTagsForTask(String userId, String taskId) {
+    return taskDao.watchTagsForClass(userId, taskId);
   }
 }
