@@ -394,25 +394,26 @@ void main() {
 
     group('editTask', () {
       test('should user has an internet connection', () async {
-        await repo.editTask('', '', '', '', '', 0, true);
+        await repo.editTask('', '', '', '', null, '', '', 0, true);
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), true);
       });
 
       test('should return [TaskResult] if remote call succeed', () async {
-        when(taskRemoteSource.editTask('', '', '', '', '', 0, true))
+        when(taskRemoteSource.editTask('', '', '', null, '', '', '', 0, true))
             .thenAnswer((_) async => taskResult);
 
-        final result = await repo.editTask('', '', '', '', '', 0, true);
+        final result =
+            await repo.editTask('', '', '', '', null, '', '', 0, true);
 
         expect(result, Right(taskResult));
       });
 
       test('should insert new row to db', () async {
-        when(taskRemoteSource.editTask('', '', '', '', '', 0, true))
+        when(taskRemoteSource.editTask('', '', '', null, '', '', '', 0, true))
             .thenAnswer((_) async => taskResult);
 
-        await repo.editTask('', '', '', '', '', 0, true);
+        await repo.editTask('', '', '', '', null, '', '', 0, true);
 
         verify(taskLocalSource.insertTask(any));
       });
@@ -420,10 +421,12 @@ void main() {
       test(
           'shuold return [TaskFieldsFailure] if remote call throws [FieldsException]',
           () async {
-        when(taskRemoteSource.editTask('', '', '', '', '', 0, true)).thenThrow(
-            FieldsException(body: fixture('task_fields_error.json')));
+        when(taskRemoteSource.editTask('', '', '', null, '', '', '', 0, true))
+            .thenThrow(
+                FieldsException(body: fixture('task_fields_error.json')));
 
-        final result = await repo.editTask('', '', '', '', '', 0, true);
+        final result =
+            await repo.editTask('', '', '', '', null, '', '', 0, true);
 
         expect(result, Left(taskFieldsFailure));
       });
@@ -431,10 +434,11 @@ void main() {
       test(
           'shuold return [UnAuthFailure] if remote call throws [UnAuthException]',
           () async {
-        when(taskRemoteSource.editTask('', '', '', '', '', 0, true))
+        when(taskRemoteSource.editTask('', '', '', null, '', '', '', 0, true))
             .thenThrow(UnAuthException());
 
-        final result = await repo.editTask('', '', '', '', '', 0, true);
+        final result =
+            await repo.editTask('', '', '', '', null, '', '', 0, true);
 
         expect(result, Left(UnAuthFailure()));
       });
@@ -442,10 +446,11 @@ void main() {
       test(
           'shuold return [NotFoundFailure] if remote call throws [NotFoundException]',
           () async {
-        when(taskRemoteSource.editTask('', '', '', '', '', 0, true))
+        when(taskRemoteSource.editTask('', '', '', null, '', '', '', 0, true))
             .thenThrow(NotFoundException());
 
-        final result = await repo.editTask('', '', '', '', '', 0, true);
+        final result =
+            await repo.editTask('', '', '', '', null, '', '', 0, true);
 
         expect(result, Left(NotFoundFailure()));
       });
@@ -453,10 +458,11 @@ void main() {
       test(
           'shuold return [UnknownFailure] if remote call throws [UnknownException]',
           () async {
-        when(taskRemoteSource.editTask('', '', '', '', '', 0, true))
+        when(taskRemoteSource.editTask('', '', '', null, '', '', '', 0, true))
             .thenThrow(UnknownException());
 
-        final result = await repo.editTask('', '', '', '', '', 0, true);
+        final result =
+            await repo.editTask('', '', '', '', null, '', '', 0, true);
 
         expect(result, Left(UnknownFailure()));
       });
@@ -844,25 +850,25 @@ void main() {
 
     group('insertTask', () {
       test('should user has an internet connection', () async {
-        await repo.insertTask('', '', '', '', 0, true);
+        await repo.insertTask('', '', '', null, '', '', 0, true);
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), true);
       });
 
       test('should return [TaskResult] if remote call succeed', () async {
-        when(taskRemoteSource.insertTask('', '', '', '', 0, true))
+        when(taskRemoteSource.insertTask('', '', null, '', '', '', 0, true))
             .thenAnswer((_) async => taskResult);
 
-        final result = await repo.insertTask('', '', '', '', 0, true);
+        final result = await repo.insertTask('', '', '', null, '', '', 0, true);
 
         expect(result, Right(taskResult));
       });
 
       test('should t new row to db', () async {
-        when(taskRemoteSource.insertTask('', '', '', '', 0, true))
+        when(taskRemoteSource.insertTask('', '', null, '', '', '', 0, true))
             .thenAnswer((_) async => taskResult);
 
-        await repo.insertTask('', '', '', '', 0, true);
+        await repo.insertTask('', '', '', null, '', '', 0, true);
 
         verify(taskLocalSource.insertTask(any));
       });
@@ -870,10 +876,11 @@ void main() {
       test(
           'shuold return [TaskFieldsFailure] if remote call throws [FieldsException]',
           () async {
-        when(taskRemoteSource.insertTask('', '', '', '', 0, true)).thenThrow(
-            FieldsException(body: fixture('task_fields_error.json')));
+        when(taskRemoteSource.insertTask('', '', null, '', '', '', 0, true))
+            .thenThrow(
+                FieldsException(body: fixture('task_fields_error.json')));
 
-        final result = await repo.insertTask('', '', '', '', 0, true);
+        final result = await repo.insertTask('', '', '', null, '', '', 0, true);
 
         expect(result, Left(taskFieldsFailure));
       });
@@ -881,10 +888,10 @@ void main() {
       test(
           'shuold return [UnAuthFailure] if remote call throws [UnAuthException]',
           () async {
-        when(taskRemoteSource.insertTask('', '', '', '', 0, true))
+        when(taskRemoteSource.insertTask('', '', null, '', '', '', 0, true))
             .thenThrow(UnAuthException());
 
-        final result = await repo.insertTask('', '', '', '', 0, true);
+        final result = await repo.insertTask('', '', '', null, '', '', 0, true);
 
         expect(result, Left(UnAuthFailure()));
       });
@@ -892,10 +899,10 @@ void main() {
       test(
           'shuold return [UnknownFailure] if remote call throws [UnknownException]',
           () async {
-        when(taskRemoteSource.insertTask('', '', '', '', 0, true))
+        when(taskRemoteSource.insertTask('', '', null, '', '', '', 0, true))
             .thenThrow(UnknownException());
 
-        final result = await repo.insertTask('', '', '', '', 0, true);
+        final result = await repo.insertTask('', '', '', null, '', '', 0, true);
 
         expect(result, Left(UnknownFailure()));
       });
@@ -1029,14 +1036,16 @@ void main() {
 
     group('editTask', () {
       test('should return false if user has no internet connection', () async {
-        await repo.editTask('', '', '', '', '', 0, true);
+        await repo.editTask('', '', '', '', null, '', '', 0, true);
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), false);
       });
       test(
           'should return [NoInternetFailure] if user has no internet connection',
           () async {
-        final result = await repo.editTask('', '', '', '', '', 0, true);
+        final result =
+            await repo.editTask('', '', '', '', null, '', '', 0, true);
+
         expect(result, Left(NoInternetFailure()));
       });
     });
@@ -1113,14 +1122,16 @@ void main() {
 
     group('insertTask', () {
       test('should return false if user has no internet connection', () async {
-        await repo.insertTask('', '', '', '', 0, true);
+        await repo.editTask('', '', '', '', null, '', '', 0, true);
         verify(netWorkInfo.isConnected());
         expect(await netWorkInfo.isConnected(), false);
       });
       test(
           'should return [NoInternetFailure] if user has no internet connection',
           () async {
-        final result = await repo.insertTask('', '', '', '', 0, true);
+        final result =
+            await repo.editTask('', '', '', '', null, '', '', 0, true);
+
         expect(result, Left(NoInternetFailure()));
       });
     });

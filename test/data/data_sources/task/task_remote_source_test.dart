@@ -78,6 +78,8 @@ void main() {
         body: {
           "name": "",
           "note": "",
+          "with_tags": null,
+          "date": "",
           "reminder": "",
           "deadline": "",
           "priority": 0,
@@ -86,7 +88,8 @@ void main() {
       )).thenAnswer(
           (_) async => http.Response(fixture('task_result.json'), 201));
 
-      final result = await remoteSource.insertTask('', '', '', '', 0, false);
+      final result =
+          await remoteSource.insertTask('', '', null, '', '', '', 0, false);
 
       expect(result, taskResult);
     });
@@ -100,6 +103,8 @@ void main() {
         body: {
           "name": "",
           "note": "",
+          "with_tags": null,
+          "date": "",
           "reminder": "",
           "deadline": "",
           "priority": 0,
@@ -109,7 +114,8 @@ void main() {
 
       final result = remoteSource.insertTask;
 
-      expect(result('', '', '', '', 0, false), throwsA(isA<UnAuthException>()));
+      expect(result('', '', null, '', '', '', 0, false),
+          throwsA(isA<UnAuthException>()));
     });
 
     test('should throw FieldsException if response code is 400', () {
@@ -121,6 +127,8 @@ void main() {
         body: {
           "name": "",
           "note": "",
+          "with_tags": null,
+          "date": "",
           "reminder": "",
           "deadline": "",
           "priority": 0,
@@ -130,7 +138,8 @@ void main() {
 
       final result = remoteSource.insertTask;
 
-      expect(result('', '', '', '', 0, false), throwsA(isA<FieldsException>()));
+      expect(result('', '', null, '', '', '', 0, false),
+          throwsA(isA<FieldsException>()));
     });
 
     test('should throw UnknownException if response code is not listed above',
@@ -143,6 +152,8 @@ void main() {
         body: {
           "name": "",
           "note": "",
+          "with_tags": null,
+          "date": "",
           "reminder": "",
           "deadline": "",
           "priority": 0,
@@ -152,8 +163,8 @@ void main() {
 
       final result = remoteSource.insertTask;
 
-      expect(
-          result('', '', '', '', 0, false), throwsA(isA<UnknownException>()));
+      expect(result('', '', null, '', '', '', 0, false),
+          throwsA(isA<UnknownException>()));
     });
   });
 
@@ -167,6 +178,8 @@ void main() {
         body: {
           "name": "",
           "note": "",
+          "with_tags": null,
+          "date": "",
           "reminder": "",
           "deadline": "",
           "priority": 0,
@@ -175,7 +188,8 @@ void main() {
       )).thenAnswer(
           (_) async => http.Response(fixture('task_result.json'), 200));
 
-      final result = await remoteSource.editTask('', '', '', '', '', 0, false);
+      final result =
+          await remoteSource.editTask('', '', '', null, '', '', '', 0, false);
 
       expect(result, taskResult);
     });
@@ -189,6 +203,8 @@ void main() {
         body: {
           "name": "",
           "note": "",
+          "with_tags": null,
+          "date": "",
           "reminder": "",
           "deadline": "",
           "priority": 0,
@@ -198,7 +214,7 @@ void main() {
 
       final result = remoteSource.editTask;
 
-      expect(result('', '', '', '', '', 0, false),
+      expect(result('', '', '', null, '', '', '', 0, false),
           throwsA(isA<UnAuthException>()));
     });
 
@@ -211,6 +227,8 @@ void main() {
         body: {
           "name": "",
           "note": "",
+          "with_tags": null,
+          "date": "",
           "reminder": "",
           "deadline": "",
           "priority": 0,
@@ -220,7 +238,7 @@ void main() {
 
       final result = remoteSource.editTask;
 
-      expect(result('', '', '', '', '', 0, false),
+      expect(result('', '', '', null, '', '', '', 0, false),
           throwsA(isA<NotFoundException>()));
     });
 
@@ -233,6 +251,8 @@ void main() {
         body: {
           "name": "",
           "note": "",
+          "with_tags": null,
+          "date": "",
           "reminder": "",
           "deadline": "",
           "priority": 0,
@@ -242,7 +262,7 @@ void main() {
 
       final result = remoteSource.editTask;
 
-      expect(result('', '', '', '', '', 0, false),
+      expect(result('', '', '', null, '', '', '', 0, false),
           throwsA(isA<FieldsException>()));
     });
 
@@ -256,6 +276,8 @@ void main() {
         body: {
           "name": "",
           "note": "",
+          "with_tags": null,
+          "date": "",
           "reminder": "",
           "deadline": "",
           "priority": 0,
@@ -265,7 +287,7 @@ void main() {
 
       final result = remoteSource.editTask;
 
-      expect(result('', '', '', '', '', 0, false),
+      expect(result('', '', '', null, '', '', '', 0, false),
           throwsA(isA<UnknownException>()));
     });
   });
