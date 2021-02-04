@@ -7,15 +7,26 @@ And even if you have an idea to improve **Diana** and makes life easier, don't h
 ## Setup
 - Clone the project
 - run (flutter pub get) command
+- run (flutter pub run build_runner build) to get auto generated files
 - to make the code compile add _constants.dart file to lib/core/constants
 - write in that file
 
 ```
-const baseUrl = 'WRITE_BASE_URL_VALUE';
+import 'package:diana/data/remote_models/auth/refresh_info.dart';
 
-String token;
+const baseUrl = 'https://diana.opensource.softshape.org';
+const refreshKey = 'REFRESH_KEY';
+const tokenKey = 'TOKEN_KEY';
+const userIdKey = 'USER_ID_KEY';
+String kToken;
+String kRefreshToken;
+String kUserId;
 
-String refreshToken;
+void updateToken(RefreshInfo info) {
+  kToken = info.access;
+  kRefreshToken = info.refresh;
+}
+
 ```
 
 - run the (flutter run) command, that's it!
@@ -29,3 +40,4 @@ This is the way that our database is designed
 ## Other links
 
 - [Diana server](https://github.com/softshape-team/diana-server)
+- [API DOC](https://diana.opensource.softshape.org/dev/api/schema/swagger-ui)

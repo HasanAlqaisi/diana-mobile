@@ -87,6 +87,25 @@ class TaskRepoImpl extends TaskRepo {
     }
   }
 
+  @override
+  Future<Either<Failure, bool>> deleteTag(String id) async{
+    if (await netWorkInfo.isConnected()) {
+      try {
+        final result = await tagRemoteSource.deleteTag(id);
+
+        return Right(result);
+      } on UnAuthException {
+        return Left(UnAuthFailure());
+      } on NotFoundException {
+        return Left(NotFoundFailure());
+      } on UnknownException catch (error) {
+        return Left(UnknownFailure(message: error.message));
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
+  }
+
   //TODO: MODIFY THESE Parameters
   @override
   Future<Either<Failure, bool>> deleteTaskTag(String id) async {

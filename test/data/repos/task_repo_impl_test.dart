@@ -205,6 +205,52 @@ void main() {
       });
     });
 
+    group('deleteTag', () {
+      test('should user has an internet connection', () async {
+        await repo.deleteTag('');
+        verify(netWorkInfo.isConnected());
+        expect(await netWorkInfo.isConnected(), true);
+      });
+
+      test('should return [true] if remote call succeed', () async {
+        when(tagRemoteSource.deleteTag('')).thenAnswer((_) async => true);
+
+        final result = await repo.deleteTag('');
+
+        expect(result, Right(true));
+      });
+
+      test(
+          'should return [UnAuthFailure] if remote call throws [UnAuthException]',
+              () async {
+            when(tagRemoteSource.deleteTag('')).thenThrow(UnAuthException());
+
+            final result = await repo.deleteTag('');
+
+            expect(result, Left(UnAuthFailure()));
+          });
+
+      test(
+          'should return [NotFoundFailure] if remote call throws [NotFoundException]',
+              () async {
+            when(tagRemoteSource.deleteTag('')).thenThrow(NotFoundException());
+
+            final result = await repo.deleteTag('');
+
+            expect(result, Left(NotFoundFailure()));
+          });
+
+      test(
+          'should return [UnknownFailure] if remote call throws [UnknownException]',
+              () async {
+            when(tagRemoteSource.deleteTag('')).thenThrow(UnknownException());
+
+            final result = await repo.deleteTag('');
+
+            expect(result, Left(UnknownFailure()));
+          });
+    });
+
     group('deleteTaskTag', () {
       test('should user has an internet connection', () async {
         await repo.deleteTaskTag('');

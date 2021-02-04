@@ -18,6 +18,8 @@ abstract class TaskRepo {
 
   Future<Either<Failure, TagResult>> editTag(String id, String name, int color);
 
+  Future<Either<Failure, bool>> deleteTag(String id);
+
   Future<Either<Failure, SubtaskResponse>> getSubtasks(String taskId);
 
   Future<Either<Failure, SubtaskResult>> insertSubtask(
