@@ -6,7 +6,7 @@ import 'package:moor_flutter/moor_flutter.dart';
 class HabitlogTable extends Table {
   TextColumn get id => text()();
   TextColumn get habitId =>
-      text().customConstraint('REFERENCES habit_table(id)')();
+      text().customConstraint('REFERENCES habit_table(id) ON DELETE CASCADE')();
   DateTimeColumn get doneAt => dateTime()();
 
   @override

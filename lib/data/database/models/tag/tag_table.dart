@@ -6,7 +6,7 @@ import 'package:diana/data/remote_models/tag/tag_result.dart';
 class TagTable extends Table {
   TextColumn get id => text()();
   TextColumn get userId =>
-      text().customConstraint('REFERENCES user_table(id)')();
+      text().customConstraint('REFERENCES user_table(id) ON DELETE CASCADE')();
   TextColumn get name => text()();
   IntColumn get color => integer()();
 

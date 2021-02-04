@@ -5,8 +5,9 @@ import 'package:moor_flutter/moor_flutter.dart';
 @DataClassName('TaskTagData')
 class TaskTagTable extends Table {
   TextColumn get taskId =>
-      text().customConstraint('REFERENCES task_table(id)')();
-  TextColumn get tagId => text().customConstraint('REFERENCES tag_table(id)')();
+      text().customConstraint('REFERENCES task_table(id) ON DELETE CASCADE')();
+  TextColumn get tagId =>
+      text().customConstraint('REFERENCES tag_table(id) ON DELETE CASCADE')();
 
   @override
   String get tableName => 'tasktag_table';

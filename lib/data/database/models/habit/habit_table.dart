@@ -6,7 +6,7 @@ import 'package:moor_flutter/moor_flutter.dart';
 class HabitTable extends Table {
   TextColumn get id => text()();
   TextColumn get userId =>
-      text().customConstraint('REFERENCES user_table(id)')();
+      text().customConstraint('REFERENCES user_table(id) ON DELETE CASCADE')();
   TextColumn get name => text()();
   // TextColumn get days => text().map(DaysConverter())();
   TextColumn get time => text()();
