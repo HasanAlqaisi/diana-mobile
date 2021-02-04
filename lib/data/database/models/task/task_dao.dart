@@ -4,9 +4,11 @@ import 'package:diana/data/database/models/tag/tag_table.dart';
 import 'package:diana/data/database/models/task/task_table.dart';
 import 'package:diana/data/database/models/tasktag/tasktag_table.dart';
 import 'package:diana/data/database/relations/task_with_subtasks/task_with_subtasks.dart';
+import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
 import 'package:diana/data/remote_models/task/task_response.dart';
 import 'package:diana/data/remote_models/task/task_result.dart';
 import 'package:moor_flutter/moor_flutter.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'task_dao.g.dart';
 
@@ -61,7 +63,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
 
   /// Return today incompleted tasks with its subtasks, for specific user
   /// How do we know it's for today? compare time with deadline
-  Future<Stream<List<TaskWithSubtasks>>> watchTodayTasks(String userId) async {
+  Stream<List<TaskWithSubtasks>> watchTodayTasks(String userId) {
     return (((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))..where((tbl) => tbl.doneAt.equals(null)))
           ..where((tbl) =>
               tbl.deadline.day.equals(DateTime.now().day) &
@@ -88,9 +90,9 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
   }
 
   /// Return all incompleted tasks with its subtasks
-  Future<Stream<List<TaskWithSubtasks>>> watchAllTasks(String userId) async {
+  Stream<List<TaskWithSubtasks>> watchAllTasks(String userId) {
     return ((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))
-          ..where((tbl) => tbl.doneAt.equals(null)))
+        // ..where((tbl) => tbl.doneAt.equals(null)))
         .join([
           leftOuterJoin(
               subTaskTable, subTaskTable.taskId.equalsExp(taskTable.id))
@@ -109,11 +111,10 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
             for (final entry in result.entries)
               TaskWithSubtasks(task: entry.key, subtasks: entry.value)
           ];
-        });
+        }));
   }
 
-  Future<Stream<List<TaskWithSubtasks>>> watchCompletedTasks(
-      String userId) async {
+  Stream<List<TaskWithSubtasks>> watchCompletedTasks(String userId) {
     return ((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))
           ..where((tbl) => tbl.doneAt.isNotIn(null)))
         .join([
@@ -137,7 +138,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
         });
   }
 
-  Future<Stream<List<TaskWithSubtasks>>> watchMissedTasks(String userId) async {
+  Stream<List<TaskWithSubtasks>> watchMissedTasks(String userId) {
     return ((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))
           ..where((tbl) => tbl.deadline.isSmallerThanValue(DateTime.now())))
         .join([
@@ -168,5 +169,30 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
   Future<int> insertTask(TaskResult taskResult) {
     return into(taskTable)
         .insertOnConflictUpdate(TaskTable.fromTaskResult(taskResult));
+  }
+
+  Stream<List<TagData>> watchAllTags(String userId) {
+    return ((select(tagTable)..where((tbl) => tbl.userId.equals(userId)))
+        .watch());
+  }
+
+  Stream<TaskWithTags> watchTagsForClass(String userId, String taskId) {
+    final taskQuery = select(taskTable)
+      ..where((task) => task.userId.equals(userId) & task.id.equals(taskId));
+    final contentQuery = select(taskTagTable).join([
+      innerJoin(tagTable, tagTable.id.equalsExp(taskTagTable.tagId)),
+    ])
+      ..where(taskTagTable.taskId.equals(taskId));
+
+    final taskStream = taskQuery.watchSingle();
+    final contentStream = contentQuery.watch().map((rows) {
+      return rows.map((row) => row.readTable(tagTable)).toList();
+    });
+
+    return Rx.combineLatest2(
+        taskStream,
+        contentStream,
+        (TaskData task, List<TagData> tags) =>
+            TaskWithTags(task: task, tags: tags));
   }
 }

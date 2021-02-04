@@ -97,6 +97,10 @@ class AuthRepoImpl extends AuthRepo {
       try {
         final result = await remoteSource.loginUser(username, password);
 
+        //Haven't test these lines
+        result.user.timeZone = await FlutterNativeTimezone.getLocalTimezone();
+        await authLocalSource.insertUser(result.user);
+
         await authLocalSource.cacheToken(result.accessToken);
         await authLocalSource.cacheRefreshToken(result.refreshToken);
         await authLocalSource.cacheUserId(result.user.userId);
@@ -137,12 +141,12 @@ class AuthRepoImpl extends AuthRepo {
         final user = await remoteSource.registerUser(
             firstName, lastName, username, email, birthdate, password);
 
-        user.timeZone = await FlutterNativeTimezone.getLocalTimezone();
+        // user.timeZone = await FlutterNativeTimezone.getLocalTimezone();
 
         return (await loginUser(username, password)).fold((failure) => null,
             (result) async {
           user.userId = result.user.userId;
-          await authLocalSource.insertUser(user);
+          // await authLocalSource.insertUser(user);
           return Right(user);
         });
       } on FieldsException catch (error) {
@@ -188,5 +192,20 @@ class AuthRepoImpl extends AuthRepo {
     } else {
       return Left(NoInternetFailure());
     }
+  }
+
+  @override
+  Future<String> getToken() {
+    return authLocalSource.getToken();
+  }
+
+  @override
+  Future<String> getRefreshToken() {
+    return authLocalSource.getRefreshToken();
+  }
+
+  @override
+  Future<String> getUserId() {
+    return authLocalSource.getUserId();
   }
 }

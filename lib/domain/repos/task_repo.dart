@@ -1,5 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:diana/core/errors/failure.dart';
+import 'package:diana/data/database/app_database/app_database.dart';
+import 'package:diana/data/database/relations/task_with_subtasks/task_with_subtasks.dart';
+import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
 import 'package:diana/data/remote_models/subtask/subtask_response.dart';
 import 'package:diana/data/remote_models/subtask/subtask_result.dart';
 import 'package:diana/data/remote_models/tag/tag_response.dart';
@@ -9,7 +12,7 @@ import 'package:diana/data/remote_models/task/task_result.dart';
 import 'package:diana/data/remote_models/tasktag/tasktag.dart';
 
 abstract class TaskRepo {
-  Future<Either<Failure, TagResponse>> getTags(); 
+  Future<Either<Failure, TagResponse>> getTags();
 
   Future<Either<Failure, TagResult>> insertTag(String name, int color);
 
@@ -37,6 +40,8 @@ abstract class TaskRepo {
   Future<Either<Failure, TaskResult>> insertTask(
     String name,
     String note,
+    String date,
+    List<String> tags,
     String reminder,
     String deadline,
     int priority,
@@ -47,6 +52,8 @@ abstract class TaskRepo {
     String taskId,
     String name,
     String note,
+    String date,
+    List<String> tags,
     String reminder,
     String deadline,
     int priority,
@@ -67,4 +74,16 @@ abstract class TaskRepo {
   Future<Either<Failure, bool>> deleteTaskTag(String id);
 
   //TODO: Add the missing deleteTag func
+
+  Stream<List<TaskWithSubtasks>> watchTodayTasks();
+
+  Stream<List<TaskWithSubtasks>> watchAllTasks();
+
+  Stream<List<TaskWithSubtasks>> watchCompletedTasks();
+
+  Stream<List<TaskWithSubtasks>> watchMissedTasks();
+
+  Stream<List<TagData>> watchAllTags();
+
+  Stream<TaskWithTags> watchTagsForTask(String taskId);
 }

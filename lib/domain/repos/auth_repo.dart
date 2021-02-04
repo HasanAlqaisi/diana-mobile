@@ -37,4 +37,10 @@ abstract class AuthRepo {
   Future<Either<Failure, bool>> resetPass(String email);
 
   Future<Either<Failure, RefreshInfo>> requestToken(String refreshToken);
+
+  Future<String> getToken();
+
+  Future<String> getRefreshToken();
+
+  Future<String> getUserId();
 }

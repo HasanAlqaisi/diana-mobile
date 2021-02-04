@@ -14,6 +14,8 @@ class TaskResult extends Equatable {
   final String note;
   final List<String> tags;
   @JsonKey(nullable: true)
+  final String date;
+  @JsonKey(nullable: true)
   final String reminder;
   @JsonKey(nullable: true)
   final String deadline;
@@ -27,6 +29,7 @@ class TaskResult extends Equatable {
     this.name,
     this.note,
     this.tags,
+    this.date,
     this.reminder,
     this.deadline,
     this.doneAt,
@@ -46,6 +49,7 @@ class TaskResult extends Equatable {
       name,
       note,
       tags,
+      date,
       reminder,
       deadline,
       doneAt,

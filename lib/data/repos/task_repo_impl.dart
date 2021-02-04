@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 
 import 'package:diana/core/api_helpers/api.dart';
+import 'package:diana/core/constants/_constants.dart';
 import 'package:diana/core/errors/exception.dart';
 import 'package:diana/core/errors/failure.dart';
 import 'package:diana/core/network/network_info.dart';
@@ -12,6 +13,9 @@ import 'package:diana/data/data_sources/task/task_local_source.dart';
 import 'package:diana/data/data_sources/task/task_remote_source.dart';
 import 'package:diana/data/data_sources/tasktag/tasktag_local_source.dart';
 import 'package:diana/data/data_sources/tasktag/tasktag_remote_source.dart';
+import 'package:diana/data/database/app_database/app_database.dart';
+import 'package:diana/data/database/relations/task_with_subtasks/task_with_subtasks.dart';
+import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
 import 'package:diana/data/remote_models/subtask/subtask_response.dart';
 import 'package:diana/data/remote_models/subtask/subtask_result.dart';
 import 'package:diana/data/remote_models/tag/tag_response.dart';
@@ -39,7 +43,6 @@ class TaskRepoImpl extends TaskRepo {
     this.tagRemoteSource,
     this.taskTagRemoteSource,
     this.taskTagLocalSoucre,
-    this.taskOffset,
   });
 
   @override
@@ -161,6 +164,8 @@ class TaskRepoImpl extends TaskRepo {
     String taskId,
     String name,
     String note,
+    String date,
+    List<String> tags,
     String reminder,
     String deadline,
     int priority,
@@ -169,7 +174,7 @@ class TaskRepoImpl extends TaskRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await taskRemoteSource.editTask(
-            taskId, name, note, reminder, deadline, priority, done);
+            taskId, name, note, tags, date, reminder, deadline, priority, done);
 
         await taskLocalSource.insertTask(result);
 
@@ -274,11 +279,12 @@ class TaskRepoImpl extends TaskRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await taskRemoteSource.getTasks(taskOffset);
+        print('Task gotten ans the result is ${result.results}');
 
         if (taskOffset == 0) {
           await taskLocalSource.deleteAndinsertTasks(result);
         } else {
-          await taskLocalSource.insertTasks(result); 
+          await taskLocalSource.insertTasks(result);
         }
 
         final offset = API.offsetExtractor(result.next);
@@ -345,12 +351,19 @@ class TaskRepoImpl extends TaskRepo {
   }
 
   @override
-  Future<Either<Failure, TaskResult>> insertTask(String name, String note,
-      String reminder, String deadline, int priority, bool done) async {
+  Future<Either<Failure, TaskResult>> insertTask(
+      String name,
+      String note,
+      String date,
+      List<String> tags,
+      String reminder,
+      String deadline,
+      int priority,
+      bool done) async {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await taskRemoteSource.insertTask(
-            name, note, reminder, deadline, priority, done);
+            name, note, tags, date, reminder, deadline, priority, done);
 
         await taskLocalSource.insertTask(result);
 
@@ -389,5 +402,31 @@ class TaskRepoImpl extends TaskRepo {
     } else {
       return Left(NoInternetFailure());
     }
+  }
+
+  Stream<List<TaskWithSubtasks>> watchTodayTasks() {
+    return taskLocalSource.watchTodayTasks(kUserId);
+  }
+
+  Stream<List<TaskWithSubtasks>> watchAllTasks() {
+    return taskLocalSource.watchAllTasks(kUserId);
+  }
+
+  Stream<List<TaskWithSubtasks>> watchCompletedTasks() {
+    return taskLocalSource.watchCompletedTasks(kUserId);
+  }
+
+  Stream<List<TaskWithSubtasks>> watchMissedTasks() {
+    return taskLocalSource.watchMissedTasks(kUserId);
+  }
+
+  @override
+  Stream<List<TagData>> watchAllTags() {
+    return taskLocalSource.watchAllTags(kUserId);
+  }
+
+  @override
+  Stream<TaskWithTags> watchTagsForTask(String taskId) {
+    return taskLocalSource.watchTagsForTask(kUserId, taskId);
   }
 }
