@@ -2,7 +2,7 @@ import 'package:diana/core/errors/failure.dart';
 import 'package:diana/core/mappers/date_to_string_birthdate.dart';
 import 'package:diana/core/mappers/failure_to_string.dart';
 import 'package:diana/domain/usecases/auth/register_user_usecase.dart';
-import 'package:diana/presentation/nav.dart';
+import 'package:diana/presentation/nav/nav.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 

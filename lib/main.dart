@@ -1,7 +1,7 @@
 import 'package:diana/presentation/habit/pages/habit_screen.dart';
 import 'package:diana/presentation/home/home.dart';
 import 'package:diana/presentation/login/pages/login_screen.dart';
-import 'package:diana/presentation/nav.dart';
+import 'package:diana/presentation/nav/nav.dart';
 import 'package:diana/presentation/register/pages/register_screen.dart';
 import 'package:diana/presentation/task/pages/task_screen.dart';
 import 'package:flutter/material.dart';

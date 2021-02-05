@@ -55,25 +55,25 @@ class TasksList extends StatelessWidget {
                                         visible: data[index]?.task?.note != null
                                             ? true
                                             : false),
-                                    trailing: _buildTrailing(),
+                                    trailing:
+                                        _buildTrailing(data[index].task.id),
                                     backgroundColor: Colors.white,
                                     childrenPadding:
                                         EdgeInsets.symmetric(horizontal: 16),
                                     tilePadding:
                                         EdgeInsets.symmetric(horizontal: 16),
                                     onExpansionChanged: (isExpanded) {
+                                      TaskController.to.isLongPressed.value =
+                                          false;
+
                                       if (isExpanded) {
-                                        TaskController.to.isExpand.value =
-                                            isExpanded;
-                                        TaskController.to.isLongPressed.value =
-                                            false;
                                         print('tapped to Expanded');
+                                        TaskController.to.selectedTask.value =
+                                            data[index].task.id;
                                       } else {
-                                        TaskController.to.isExpand.value =
-                                            isExpanded;
-                                        TaskController.to.isLongPressed.value =
-                                            false;
                                         print('tapped to close');
+                                        TaskController.to.selectedTask.value =
+                                            '';
                                       }
                                     },
                                     children: [
@@ -100,24 +100,24 @@ class TasksList extends StatelessWidget {
         });
   }
 
-  Widget _buildTrailing() {
-    final isExpand = TaskController.to.isExpand.value;
-    if (!isExpand) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.priority_high),
-          SizedBox(width: 10),
-          Icon(Icons.check_outlined),
-        ],
-      );
-    } else {
+  Widget _buildTrailing(String taskId) {
+    final selectedTask = TaskController.to.selectedTask.value;
+    if (selectedTask == taskId) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(FontAwesomeIcons.trash, color: Colors.red),
           SizedBox(width: 10),
           Icon(FontAwesomeIcons.pencilAlt),
+        ],
+      );
+    } else {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.priority_high),
+          SizedBox(width: 10),
+          Icon(Icons.check_outlined),
         ],
       );
     }

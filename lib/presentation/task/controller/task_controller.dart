@@ -42,8 +42,8 @@ class TaskController extends GetxController {
 
   StreamController<TaskWithTags> _taskWithTagsController;
   Failure failure;
-  RxBool isExpand = false.obs;
   RxBool isLongPressed = false.obs;
+  RxString selectedTask = ''.obs;
 
   TaskController(
     this.requestTokenUsecase,

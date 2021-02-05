@@ -2,7 +2,7 @@ import 'package:diana/core/constants/_constants.dart';
 import 'package:diana/data/data_sources/auth/auth_local_source.dart';
 import 'package:diana/presentation/home/home_controller.dart';
 import 'package:diana/presentation/login/pages/login_screen.dart';
-import 'package:diana/presentation/nav.dart';
+import 'package:diana/presentation/nav/nav.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:diana/injection_container.dart' as di;
