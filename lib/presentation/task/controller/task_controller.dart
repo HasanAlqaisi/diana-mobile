@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:dartz/dartz.dart';
+import 'package:diana/core/api_helpers/api.dart';
 import 'package:diana/core/mappers/failure_to_string.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
+import 'package:diana/domain/usecases/task/edit_subtask_usecase.dart';
+import 'package:diana/domain/usecases/task/edit_task_usecase.dart';
 import 'package:diana/domain/usecases/task/get_subtasks_usecase.dart';
 import 'package:diana/domain/usecases/task/insert_task_usecase.dart';
 import 'package:diana/domain/usecases/task/watch_tags_for_task.dart';
@@ -39,6 +42,7 @@ class TaskController extends GetxController {
   final InsertTaskUseCase insertTaskUseCase;
   final WatchTagsForTaskUseCase watchTagsForTaskUseCase;
   final GetSubtasksUseCase getSubtasksUseCase;
+  final EditTaskUseCase editTaskUseCase;
 
   StreamController<TaskWithTags> _taskWithTagsController;
   Failure failure;
@@ -57,6 +61,7 @@ class TaskController extends GetxController {
     this.insertTaskUseCase,
     this.watchTagsForTaskUseCase,
     this.getSubtasksUseCase,
+    this.editTaskUseCase,
   );
 
   @override
@@ -82,36 +87,29 @@ class TaskController extends GetxController {
     //   }
     // }, (r) => null);
 
-    await doRequest(() async {
+    await API.doRequest(body: () async {
       return await getTagsUseCase();
+    }, failedBody: (failure) {
+      Fluttertoast.showToast(msg: failureToString(failure));
     });
 
-    await doRequest(() async {
-      return await getTasksUseCase();
-    });
+    await API.doRequest(
+      body: () async {
+        return await getTasksUseCase();
+      },
+      failedBody: (failure) {
+        Fluttertoast.showToast(msg: failureToString(failure));
+      },
+    );
 
-    // await doRequest(() async {
-    //   return await getSubtasksUseCase(null);
-    // });
-  }
-
-  Future<void> doRequest(Function body) async {
-    (await body()).fold((fail) async {
-      print("FAIL happen => ${fail.runtimeType}");
-      if (fail is UnAuthFailure) {
-        final requestTokenResult = await requestTokenUsecase(kRefreshToken);
-        requestTokenResult.fold((requestTokenFail) {
-          if (requestTokenFail is UnAuthFailure) {
-            Fluttertoast.showToast(msg: 'خلص الرفرش');
-            Get.offAllNamed(LoginScreen.route);
-          } else {
-            Fluttertoast.showToast(msg: failureToString(fail));
-          }
-        }, (r) => body());
-      } else {
-        Fluttertoast.showToast(msg: failureToString(fail));
-      }
-    }, (r) => null);
+    await API.doRequest(
+      body: () async {
+        return await getSubtasksUseCase(null);
+      },
+      failedBody: (failure) {
+        Fluttertoast.showToast(msg: failureToString(failure));
+      },
+    );
   }
 
   @override
@@ -122,10 +120,37 @@ class TaskController extends GetxController {
 
   Future<void> addTask(String name, String note, String date, List<String> tags,
       String reminder, String deadline, int priority, bool done) async {
-    await doRequest(() async {
-      return await insertTaskUseCase(
-          name, note, date, tags, reminder, deadline, priority, done);
-    });
+    await API.doRequest(
+      body: () async {
+        return await insertTaskUseCase(
+            name, note, date, tags, reminder, deadline, priority, done);
+      },
+      failedBody: (failure) {
+        Fluttertoast.showToast(msg: failureToString(failure));
+      },
+    );
+  }
+
+  Future<void> editTask(
+    String taskId,
+    String name,
+    String note,
+    String date,
+    List<String> tags,
+    String reminder,
+    String deadline,
+    int priority,
+    bool done,
+  ) async {
+    await API.doRequest(
+      body: () async {
+        return await editTaskUseCase(
+            taskId, name, note, date, tags, reminder, deadline, priority, done);
+      },
+      failedBody: (failure) {
+        Fluttertoast.showToast(msg: failureToString(failure));
+      },
+    );
   }
 
   Stream<List<TaskWithSubtasks>> watchTodayTasks() {

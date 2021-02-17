@@ -1,9 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:diana/presentation/task/pages/today_task_tab.dart';
+import 'package:diana/presentation/task/controller/task_controller.dart';
+import 'package:diana/presentation/task/pages/tabs/done_task_tab.dart';
+import 'package:diana/presentation/task/pages/tabs/missed_task_tab.dart';
+import 'package:diana/presentation/task/pages/tabs/inbox_task_tab.dart';
+import 'package:diana/presentation/task/pages/tabs/today_task_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:diana/injection_container.dart' as di;
 
 class TaskScreen extends StatelessWidget {
   static const route = '/task';
@@ -48,12 +54,18 @@ class TaskScreen extends StatelessWidget {
             ],
           ),
         ),
-        body: TabBarView(children: [
-          TodayTaskTab(),
-          TodayTaskTab(),
-          TodayTaskTab(),
-          TodayTaskTab(),
-        ]),
+        body: GetBuilder<TaskController>(
+          init: di.sl<TaskController>(),
+          initState: (_) {},
+          builder: (_) {
+            return TabBarView(children: [
+              TodayTaskTab(),
+              InboxTaskTab(),
+              DoneTaskTab(),
+              MissedTaskTab(),
+            ]);
+          },
+        ),
       ),
     );
   }
