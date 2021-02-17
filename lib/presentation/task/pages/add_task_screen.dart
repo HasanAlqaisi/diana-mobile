@@ -24,8 +24,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          gradient:
-              LinearGradient(colors: [Color(0xFf852EF3), Color(0xFF612EF3)])),
+        gradient: LinearGradient(
+          colors: [Color(0xFf852EF3), Color(0xFF612EF3)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
@@ -46,7 +50,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   ),
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+                        EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
                     child: TextFormField(
                       style: TextStyle(color: Color(0xFFA687FF)),
                       decoration: InputDecoration(
@@ -78,7 +82,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         },
                       )),
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 24),
                     child: TextFormField(
                       style: TextStyle(color: Color(0xFFA687FF)),
                       decoration: InputDecoration(
@@ -324,7 +329,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 24),
                     child: TextFormField(
                       onChanged: (tag) {
                         _.tag = tag;
@@ -332,8 +338,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       style: TextStyle(color: Color(0xFFA687FF)),
                       decoration: InputDecoration(
                         errorText: null,
+                        // labelText: 'Tags',
                         hintText: 'New Tag...',
                         hintStyle: TextStyle(color: Color(0xFFA687FF)),
+                        // labelStyle: TextStyle(color: Colors.white),
                         suffixIcon: GestureDetector(
                           onTap: () {
                             _.onTagPlusClicked();
@@ -391,7 +399,8 @@ class SubtaskField extends StatelessWidget {
                   key: key, index: AddTaskController.to.subtasks.length));
             },
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
               child: Text(
                 '+ Sub task',
                 style: TextStyle(color: Color(0xFFD6C8FF)),
