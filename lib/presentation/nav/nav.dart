@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diana/presentation/habit/pages/habit_screen.dart';
+import 'package:diana/presentation/task/pages/add_task_screen.dart';
 import 'package:diana/presentation/task/pages/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -53,9 +54,11 @@ class _NavState extends State<Nav> {
                   BorderRadius.circular(0.0)), //To avoid topRight null error
           navBarStyle: NavBarStyle.style15,
 
-          onItemSelected: (index) => {
+          onItemSelected: (index) {
             //TODO: Customize an algo to check the previous tab
-            if (index == 1) print('Hi')
+            if (index == 1) {
+              Navigator.pushNamed(context, AddTaskScreen.route);
+            }
           },
           // body: navigationWidgets[_currentIndex],
         ),

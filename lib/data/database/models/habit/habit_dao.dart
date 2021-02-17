@@ -23,10 +23,11 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
       await delete(daysTable).go();
       // Insert data for habit, days
       await batch((batch) {
-        batch.insertAllOnConflictUpdate(
-            habitTable, HabitTable.fromHabitResponse(habits.results));
-        batch.insertAllOnConflictUpdate(
-            daysTable, DaysTable.fromHabitResponse(habits.results));
+        batch.insertAll(
+            habitTable, HabitTable.fromHabitResponse(habits.results),
+            mode: InsertMode.replace);
+        batch.insertAll(daysTable, DaysTable.fromHabitResponse(habits.results),
+            mode: InsertMode.replace);
       });
     });
   }
@@ -35,10 +36,11 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
     return transaction(() async {
       // Insert data for habit, days
       await batch((batch) {
-        batch.insertAllOnConflictUpdate(
-            habitTable, HabitTable.fromHabitResponse(habits.results));
-        batch.insertAllOnConflictUpdate(
-            daysTable, DaysTable.fromHabitResponse(habits.results));
+        batch.insertAll(
+            habitTable, HabitTable.fromHabitResponse(habits.results),
+            mode: InsertMode.replace);
+        batch.insertAll(daysTable, DaysTable.fromHabitResponse(habits.results),
+            mode: InsertMode.replace);
       });
     });
   }

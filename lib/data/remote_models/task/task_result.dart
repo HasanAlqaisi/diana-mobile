@@ -19,7 +19,7 @@ class TaskResult extends Equatable {
   final String reminder;
   @JsonKey(nullable: true)
   final String deadline;
-  @JsonKey(nullable: true)
+  @JsonKey(name: 'done_at', nullable: true)
   final String doneAt;
   final int priority;
 

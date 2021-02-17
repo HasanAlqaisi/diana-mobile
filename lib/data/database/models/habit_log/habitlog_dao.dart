@@ -17,8 +17,9 @@ class HabitlogDao extends DatabaseAccessor<AppDatabase>
       await delete(habitlogTable).go();
       // Insert data for habitlog
       await batch((batch) {
-        batch.insertAllOnConflictUpdate(habitlogTable,
-            HabitlogTable.fromHabitlogResponse(habitlogs.results));
+        batch.insertAll(habitlogTable,
+            HabitlogTable.fromHabitlogResponse(habitlogs.results),
+            mode: InsertMode.replace);
       });
     });
   }
@@ -27,8 +28,9 @@ class HabitlogDao extends DatabaseAccessor<AppDatabase>
     return transaction(() async {
       // Insert data for habit
       await batch((batch) {
-        batch.insertAllOnConflictUpdate(habitlogTable,
-            HabitlogTable.fromHabitlogResponse(habitlogs.results));
+        batch.insertAll(habitlogTable,
+            HabitlogTable.fromHabitlogResponse(habitlogs.results),
+            mode: InsertMode.replace);
       });
     });
   }

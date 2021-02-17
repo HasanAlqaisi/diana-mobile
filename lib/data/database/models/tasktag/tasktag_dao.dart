@@ -13,7 +13,7 @@ class TaskTagDao extends DatabaseAccessor<AppDatabase> with _$TaskTagDaoMixin {
   TaskTagDao(AppDatabase db) : super(db);
 
   Future<void> insertTaskTag(TaskTagData taskTag) async {
-    into(taskTagTable).insertOnConflictUpdate(taskTag);
+    into(taskTagTable).insert(taskTag, mode: InsertMode.replace);
   }
 
   Stream<TagWithTasks> watchTodayTasksForTag(String id) {

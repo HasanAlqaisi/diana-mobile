@@ -1,21 +1,22 @@
+import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/relations/task_with_subtasks/task_with_subtasks.dart';
 import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
-import 'package:diana/presentation/task/widgets/subtasks_list.dart';
+import 'package:diana/presentation/task/widgets/general_subtasks_list.dart';
 import 'package:diana/presentation/task/widgets/tags_row.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
-class TasksList extends StatelessWidget {
-  const TasksList({
+class TodayTasksList extends StatelessWidget {
+  const TodayTasksList({
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<TaskWithSubtasks>>(
-        stream: TaskController.to.watchAllTasks(),
+        stream: TaskController.to.watchTodayTasks(),
         builder: (context, snapshot) {
           final data = snapshot?.data;
           if (data != null && data.isNotEmpty) {
@@ -55,8 +56,8 @@ class TasksList extends StatelessWidget {
                                         visible: data[index]?.task?.note != null
                                             ? true
                                             : false),
-                                    trailing:
-                                        _buildTrailing(data[index].task.id),
+                                    trailing: _buildTrailing(data[index].task,
+                                        taskWithTagsSnapshot?.data),
                                     backgroundColor: Colors.white,
                                     childrenPadding:
                                         EdgeInsets.symmetric(horizontal: 16),
@@ -77,7 +78,7 @@ class TasksList extends StatelessWidget {
                                       }
                                     },
                                     children: [
-                                      SubtasksList(
+                                      GeneralSubtasksList(
                                           taskWithSubtasks: data[index]),
                                       TagsRow(
                                           taskWithTags:
@@ -100,9 +101,9 @@ class TasksList extends StatelessWidget {
         });
   }
 
-  Widget _buildTrailing(String taskId) {
+  Widget _buildTrailing(TaskData taskData, TaskWithTags tagsData) {
     final selectedTask = TaskController.to.selectedTask.value;
-    if (selectedTask == taskId) {
+    if (selectedTask == taskData.id) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -116,8 +117,23 @@ class TasksList extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.priority_high),
-          SizedBox(width: 10),
-          Icon(Icons.check_outlined),
+          SizedBox(width: 5),
+          GestureDetector(
+              onTap: () {
+                print('check mark cliked');
+                TaskController.to.editTask(
+                  taskData.id,
+                  taskData.name,
+                  taskData.note,
+                  taskData.date.toString(),
+                  tagsData.tags.map((tag) => tag.id).toList(),
+                  taskData.reminder.toString(),
+                  taskData.deadline.toString(),
+                  taskData.priority,
+                  true,
+                );
+              },
+              child: Icon(Icons.check_circle, color: Colors.grey, size: 30.0)),
         ],
       );
     }

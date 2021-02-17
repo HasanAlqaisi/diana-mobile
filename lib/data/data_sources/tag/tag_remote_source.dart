@@ -42,11 +42,13 @@ class TagRemoteSourceImpl extends TagRemoteSource {
       '$baseUrl/tag/',
       headers: {
         'Authorization': 'Bearer $kToken',
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
       },
-      body: {
+      body: jsonEncode({
         "name": name,
         "color": color,
-      },
+      }),
     );
 
     if (response.statusCode == 201) {

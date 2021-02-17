@@ -121,21 +121,28 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     int priority,
     bool done,
   ) async {
-    final response = await client.put(
+    print("""task edition info: 
+    name: $name
+    note: $note
+    tags: $tags
+    date: $date
+    reminder: $reminder
+    deadline: $deadline
+    priority: $priority
+    done: $done""");
+
+    final response = await client.patch(
       '$baseUrl/task/$taskId/',
       headers: {
         'Authorization': 'Bearer $kToken',
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
       },
-      body: {
-        "name": name,
-        "note": note,
-        "with_tags": tags,
-        "date": date,
-        "reminder": reminder,
-        "deadline": deadline,
-        "priority": priority,
-        "done": done,
-      },
+      body: jsonEncode(
+        {
+          "done": done,
+        },
+      ),
     );
 
     if (response.statusCode == 200) {

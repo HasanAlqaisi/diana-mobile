@@ -9,6 +9,7 @@ class TaskTable extends Table {
       text().customConstraint('REFERENCES user_table(id) ON DELETE CASCADE')();
   TextColumn get name => text()();
   TextColumn get note => text().nullable()();
+  DateTimeColumn get date => dateTime().nullable()();
   DateTimeColumn get reminder => dateTime().nullable()();
   DateTimeColumn get deadline => dateTime().nullable()();
   IntColumn get priority => integer().nullable()();
@@ -27,6 +28,9 @@ class TaskTable extends Table {
               userId: Value(task.userId),
               name: Value(task.name),
               note: Value(task.note),
+              date: Value(
+                task.date != null ? DateTime.tryParse(task.date) : null,
+              ),
               reminder: Value(task.reminder != null
                   ? DateTime.tryParse(task.reminder)
                   : null),
@@ -41,6 +45,7 @@ class TaskTable extends Table {
   }
 
   static TaskTableCompanion fromTaskResult(TaskResult task) {
+    print('Task ${task.name} has a done date ${task.doneAt}');
     return TaskTableCompanion(
       id: Value(task.taskId),
       userId: Value(task.userId),

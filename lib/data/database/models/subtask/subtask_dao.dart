@@ -16,16 +16,18 @@ class SubTaskDao extends DatabaseAccessor<AppDatabase> with _$SubTaskDaoMixin {
     return transaction(() async {
       await delete(subTaskTable).go();
       await batch((batch) {
-        batch.insertAllOnConflictUpdate(subTaskTable,
-            SubTaskTable.fromSubTaskResponse(subtaskResponse.results));
+        batch.insertAll(subTaskTable,
+            SubTaskTable.fromSubTaskResponse(subtaskResponse.results),
+            mode: InsertMode.replace);
       });
     });
   }
 
   Future<void> insertSubTasks(SubtaskResponse subtaskResponse) async {
     await batch((batch) {
-      batch.insertAllOnConflictUpdate(subTaskTable,
-          SubTaskTable.fromSubTaskResponse(subtaskResponse.results));
+      batch.insertAll(subTaskTable,
+          SubTaskTable.fromSubTaskResponse(subtaskResponse.results),
+          mode: InsertMode.replace);
     });
   }
 
@@ -35,7 +37,8 @@ class SubTaskDao extends DatabaseAccessor<AppDatabase> with _$SubTaskDaoMixin {
   }
 
   Future<int> insertSubTask(SubtaskResult subtaskResult) {
-    return into(subTaskTable)
-        .insertOnConflictUpdate(SubTaskTable.fromSubTaskResult(subtaskResult));
+    return into(subTaskTable).insert(
+        SubTaskTable.fromSubTaskResult(subtaskResult),
+        mode: InsertMode.replace);
   }
 }

@@ -88,7 +88,7 @@ class TaskRepoImpl extends TaskRepo {
   }
 
   @override
-  Future<Either<Failure, bool>> deleteTag(String id) async{
+  Future<Either<Failure, bool>> deleteTag(String id) async {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await tagRemoteSource.deleteTag(id);
@@ -195,7 +195,10 @@ class TaskRepoImpl extends TaskRepo {
         final result = await taskRemoteSource.editTask(
             taskId, name, note, tags, date, reminder, deadline, priority, done);
 
-        await taskLocalSource.insertTask(result);
+        print('task ${result.name} done date is ${result.doneAt}');
+
+        print('task inserted?' +
+            (await taskLocalSource.insertTask(result)).toString());
 
         return Right(result);
       } on FieldsException catch (error) {
@@ -298,7 +301,8 @@ class TaskRepoImpl extends TaskRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await taskRemoteSource.getTasks(taskOffset);
-        print('Task gotten ans the result is ${result.results}');
+        result.results
+            .forEach((task) => print('Task ${task.name} its date is ${task.date}'));
 
         if (taskOffset == 0) {
           await taskLocalSource.deleteAndinsertTasks(result);

@@ -1,5 +1,5 @@
 import 'package:diana/core/errors/failure.dart';
-import 'package:diana/core/mappers/date_to_string_birthdate.dart';
+import 'package:diana/core/mappers/date_to_ymd_string.dart';
 import 'package:diana/core/validators/local_validators.dart';
 import 'package:diana/presentation/login/controller/login_controller.dart';
 import 'package:diana/core/global_widgets/rounded_button.dart';
@@ -142,7 +142,7 @@ class RegisterForm extends StatelessWidget {
                           lastDate: DateTime.now(),
                         );
                         controller.birthString.value =
-                            dateToStringBirthdate(controller.birthdate);
+                            dateToYMDString(controller.birthdate);
                       },
                       isReadOnly: true,
                       isObsecure: false,

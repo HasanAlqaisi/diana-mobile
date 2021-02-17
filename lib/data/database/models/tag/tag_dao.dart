@@ -16,7 +16,7 @@ class TagDao extends DatabaseAccessor<AppDatabase> with _$TagDaoMixin {
 
   Future<int> insertTag(TagResult tagResult) {
     return into(tagTable)
-        .insertOnConflictUpdate(TagTable.fromTagResult(tagResult));
+        .insert(TagTable.fromTagResult(tagResult), mode: InsertMode.replace);
   }
 
   Future<void> deleteAndinsertTags(
@@ -25,16 +25,16 @@ class TagDao extends DatabaseAccessor<AppDatabase> with _$TagDaoMixin {
     return transaction(() async {
       await delete(tagTable).go();
       await batch((batch) {
-        batch.insertAllOnConflictUpdate(
-            tagTable, TagTable.fromTagResponse(tagResponse.results));
+        batch.insertAll(tagTable, TagTable.fromTagResponse(tagResponse.results),
+            mode: InsertMode.replace);
       });
     });
   }
 
   Future<void> insertTags(TagResponse tagResponse) async {
     await batch((batch) {
-      batch.insertAllOnConflictUpdate(
-          tagTable, TagTable.fromTagResponse(tagResponse.results));
+      batch.insertAll(tagTable, TagTable.fromTagResponse(tagResponse.results),
+          mode: InsertMode.replace);
     });
   }
 }

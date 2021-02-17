@@ -25,8 +25,9 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
       await delete(taskTagTable).go();
       // Insert data for task, tasktag
       await batch((batch) {
-        batch.insertAllOnConflictUpdate(
-            taskTable, TaskTable.fromTaskResponse(taskResponse.results));
+        batch.insertAll(
+            taskTable, TaskTable.fromTaskResponse(taskResponse.results),
+            mode: InsertMode.replace);
 
         taskResponse.results.forEach(
           (task) => task.tags.forEach(
@@ -45,8 +46,9 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
     return transaction(() async {
       // Insert data for task, tasktag
       await batch((batch) {
-        batch.insertAllOnConflictUpdate(
-            taskTable, TaskTable.fromTaskResponse(taskResponse.results));
+        batch.insertAll(
+            taskTable, TaskTable.fromTaskResponse(taskResponse.results),
+            mode: InsertMode.replace);
 
         taskResponse.results.forEach(
           (task) => task.tags.forEach(
@@ -62,12 +64,15 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
   }
 
   /// Return today incompleted tasks with its subtasks, for specific user
-  /// How do we know it's for today? compare time with deadline
+  /// How do we know it's for today? compare time with date field
   Stream<List<TaskWithSubtasks>> watchTodayTasks(String userId) {
-    return (((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))..where((tbl) => tbl.doneAt.equals(null)))
+    return (((select(taskTable)
           ..where((tbl) =>
-              tbl.deadline.day.equals(DateTime.now().day) &
-              tbl.deadline.isBiggerThanValue(DateTime.now())))
+              tbl.userId.equals(userId) &
+              isNull(tbl.doneAt) &
+              tbl.date.day.equals(DateTime.now().toUtc().day) &
+              (tbl.deadline.isBiggerThanValue(DateTime.now().toUtc()) |
+                  isNull(tbl.deadline))))
         .join([
           leftOuterJoin(
               subTaskTable, subTaskTable.taskId.equalsExp(taskTable.id))
@@ -86,13 +91,17 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
             for (final entry in result.entries)
               TaskWithSubtasks(task: entry.key, subtasks: entry.value)
           ];
-        });
+        })));
   }
 
   /// Return all incompleted tasks with its subtasks
   Stream<List<TaskWithSubtasks>> watchAllTasks(String userId) {
-    return ((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))
-        // ..where((tbl) => tbl.doneAt.equals(null)))
+    return ((select(taskTable)
+          ..where((tbl) =>
+              tbl.userId.equals(userId) &
+              isNull(tbl.doneAt) &
+              (tbl.deadline.isBiggerThanValue(DateTime.now().toUtc()) |
+                  isNull(tbl.deadline))))
         .join([
           leftOuterJoin(
               subTaskTable, subTaskTable.taskId.equalsExp(taskTable.id))
@@ -116,7 +125,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
 
   Stream<List<TaskWithSubtasks>> watchCompletedTasks(String userId) {
     return ((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))
-          ..where((tbl) => tbl.doneAt.isNotIn(null)))
+          ..where((tbl) => isNotNull(tbl.doneAt)))
         .join([
           leftOuterJoin(
               subTaskTable, subTaskTable.taskId.equalsExp(taskTable.id))
@@ -140,7 +149,11 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
 
   Stream<List<TaskWithSubtasks>> watchMissedTasks(String userId) {
     return ((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))
-          ..where((tbl) => tbl.deadline.isSmallerThanValue(DateTime.now())))
+          ..where(
+            (tbl) =>
+                tbl.deadline.isSmallerThanValue(DateTime.now().toUtc()) &
+                isNull(tbl.doneAt),
+          ))
         .join([
           leftOuterJoin(
               subTaskTable, subTaskTable.taskId.equalsExp(taskTable.id))
@@ -168,7 +181,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
 
   Future<int> insertTask(TaskResult taskResult) {
     return into(taskTable)
-        .insertOnConflictUpdate(TaskTable.fromTaskResult(taskResult));
+        .insert(TaskTable.fromTaskResult(taskResult), mode: InsertMode.replace);
   }
 
   Stream<List<TagData>> watchAllTags(String userId) {
