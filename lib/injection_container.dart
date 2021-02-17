@@ -26,9 +26,11 @@ import 'package:diana/domain/usecases/auth/request_token_usecase.dart';
 import 'package:diana/domain/usecases/home/get_refresh_token_usecase.dart';
 import 'package:diana/domain/usecases/home/get_token_usecase.dart';
 import 'package:diana/domain/usecases/home/get_userid_usecase.dart';
+import 'package:diana/domain/usecases/task/edit_task_usecase.dart';
 import 'package:diana/domain/usecases/task/get_subtasks_usecase.dart';
 import 'package:diana/domain/usecases/task/get_tags_usecase.dart';
 import 'package:diana/domain/usecases/task/get_tasks_usecase.dart';
+import 'package:diana/domain/usecases/task/insert_tag_usecase.dart';
 import 'package:diana/domain/usecases/task/insert_task_usecase.dart';
 import 'package:diana/domain/usecases/task/watch_all_tags_usecase.dart';
 import 'package:diana/domain/usecases/task/watch_all_tasks_usecase.dart';
@@ -39,6 +41,7 @@ import 'package:diana/domain/usecases/task/watch_today_tasks_usecase.dart';
 import 'package:diana/presentation/home/home_controller.dart';
 import 'package:diana/presentation/login/controller/login_controller.dart';
 import 'package:diana/presentation/register/controller/registeration_controller.dart';
+import 'package:diana/presentation/task/controller/add_task_controller.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path/path.dart' as p;
@@ -85,7 +88,8 @@ void controllersInjection() {
   sl.registerFactory(() => LoginController(sl()));
   sl.registerFactory(() => RegistrationController(sl()));
   sl.registerFactory(() => TaskController(
-      sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+      sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => AddTaskController(sl(), sl(),sl(),sl()));
 }
 
 void usecasesInjection() {
@@ -107,6 +111,9 @@ void usecasesInjection() {
   sl.registerLazySingleton(() => WatchAllTagsUseCase(sl()));
   sl.registerLazySingleton(() => WatchTagsForTaskUseCase(sl()));
   sl.registerLazySingleton(() => GetSubtasksUseCase(taskRepo: sl()));
+  sl.registerLazySingleton(() => EditTaskUseCase(taskRepo: sl()));
+  sl.registerLazySingleton(() => InsertTagUseCase(taskRepo: sl()));
+
 }
 
 void reposInjection() {

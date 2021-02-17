@@ -3,6 +3,7 @@ import 'package:diana/presentation/home/home.dart';
 import 'package:diana/presentation/login/pages/login_screen.dart';
 import 'package:diana/presentation/nav/nav.dart';
 import 'package:diana/presentation/register/pages/register_screen.dart';
+import 'package:diana/presentation/task/pages/add_task_screen.dart';
 import 'package:diana/presentation/task/pages/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -47,6 +48,7 @@ class Diana extends StatelessWidget {
         Home.route: (context) => Home(),
         Nav.route: (context) => Nav(),
         TaskScreen.route: (context) => TaskScreen(),
+        AddTaskScreen.route: (context) => AddTaskScreen(),
         HabitScreen.route: (context) => HabitScreen(),
       },
     );
