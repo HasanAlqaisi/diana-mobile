@@ -116,7 +116,27 @@ class AllTasksList extends StatelessWidget {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.priority_high),
+          Row(
+              children: List.generate(
+            taskData.priority,
+            (index) => Row(
+              children: [
+                Container(
+                  height: 10,
+                  width: 10,
+                  decoration: BoxDecoration(
+                    color: _priorityColor(taskData),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                index != taskData.priority
+                    ? SizedBox(
+                        width: 10,
+                        child: Divider(color: Colors.red, thickness: 1))
+                    : Container(),
+              ],
+            ),
+          )),
           SizedBox(width: 5),
           GestureDetector(
               onTap: () {
@@ -136,6 +156,16 @@ class AllTasksList extends StatelessWidget {
               child: Icon(Icons.check_circle, color: Colors.grey, size: 30.0)),
         ],
       );
+    }
+  }
+
+  Color _priorityColor(TaskData taskData) {
+    if (taskData.priority == 1) {
+      return Colors.green;
+    } else if (taskData.priority == 2) {
+      return Colors.yellow;
+    } else {
+      return Colors.red;
     }
   }
 }
