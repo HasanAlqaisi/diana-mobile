@@ -14,7 +14,7 @@ And even if you have an idea to improve **Diana** and makes life easier, don't h
 ```
 import 'package:diana/data/remote_models/auth/refresh_info.dart';
 
-const baseUrl = 'https://diana.opensource.softshape.org';
+const baseUrl = 'https://api.diana.opensource.softshape.org';
 const refreshKey = 'REFRESH_KEY';
 const tokenKey = 'TOKEN_KEY';
 const userIdKey = 'USER_ID_KEY';
