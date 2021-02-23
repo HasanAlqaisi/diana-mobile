@@ -24,13 +24,13 @@ class DaysTable extends Table {
     return habits.map((habit) {
       return DaysTableCompanion(
         habitId: Value(habit.habitId),
-        dayZero: Value(habit.days[0]),
-        dayOne: Value(habit.days[1]),
-        dayTwo: Value(habit.days[2]),
-        dayThree: Value(habit.days[3]),
-        dayFour: Value(habit.days[4]),
-        dayFive: Value(habit.days[5]),
-        daySix: Value(habit.days[6]),
+        dayZero: Value(habit.days[0] ?? null),
+        dayOne: Value(habit.days[1] ?? null),
+        dayTwo: Value(habit.days[2] ?? null),
+        // dayThree: Value(habit.days[3] ?? null),
+        // dayFour: Value(habit.days[4] ?? null),
+        // dayFive: Value(habit.days[5] ?? null),
+        // daySix: Value(habit.days[6] ?? null),
       );
     }).toList();
   }

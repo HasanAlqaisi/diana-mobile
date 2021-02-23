@@ -20,4 +20,7 @@ class TaskTagResponse extends Equatable {
 
   @override
   List<Object> get props => [id, taskId, tagId];
+
+  @override
+  bool get stringify => true;
 }

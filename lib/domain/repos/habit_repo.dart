@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:diana/core/errors/failure.dart';
+import 'package:diana/data/database/relations/habit_with_habitlogs/habit_with_habitlogs.dart';
 import 'package:diana/data/remote_models/habit/habit_response.dart';
 import 'package:diana/data/remote_models/habit/habit_result.dart';
 import 'package:diana/data/remote_models/habitlog/habitlog_response.dart';
@@ -30,4 +31,8 @@ abstract class HabitRepo {
   Future<Either<Failure, HabitlogResult>> insertHabitlog(
     String habitId,
   );
+
+  Stream<Future<List<HabitWitLogsWithDays>>> watchTodayHabits(int day);
+
+  Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits();
 }

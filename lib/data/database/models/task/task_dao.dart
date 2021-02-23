@@ -22,6 +22,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
     return transaction(() async {
       // Clear the tables associated with task
       await delete(taskTable).go();
+      await delete(subTaskTable).go();
       await delete(taskTagTable).go();
       // Insert data for task, tasktag
       await batch((batch) {
@@ -29,11 +30,17 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
             taskTable, TaskTable.fromTaskResponse(taskResponse.results),
             mode: InsertMode.replace);
 
+        taskResponse.results.forEach((task) {
+          batch.insertAll(
+              subTaskTable, SubTaskTable.fromSubTaskResponse(task.checkList),
+              mode: InsertMode.replace);
+        });
+
         taskResponse.results.forEach(
           (task) => task.tags.forEach(
             (tag) => batch.insert(
               taskTagTable,
-              TaskTagTable.fromTaskResult(task, tag),
+              TaskTagTable.fromTaskResult(task, tag.id),
               mode: InsertMode.insertOrReplace,
             ),
           ),
@@ -50,11 +57,17 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
             taskTable, TaskTable.fromTaskResponse(taskResponse.results),
             mode: InsertMode.replace);
 
+        taskResponse.results.forEach((task) {
+          batch.insertAll(
+              subTaskTable, SubTaskTable.fromSubTaskResponse(task.checkList),
+              mode: InsertMode.replace);
+        });
+
         taskResponse.results.forEach(
           (task) => task.tags.forEach(
             (tag) => batch.insert(
               taskTagTable,
-              TaskTagTable.fromTaskResult(task, tag),
+              TaskTagTable.fromTaskResult(task, tag.id),
               mode: InsertMode.insertOrReplace,
             ),
           ),
@@ -179,9 +192,26 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
     return (delete(taskTable)..where((tbl) => tbl.id.equals(taskId))).go();
   }
 
-  Future<int> insertTask(TaskResult taskResult) {
-    return into(taskTable)
-        .insert(TaskTable.fromTaskResult(taskResult), mode: InsertMode.replace);
+  Future<void> insertTask(TaskResult taskResult) {
+    return transaction(() async {
+      // Insert data for task, tasktag
+      await batch((batch) {
+        batch.insert(taskTable, TaskTable.fromTaskResult(taskResult),
+            mode: InsertMode.replace);
+
+        batch.insertAll(subTaskTable,
+            SubTaskTable.fromSubTaskResponse(taskResult.checkList),
+            mode: InsertMode.replace);
+
+        taskResult.tags.forEach(
+          (tag) => batch.insert(
+            taskTagTable,
+            TaskTagTable.fromTaskResult(taskResult, tag.id),
+            mode: InsertMode.insertOrReplace,
+          ),
+        );
+      });
+    });
   }
 
   Stream<List<TagData>> watchAllTags(String userId) {

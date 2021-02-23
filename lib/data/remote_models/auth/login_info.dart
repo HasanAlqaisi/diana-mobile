@@ -22,4 +22,7 @@ class LoginInfo extends Equatable {
 
   @override
   List<Object> get props => [accessToken, refreshToken, user];
+
+  @override
+  bool get stringify => true;
 }

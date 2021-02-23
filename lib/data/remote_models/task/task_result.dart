@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:diana/data/remote_models/tag/tag_result.dart';
+import 'package:diana/data/remote_models/subtask/subtask_result.dart';
 
 part 'task_result.g.dart';
 
@@ -12,7 +14,9 @@ class TaskResult extends Equatable {
   final String name;
   @JsonKey(nullable: true)
   final String note;
-  final List<String> tags;
+  final List<TagResult> tags;
+  @JsonKey(name: 'checklist')
+  final List<SubtaskResult> checkList;
   @JsonKey(nullable: true)
   final String date;
   @JsonKey(nullable: true)
@@ -29,6 +33,7 @@ class TaskResult extends Equatable {
     this.name,
     this.note,
     this.tags,
+    this.checkList,
     this.date,
     this.reminder,
     this.deadline,
@@ -49,6 +54,7 @@ class TaskResult extends Equatable {
       name,
       note,
       tags,
+      checkList,
       date,
       reminder,
       deadline,
@@ -56,4 +62,7 @@ class TaskResult extends Equatable {
       priority,
     ];
   }
+
+  @override
+  bool get stringify => true;
 }

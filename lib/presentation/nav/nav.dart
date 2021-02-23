@@ -15,9 +15,10 @@ class Nav extends StatefulWidget {
 
 class _NavState extends State<Nav> {
   PersistentTabController _navController;
+  bool _shouldHideNavBar = false;
   List<Widget> navigationWidgets = [
     TaskScreen(),
-    Container(),
+    AddTaskScreen(),
     HabitScreen(),
   ];
 
@@ -45,6 +46,7 @@ class _NavState extends State<Nav> {
           context,
           controller: _navController,
           screens: navigationWidgets,
+          hideNavigationBar: _shouldHideNavBar,
           items: _buildItems(),
           hideNavigationBarWhenKeyboardShows: true,
           handleAndroidBackButtonPress: true,
@@ -57,7 +59,9 @@ class _NavState extends State<Nav> {
           onItemSelected: (index) {
             //TODO: Customize an algo to check the previous tab
             if (index == 1) {
-              Navigator.pushNamed(context, AddTaskScreen.route);
+              setState(() {
+                _shouldHideNavBar = false;
+              });
             }
           },
           // body: navigationWidgets[_currentIndex],

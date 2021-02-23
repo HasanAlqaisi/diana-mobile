@@ -22,11 +22,11 @@ class AddTaskController extends GetxController {
 
   RxList<dynamic> subtasks = [].obs;
   RxBool shouldRemind = false.obs;
+  RxString reminderTime = ''.obs, startingDate = ''.obs, deadlineDate = ''.obs;
   String taskName, note, tag;
   List<String> subtasksNames = [];
   List<String> tags = [];
   RxInt priority = 0.obs;
-  String startingDate, reminderDate, deadlineDate;
 
   @override
   void onInit() {
@@ -52,16 +52,17 @@ class AddTaskController extends GetxController {
     );
   }
 
-  void onTaskPlusClicked() {
-    API.doRequest(
+  Future<void> onTaskPlusClicked() async {
+    await API.doRequest(
       body: () async {
         return await insertTaskUseCase(
           taskName,
           note,
-          startingDate,
+          startingDate.value,
           tags,
-          reminderDate,
-          deadlineDate,
+          subtasksNames,
+          reminderTime.value,
+          deadlineDate.value,
           priority.value,
           false,
         );

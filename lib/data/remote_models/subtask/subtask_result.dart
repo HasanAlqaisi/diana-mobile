@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'subtask_result.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class SubtaskResult extends Equatable {
   final String id;
   final String name;
@@ -20,4 +20,7 @@ class SubtaskResult extends Equatable {
 
   @override
   List<Object> get props => [id, name, done, taskId];
+
+  @override
+  bool get stringify => true;
 }

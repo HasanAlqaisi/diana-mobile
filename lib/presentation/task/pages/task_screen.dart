@@ -56,7 +56,6 @@ class TaskScreen extends StatelessWidget {
         ),
         body: GetBuilder<TaskController>(
           init: di.sl<TaskController>(),
-          initState: (_) {},
           builder: (_) {
             return TabBarView(children: [
               TodayTaskTab(),

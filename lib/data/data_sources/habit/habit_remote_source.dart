@@ -55,12 +55,14 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
       '$baseUrl/habit/',
       headers: {
         'Authorization': 'Bearer $kToken',
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
       },
-      body: {
+      body: jsonEncode({
         "name": name,
         "days": days,
         "time": time,
-      },
+      }),
     );
 
     if (response.statusCode == 201) {

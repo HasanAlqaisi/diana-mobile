@@ -120,7 +120,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   vertical: 16.0, horizontal: 8.0),
                               child: GestureDetector(
                                 onTap: () async {
-                                  _.startingDate = dateToYMDString(
+                                  _.startingDate.value = dateToYMDString(
                                     await showDatePicker(
                                       context: context,
                                       initialDate: DateTime.now(),
@@ -136,10 +136,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     color: Color(0xFF4A15B5),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  child: Text(
-                                    'Choose a date',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                  child: Obx(() => Text(
+                                        _dateFieldFormatter(
+                                            _.startingDate.value),
+                                        style: TextStyle(color: Colors.white),
+                                      )),
                                 ),
                               ),
                             ),
@@ -248,9 +249,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Checkbox(
-                            value: _.shouldRemind.value,
-                            onChanged: (newValue) =>
-                                _.shouldRemind.value = newValue,
+                            value: _.shouldRemind.value &&
+                                _.startingDate.value.isNotEmpty,
+                            onChanged: (newValue) {
+                              _.shouldRemind.value = newValue;
+                              if (newValue == true) {
+                                _.reminderTime.value =
+                                    '${_.startingDate.value}T${TimeOfDay.now().hour}:${TimeOfDay.now().minute}';
+                              }
+                            },
                             checkColor: Colors.black,
                             activeColor: Colors.white,
                           ),
@@ -275,9 +282,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   color: Color(0xFF4A15B5),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                child: Text(
-                                  '${DateTime.now().hour}:${DateTime.now().minute}',
-                                  style: TextStyle(color: Colors.white),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    await showTimePicker(
+                                            context: context,
+                                            initialTime: TimeOfDay.now())
+                                        .then((time) => AddTaskController
+                                                .to.reminderTime.value =
+                                            '${_.startingDate.value}T${time.hour}:${time.minute}');
+                                  },
+                                  child: Text(
+                                    '${AddTaskController.to.reminderTime.value}',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               ),
                             ),
@@ -302,8 +319,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               vertical: 16.0, horizontal: 8.0),
                           child: GestureDetector(
                             onTap: () async {
-                              _.deadlineDate =
-                                  dateToYMDString(await showDatePicker(
+                              _.deadlineDate.value =
+                                  dateToDjangotring(await showDatePicker(
                                 context: context,
                                 initialDate:
                                     DateTime.now().add(Duration(days: 1)),
@@ -318,10 +335,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 color: Color(0xFF4A15B5),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: Text(
-                                'Choose a date',
-                                style: TextStyle(color: Colors.white),
-                              ),
+                              child: Obx(() => Text(
+                                    _dateFieldFormatter(_.deadlineDate.value),
+                                    style: TextStyle(color: Colors.white),
+                                  )),
                             ),
                           ),
                         ),
@@ -376,6 +393,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         ),
       ),
     );
+  }
+
+  String _dateFieldFormatter(String date) {
+    if (date.isEmpty) {
+      return 'Choose a date';
+    } else {
+      return date;
+    }
   }
 }
 

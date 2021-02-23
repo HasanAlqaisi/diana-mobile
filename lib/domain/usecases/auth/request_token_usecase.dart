@@ -8,7 +8,7 @@ class RequestTokenUsecase {
 
   RequestTokenUsecase(this.authRepo);
 
-  Future<Either<Failure, RefreshInfo>> call(String refreshToken) {
-    return authRepo.requestToken(refreshToken);
+  Future<Either<Failure, RefreshInfo>> call() {
+    return authRepo.requestToken();
   }
 }

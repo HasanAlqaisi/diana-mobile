@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'tag_result.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class TagResult extends Equatable {
   final String id;
   final String name;
@@ -20,4 +20,7 @@ class TagResult extends Equatable {
 
   @override
   List<Object> get props => [id, name, color, userId];
+
+  @override
+  bool get stringify => true;
 }

@@ -38,4 +38,7 @@ class HabitResult extends Equatable {
       userId,
     ];
   }
+
+  @override
+  bool get stringify => true;
 }

@@ -101,15 +101,6 @@ class TaskController extends GetxController {
         Fluttertoast.showToast(msg: failureToString(failure));
       },
     );
-
-    await API.doRequest(
-      body: () async {
-        return await getSubtasksUseCase(null);
-      },
-      failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
-      },
-    );
   }
 
   @override
@@ -118,12 +109,21 @@ class TaskController extends GetxController {
     _taskWithTagsController.close();
   }
 
-  Future<void> addTask(String name, String note, String date, List<String> tags,
-      String reminder, String deadline, int priority, bool done) async {
+  Future<void> addTask(
+    String name,
+    String note,
+    String date,
+    List<String> tags,
+    List<String> checklist,
+    String reminder,
+    String deadline,
+    int priority,
+    bool done,
+  ) async {
     await API.doRequest(
       body: () async {
-        return await insertTaskUseCase(
-            name, note, date, tags, reminder, deadline, priority, done);
+        return await insertTaskUseCase(name, note, date, tags, checklist,
+            reminder, deadline, priority, done);
       },
       failedBody: (failure) {
         Fluttertoast.showToast(msg: failureToString(failure));
@@ -137,6 +137,7 @@ class TaskController extends GetxController {
     String note,
     String date,
     List<String> tags,
+    List<String> checklist,
     String reminder,
     String deadline,
     int priority,
@@ -144,8 +145,8 @@ class TaskController extends GetxController {
   ) async {
     await API.doRequest(
       body: () async {
-        return await editTaskUseCase(
-            taskId, name, note, date, tags, reminder, deadline, priority, done);
+        return await editTaskUseCase(taskId, name, note, date, tags, checklist,
+            reminder, deadline, priority, done);
       },
       failedBody: (failure) {
         Fluttertoast.showToast(msg: failureToString(failure));

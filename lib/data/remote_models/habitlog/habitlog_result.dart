@@ -25,4 +25,7 @@ class HabitlogResult extends Equatable {
 
   @override
   List<Object> get props => [habitlogId, doneAt, habitId];
+
+  @override
+  bool get stringify => true;
 }

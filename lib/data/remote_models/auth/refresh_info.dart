@@ -22,4 +22,7 @@ class RefreshInfo extends Equatable {
   List<Object> get props {
     return [access, refresh];
   }
+
+  @override
+  bool get stringify => true;
 }

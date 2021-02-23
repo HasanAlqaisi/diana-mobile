@@ -20,7 +20,13 @@ class TodayTaskTab extends StatelessWidget {
         TagChips(),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: QuickAddField(),
+          child: QuickAddField(
+            hint: 'Quick Task',
+            onSubmitted: (taskName) {
+              TaskController.to
+                  .addTask(taskName, null, null, [], [], null, null, 0, false);
+            },
+          ),
         ),
         TodayTasksList(),
       ],

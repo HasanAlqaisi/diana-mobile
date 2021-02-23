@@ -13,6 +13,7 @@ abstract class TaskRemoteSource {
     String name,
     String note,
     List<String> tags,
+    List<String> checkList,
     String date,
     String reminder,
     String deadline,
@@ -25,6 +26,7 @@ abstract class TaskRemoteSource {
     String name,
     String note,
     List<String> tags,
+    List<String> checkList,
     String date,
     String reminder,
     String deadline,
@@ -42,8 +44,9 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
 
   @override
   Future<TaskResponse> getTasks(int offset) async {
+    //TODO: Edit limit
     final response = await client.get(
-      '$baseUrl/task/?limit=10&offset=$offset',
+      '$baseUrl/task/?limit=100&offset=$offset',
       headers: {
         'Authorization': 'Bearer $kToken',
       },
@@ -63,6 +66,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     String name,
     String note,
     List<String> tags,
+    List<String> checkList,
     String date,
     String reminder,
     String deadline,
@@ -73,6 +77,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
             name: $name,
         note: $note,
         with_tags: $tags,
+        with_subtasks: $checkList,
         date: $date,
         reminder: $reminder,
         deadline: $deadline,
@@ -90,9 +95,10 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
             "name": name,
             "note": note,
             "with_tags": tags,
-            "date": date,
-            "reminder": reminder,
-            "deadline": deadline,
+            "with_subtasks": checkList,
+            "date": date == null || date.isEmpty ? null : date,
+            "reminder": date == null || reminder.isEmpty ? null : reminder,
+            "deadline": date == null || deadline.isEmpty ? null : deadline,
             "priority": priority,
             "done": done,
           },
@@ -115,6 +121,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     String name,
     String note,
     List<String> tags,
+    List<String> checkList,
     String date,
     String reminder,
     String deadline,
@@ -125,13 +132,14 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     name: $name
     note: $note
     tags: $tags
+    checklist: $checkList
     date: $date
     reminder: $reminder
     deadline: $deadline
     priority: $priority
     done: $done""");
 
-    final response = await client.patch(
+    final response = await client.put(
       '$baseUrl/task/$taskId/',
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -140,7 +148,15 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
       },
       body: jsonEncode(
         {
-          "done": done,
+          "name": name,
+          "note": note,
+          "with_tags": tags,
+          "with_subtasks": checkList,
+          "date": (date == null || date.isEmpty) ? null : date,
+          "reminder": (date == null || reminder.isEmpty) ? null : reminder,
+          "deadline": (date == null || deadline.isEmpty) ? null : deadline,
+          "priority": priority,
+          "done": done
         },
       ),
     );

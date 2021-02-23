@@ -59,8 +59,8 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
     return (delete(habitTable)..where((tbl) => tbl.id.equals(habitId))).go();
   }
 
-  Future<Stream<Future<List<HabitWitLogsWithDays>>>> watchTodayHabits(
-      String userId, int todayInt) async {
+  Stream<Future<List<HabitWitLogsWithDays>>> watchTodayHabits(
+      String userId, int todayInt) {
     final firstDayOfWeek = DateHelper.getFirstDayOfWeek(DateTime.now());
     final lastDayOfWeek = DateHelper.getLastDayOfWeek(DateTime.now());
 
@@ -102,8 +102,7 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
     });
   }
 
-  Future<Stream<Future<List<HabitWitLogsWithDays>>>> watchAllHabits(
-      String userId) async {
+  Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits(String userId) {
     final firstDayOfWeek = DateHelper.getFirstDayOfWeek(DateTime.now());
     final lastDayOfWeek = DateHelper.getLastDayOfWeek(DateTime.now());
 
@@ -113,9 +112,9 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
           habitlogTable, habitlogTable.habitId.equalsExp(habitTable.id)),
       leftOuterJoin(daysTable, daysTable.habitId.equalsExp(habitTable.id))
     ])
-              ..where(habitlogTable.doneAt
-                      .isBiggerOrEqualValue(firstDayOfWeek) &
-                  habitlogTable.doneAt.isSmallerOrEqualValue(lastDayOfWeek)))
+              // ..where(habitlogTable.doneAt
+              //         .isBiggerOrEqualValue(firstDayOfWeek) &
+              //     habitlogTable.doneAt.isSmallerOrEqualValue(lastDayOfWeek)))
         .watch()
         .map((rows) async {
       final result = <HabitData, List<HabitlogData>>{};
@@ -136,6 +135,6 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
                 .getSingle(),
           )
       ];
-    });
+    }));
   }
 }

@@ -56,7 +56,7 @@ class TodayTasksList extends StatelessWidget {
                                         visible: data[index]?.task?.note != null
                                             ? true
                                             : false),
-                                    trailing: _buildTrailing(data[index].task,
+                                    trailing: _buildTrailing(data[index],
                                         taskWithTagsSnapshot?.data),
                                     backgroundColor: Colors.white,
                                     childrenPadding:
@@ -101,9 +101,9 @@ class TodayTasksList extends StatelessWidget {
         });
   }
 
-  Widget _buildTrailing(TaskData taskData, TaskWithTags tagsData) {
+  Widget _buildTrailing(TaskWithSubtasks taskData, TaskWithTags tagsData) {
     final selectedTask = TaskController.to.selectedTask.value;
-    if (selectedTask == taskData.id) {
+    if (selectedTask == taskData.task.id) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -122,14 +122,15 @@ class TodayTasksList extends StatelessWidget {
               onTap: () {
                 print('check mark cliked');
                 TaskController.to.editTask(
-                  taskData.id,
-                  taskData.name,
-                  taskData.note,
-                  taskData.date.toString(),
+                  taskData.task.id,
+                  taskData.task.name,
+                  taskData.task.note,
+                  taskData.task.date.toString(),
                   tagsData.tags.map((tag) => tag.id).toList(),
-                  taskData.reminder.toString(),
-                  taskData.deadline.toString(),
-                  taskData.priority,
+                  taskData.subtasks.map((subtask) => subtask.name).toList(),
+                  taskData.task.reminder.toString(),
+                  taskData.task.deadline.toString(),
+                  taskData.task.priority,
                   true,
                 );
               },

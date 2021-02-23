@@ -22,4 +22,7 @@ class TaskResponse extends Equatable {
 
   @override
   List<Object> get props => [count, next, previous, results];
+
+  @override
+  bool get stringify => true;
 }

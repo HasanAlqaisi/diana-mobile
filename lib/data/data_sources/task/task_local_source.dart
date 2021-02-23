@@ -36,7 +36,7 @@ abstract class TaskLocalSource {
 
   Future<int> deleteTask(String taskId);
 
-  Future<int> insertTask(TaskResult taskResult);
+  Future<void> insertTask(TaskResult taskResult);
 
   Future<int> deleteSubTask(String subtaskId);
 
@@ -124,7 +124,7 @@ class TaskLocalSourceImpl extends TaskLocalSource {
   }
 
   @override
-  Future<int> insertTask(TaskResult taskResult) {
+  Future<void> insertTask(TaskResult taskResult) {
     return taskDao.insertTask(taskResult);
   }
 

@@ -50,4 +50,7 @@ class User extends Equatable {
       dailyProgress,
     ];
   }
+
+  @override
+  bool get stringify => true;
 }

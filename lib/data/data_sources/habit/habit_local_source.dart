@@ -13,11 +13,10 @@ abstract class HabitLocalSource {
 
   Future<void> insertHabits(HabitResponse habits);
 
-  Future<Stream<Future<List<HabitWitLogsWithDays>>>> watchTodayHabits(
+  Stream<Future<List<HabitWitLogsWithDays>>> watchTodayHabits(
       String userId, int todayInt);
 
-  Future<Stream<Future<List<HabitWitLogsWithDays>>>> watchAllHabits(
-      String userId);
+  Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits(String userId);
 
   Future<void> insertHabit(HabitResult habit);
 
@@ -58,13 +57,12 @@ class HabitLocalSourceImpl extends HabitLocalSource {
   }
 
   @override
-  Future<Stream<Future<List<HabitWitLogsWithDays>>>> watchAllHabits(
-      String userId) {
+  Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits(String userId) {
     return habitDao.watchAllHabits(userId);
   }
 
   @override
-  Future<Stream<Future<List<HabitWitLogsWithDays>>>> watchTodayHabits(
+  Stream<Future<List<HabitWitLogsWithDays>>> watchTodayHabits(
       String userId, int todayInt) {
     return habitDao.watchTodayHabits(userId, todayInt);
   }

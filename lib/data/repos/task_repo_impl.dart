@@ -24,6 +24,7 @@ import 'package:diana/data/remote_models/task/task_response.dart';
 import 'package:diana/data/remote_models/task/task_result.dart';
 import 'package:diana/data/remote_models/tasktag/tasktag.dart';
 import 'package:diana/domain/repos/task_repo.dart';
+import 'package:flutter/material.dart';
 
 class TaskRepoImpl extends TaskRepo {
   final NetWorkInfo netWorkInfo;
@@ -51,6 +52,8 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await subtaskRemoteSource.deleteSubtask(subtaskId);
 
+        debugPrint('deleteSubtask => API result is $result');
+
         await taskLocalSource.deleteSubTask(subtaskId);
 
         return Right(result);
@@ -71,6 +74,8 @@ class TaskRepoImpl extends TaskRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await taskRemoteSource.deleteTask(taskId);
+
+        debugPrint('deleteTask => API result is $result');
 
         await taskLocalSource.deleteTask(taskId);
 
@@ -93,6 +98,8 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await tagRemoteSource.deleteTag(id);
 
+        debugPrint('deleteTag => API result is $result');
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -112,6 +119,9 @@ class TaskRepoImpl extends TaskRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await taskTagRemoteSource.deleteTaskTag(id);
+
+        debugPrint('deleteTaskTag => API result is $result');
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -132,6 +142,8 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await subtaskRemoteSource.editSubtask(
             subtaskId, name, isDone, taskId);
+
+        debugPrint('editSubtask => API result is $result');
 
         await taskLocalSource.insertSubTask(result);
 
@@ -159,6 +171,8 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await tagRemoteSource.editTag(id, name, color);
 
+        debugPrint('editTag => API result is $result');
+
         await taskLocalSource.insertTag(result);
 
         return Right(result);
@@ -185,6 +199,7 @@ class TaskRepoImpl extends TaskRepo {
     String note,
     String date,
     List<String> tags,
+    List<String> checklist,
     String reminder,
     String deadline,
     int priority,
@@ -192,13 +207,12 @@ class TaskRepoImpl extends TaskRepo {
   ) async {
     if (await netWorkInfo.isConnected()) {
       try {
-        final result = await taskRemoteSource.editTask(
-            taskId, name, note, tags, date, reminder, deadline, priority, done);
+        final result = await taskRemoteSource.editTask(taskId, name, note, tags,
+            checklist, date, reminder, deadline, priority, done);
 
-        print('task ${result.name} done date is ${result.doneAt}');
+        debugPrint('editTask => API result is $result');
 
-        print('task inserted?' +
-            (await taskLocalSource.insertTask(result)).toString());
+        await taskLocalSource.insertTask(result);
 
         return Right(result);
       } on FieldsException catch (error) {
@@ -224,6 +238,9 @@ class TaskRepoImpl extends TaskRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await taskTagRemoteSource.editTaskTag(id, taskId, tagId);
+
+        debugPrint('editTaskTag => API result is $result');
+
         return Right(result);
       } on FieldsException catch (error) {
         return Left(
@@ -247,6 +264,8 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result =
             await subtaskRemoteSource.getSubtasks(taskId, subtaskOffset);
+
+        debugPrint('getSubtasks => API result is $result');
 
         if (subtaskOffset == 0) {
           await taskLocalSource.deleteAndInsertSubTasks(result);
@@ -275,6 +294,8 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await tagRemoteSource.getTags(tagOffset);
 
+        debugPrint('getTags => API result is $result');
+
         if (tagOffset == 0) {
           await taskLocalSource.deleteAndInsertTags(result);
         } else {
@@ -301,8 +322,8 @@ class TaskRepoImpl extends TaskRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await taskRemoteSource.getTasks(taskOffset);
-        result.results
-            .forEach((task) => print('Task ${task.name} its date is ${task.date}'));
+
+        debugPrint('getTasks => API result is ${result.results}');
 
         if (taskOffset == 0) {
           await taskLocalSource.deleteAndinsertTasks(result);
@@ -333,6 +354,8 @@ class TaskRepoImpl extends TaskRepo {
         final result =
             await subtaskRemoteSource.insertSubtask(name, isDone, taskId);
 
+        debugPrint('insertSubtask => API result is $result');
+
         await taskLocalSource.insertSubTask(result);
 
         return Right(result);
@@ -356,6 +379,8 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await tagRemoteSource.insertTags(name, color);
 
+        debugPrint('insertTag => API result is $result');
+
         await taskLocalSource.insertTag(result);
 
         return Right(result);
@@ -375,18 +400,22 @@ class TaskRepoImpl extends TaskRepo {
 
   @override
   Future<Either<Failure, TaskResult>> insertTask(
-      String name,
-      String note,
-      String date,
-      List<String> tags,
-      String reminder,
-      String deadline,
-      int priority,
-      bool done) async {
+    String name,
+    String note,
+    String date,
+    List<String> tags,
+    List<String> checklist,
+    String reminder,
+    String deadline,
+    int priority,
+    bool done,
+  ) async {
     if (await netWorkInfo.isConnected()) {
       try {
-        final result = await taskRemoteSource.insertTask(
-            name, note, tags, date, reminder, deadline, priority, done);
+        final result = await taskRemoteSource.insertTask(name, note, tags,
+            checklist, date, reminder, deadline, priority, done);
+
+        debugPrint('insertTask => API result is $result');
 
         await taskLocalSource.insertTask(result);
 
@@ -412,6 +441,9 @@ class TaskRepoImpl extends TaskRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await taskTagRemoteSource.insertTaskTag(taskId, tagId);
+
+        debugPrint('insertTaskTag => API result is $result');
+
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());

@@ -13,12 +13,13 @@ class InsertTaskUseCase {
     String note,
     String date,
     List<String> tags,
+    List<String> checklist,
     String reminder,
     String deadline,
     int priority,
     bool done,
   ) {
     return taskRepo.insertTask(
-        name, note, date, tags, reminder, deadline, priority, done);
+        name, note, date, tags, checklist, reminder, deadline, priority, done);
   }
 }
