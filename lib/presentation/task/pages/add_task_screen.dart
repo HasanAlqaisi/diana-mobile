@@ -1,6 +1,7 @@
 import 'package:diana/core/constants/constants.dart';
 import 'package:diana/core/mappers/date_to_ymd_string.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -120,15 +121,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   vertical: 16.0, horizontal: 8.0),
                               child: GestureDetector(
                                 onTap: () async {
-                                  _.startingDate.value = dateToYMDString(
-                                    await showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime.now(),
-                                      lastDate: DateTime.now()
-                                          .add(Duration(days: 60)),
-                                    ),
+                                  _.date.value = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime.now(),
+                                    lastDate:
+                                        DateTime.now().add(Duration(days: 60)),
                                   );
+                                  _.startingDate.value =
+                                      dateToDjangotring(_.date.value);
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(10),
@@ -264,7 +265,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           Text(
                             'Remind me',
                             style: TextStyle(
-                              color: _.shouldRemind.value
+                              color: _.shouldRemind.value &&
+                                      _.startingDate.value.isNotEmpty
                                   ? Colors.white
                                   : Color(0xFF4A15B5),
                               fontSize: 16,
@@ -272,7 +274,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             ),
                           ),
                           Visibility(
-                            visible: _.shouldRemind.value,
+                            visible: _.shouldRemind.value &&
+                                _.startingDate.value.isNotEmpty,
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 14.0),
@@ -287,12 +290,20 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     await showTimePicker(
                                             context: context,
                                             initialTime: TimeOfDay.now())
-                                        .then((time) => AddTaskController
-                                                .to.reminderTime.value =
-                                            '${_.startingDate.value}T${time.hour}:${time.minute}');
+                                        .then((time) {
+                                      _.date.value = DateTime(
+                                        _.date.value.year,
+                                        _.date.value.month,
+                                        _.date.value.day,
+                                        time.hour,
+                                        time.minute,
+                                      );
+                                      AddTaskController.to.reminderTime.value =
+                                          dateAndTimeToDjango(_.date.value);
+                                    });
                                   },
                                   child: Text(
-                                    '${AddTaskController.to.reminderTime.value}',
+                                    '${_.date.value.toLocal()?.hour}:${_.date.value.toLocal()?.minute}',
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -319,15 +330,38 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               vertical: 16.0, horizontal: 8.0),
                           child: GestureDetector(
                             onTap: () async {
-                              _.deadlineDate.value =
-                                  dateToDjangotring(await showDatePicker(
-                                context: context,
-                                initialDate:
-                                    DateTime.now().add(Duration(days: 1)),
-                                firstDate: DateTime.now(),
-                                lastDate:
-                                    DateTime.now().add(Duration(days: 60)),
-                              ));
+                              // _.deadlineDate.value =
+                              //     dateToDjangotring(await showDatePicker(
+                              //   context: context,
+                              //   initialDate:
+                              //       DateTime.now().add(Duration(days: 1)),
+                              //   firstDate: DateTime.now(),
+                              //   lastDate:
+                              //       DateTime.now().add(Duration(days: 60)),
+                              // ));
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    final currentDate = DateTime.now();
+                                    return CupertinoDatePicker(
+                                      mode: CupertinoDatePickerMode.dateAndTime,
+                                      initialDateTime: DateTime(
+                                          currentDate.year,
+                                          currentDate.month,
+                                          currentDate
+                                              .add(Duration(days: 1))
+                                              .day,
+                                          currentDate.hour,
+                                          currentDate.minute),
+                                      onDateTimeChanged:
+                                          (DateTime newDateTime) {
+                                        _.deadlineDate.value =
+                                            dateAndTimeToDjango(newDateTime);
+                                      },
+                                      use24hFormat: false,
+                                      minuteInterval: 1,
+                                    );
+                                  });
                             },
                             child: Container(
                               padding: EdgeInsets.all(10),
@@ -336,7 +370,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Obx(() => Text(
-                                    _dateFieldFormatter(_.deadlineDate.value),
+                                    _dateFieldFormatter(
+                                        _.deadlineDate.value.split('T').first),
                                     style: TextStyle(color: Colors.white),
                                   )),
                             ),

@@ -5,6 +5,7 @@ import 'package:diana/core/api_helpers/api.dart';
 import 'package:diana/core/mappers/failure_to_string.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
+import 'package:diana/domain/usecases/task/delete_task_usecase.dart';
 import 'package:diana/domain/usecases/task/edit_subtask_usecase.dart';
 import 'package:diana/domain/usecases/task/edit_task_usecase.dart';
 import 'package:diana/domain/usecases/task/get_subtasks_usecase.dart';
@@ -43,6 +44,7 @@ class TaskController extends GetxController {
   final WatchTagsForTaskUseCase watchTagsForTaskUseCase;
   final GetSubtasksUseCase getSubtasksUseCase;
   final EditTaskUseCase editTaskUseCase;
+  final DeleteTaskUseCase deleteTaskUseCase;
 
   StreamController<TaskWithTags> _taskWithTagsController;
   Failure failure;
@@ -62,6 +64,7 @@ class TaskController extends GetxController {
     this.watchTagsForTaskUseCase,
     this.getSubtasksUseCase,
     this.editTaskUseCase,
+    this.deleteTaskUseCase,
   );
 
   @override
@@ -147,6 +150,17 @@ class TaskController extends GetxController {
       body: () async {
         return await editTaskUseCase(taskId, name, note, date, tags, checklist,
             reminder, deadline, priority, done);
+      },
+      failedBody: (failure) {
+        Fluttertoast.showToast(msg: failureToString(failure));
+      },
+    );
+  }
+
+  Future<void> onDeleteTaskClicked(String taskId) async {
+    await API.doRequest(
+      body: () async {
+        return await deleteTaskUseCase(taskId);
       },
       failedBody: (failure) {
         Fluttertoast.showToast(msg: failureToString(failure));

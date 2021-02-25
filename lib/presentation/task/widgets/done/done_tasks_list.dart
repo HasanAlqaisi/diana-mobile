@@ -115,7 +115,11 @@ class DoneTasksList extends StatelessWidget {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(FontAwesomeIcons.trash, color: Colors.red),
+          GestureDetector(
+              onTap: () {
+                TaskController.to.onDeleteTaskClicked(taskData.task.id);
+              },
+              child: Icon(FontAwesomeIcons.trash, color: Colors.red)),
           SizedBox(width: 10),
           Icon(FontAwesomeIcons.pencilAlt),
         ],
