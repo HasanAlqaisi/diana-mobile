@@ -37,6 +37,7 @@ import 'package:diana/domain/usecases/habit/watch_today_habits_usecase.dart';
 import 'package:diana/domain/usecases/home/get_refresh_token_usecase.dart';
 import 'package:diana/domain/usecases/home/get_token_usecase.dart';
 import 'package:diana/domain/usecases/home/get_userid_usecase.dart';
+import 'package:diana/domain/usecases/task/delete_task_usecase.dart';
 import 'package:diana/domain/usecases/task/edit_task_usecase.dart';
 import 'package:diana/domain/usecases/task/get_subtasks_usecase.dart';
 import 'package:diana/domain/usecases/task/get_tags_usecase.dart';
@@ -103,8 +104,8 @@ void controllersInjection() {
 
   sl.registerFactory(() => LoginController(sl()));
   sl.registerFactory(() => RegistrationController(sl()));
-  sl.registerFactory(() => TaskController(
-      sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => TaskController(sl(), sl(), sl(), sl(), sl(), sl(),
+      sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory(() => AddTaskController(sl(), sl(), sl(), sl()));
   sl.registerFactory(
       () => HabitController(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
@@ -122,6 +123,7 @@ void usecasesInjection() {
   sl.registerLazySingleton(() => GetTagsUseCase(taskRepo: sl()));
   sl.registerLazySingleton(() => GetTasksUseCase(taskRepo: sl()));
   sl.registerLazySingleton(() => InsertTaskUseCase(taskRepo: sl()));
+  sl.registerLazySingleton(() => DeleteTaskUseCase(taskRepo: sl()));
   sl.registerLazySingleton(() => WatchTodayTasksUseCase(sl()));
   sl.registerLazySingleton(() => WatchAllTasksUseCase(sl()));
   sl.registerLazySingleton(() => WatchCompletedTasksUseCase(sl()));
