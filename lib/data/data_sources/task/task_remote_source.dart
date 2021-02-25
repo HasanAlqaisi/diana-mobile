@@ -74,7 +74,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     bool done,
   ) async {
     print("""
-            name: $name,
+            title: $name,
         note: $note,
         with_tags: $tags,
         with_subtasks: $checkList,
@@ -92,13 +92,13 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
         },
         body: jsonEncode(
           {
-            "name": name,
+            "title": name,
             "note": note,
             "with_tags": tags,
             "with_subtasks": checkList,
-            "date": date == null || date.isEmpty ? null : date,
-            "reminder": date == null || reminder.isEmpty ? null : reminder,
-            "deadline": date == null || deadline.isEmpty ? null : deadline,
+            "date": date.isEmpty ? null : date,
+            "reminder": reminder.isEmpty ? null : reminder,
+            "deadline": deadline.isEmpty ? null : deadline,
             "priority": priority,
             "done": done,
           },
@@ -129,7 +129,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     bool done,
   ) async {
     print("""task edition info: 
-    name: $name
+    title: $name
     note: $note
     tags: $tags
     checklist: $checkList
@@ -148,13 +148,13 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
       },
       body: jsonEncode(
         {
-          "name": name,
+          "title": name,
           "note": note,
           "with_tags": tags,
           "with_subtasks": checkList,
-          "date": (date == null || date.isEmpty) ? null : date,
-          "reminder": (date == null || reminder.isEmpty) ? null : reminder,
-          "deadline": (date == null || deadline.isEmpty) ? null : deadline,
+          "date": date,
+          "reminder": reminder,
+          "deadline": deadline,
           "priority": priority,
           "done": done
         },
