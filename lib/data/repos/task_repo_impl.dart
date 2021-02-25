@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 
@@ -52,7 +53,7 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await subtaskRemoteSource.deleteSubtask(subtaskId);
 
-        debugPrint('deleteSubtask => API result is $result');
+        log('API result is $result', name: 'deleteSubtask');
 
         await taskLocalSource.deleteSubTask(subtaskId);
 
@@ -75,7 +76,7 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await taskRemoteSource.deleteTask(taskId);
 
-        debugPrint('deleteTask => API result is $result');
+        log('API result is $result', name: 'deleteTask');
 
         await taskLocalSource.deleteTask(taskId);
 
@@ -98,7 +99,7 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await tagRemoteSource.deleteTag(id);
 
-        debugPrint('deleteTag => API result is $result');
+        log('API result is $result', name: 'deleteTag');
 
         return Right(result);
       } on UnAuthException {
@@ -120,7 +121,7 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await taskTagRemoteSource.deleteTaskTag(id);
 
-        debugPrint('deleteTaskTag => API result is $result');
+        log('API result is $result', name: 'deleteTaskTag');
 
         return Right(result);
       } on UnAuthException {
@@ -143,7 +144,7 @@ class TaskRepoImpl extends TaskRepo {
         final result = await subtaskRemoteSource.editSubtask(
             subtaskId, name, isDone, taskId);
 
-        debugPrint('editSubtask => API result is $result');
+        log('API result is $result', name: 'editSubtask');
 
         await taskLocalSource.insertSubTask(result);
 
@@ -171,7 +172,7 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await tagRemoteSource.editTag(id, name, color);
 
-        debugPrint('editTag => API result is $result');
+        log('API result is $result', name: 'editTag');
 
         await taskLocalSource.insertTag(result);
 
@@ -210,7 +211,7 @@ class TaskRepoImpl extends TaskRepo {
         final result = await taskRemoteSource.editTask(taskId, name, note, tags,
             checklist, date, reminder, deadline, priority, done);
 
-        debugPrint('editTask => API result is $result');
+        log('API result is $result', name: 'editTask');
 
         await taskLocalSource.insertTask(result);
 
@@ -239,7 +240,7 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await taskTagRemoteSource.editTaskTag(id, taskId, tagId);
 
-        debugPrint('editTaskTag => API result is $result');
+        log('API result is $result', name: 'editTaskTag');
 
         return Right(result);
       } on FieldsException catch (error) {
@@ -265,7 +266,7 @@ class TaskRepoImpl extends TaskRepo {
         final result =
             await subtaskRemoteSource.getSubtasks(taskId, subtaskOffset);
 
-        debugPrint('getSubtasks => API result is $result');
+        log('API result is ${result.results}', name: 'getSubtasks');
 
         if (subtaskOffset == 0) {
           await taskLocalSource.deleteAndInsertSubTasks(result);
@@ -294,7 +295,7 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await tagRemoteSource.getTags(tagOffset);
 
-        debugPrint('getTags => API result is $result');
+        log('API result is ${result.results}', name: 'getTags');
 
         if (tagOffset == 0) {
           await taskLocalSource.deleteAndInsertTags(result);
@@ -323,7 +324,7 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await taskRemoteSource.getTasks(taskOffset);
 
-        debugPrint('getTasks => API result is ${result.results}');
+        log('API result is ${result.results}', name: 'getTasks');
 
         if (taskOffset == 0) {
           await taskLocalSource.deleteAndinsertTasks(result);
@@ -354,7 +355,7 @@ class TaskRepoImpl extends TaskRepo {
         final result =
             await subtaskRemoteSource.insertSubtask(name, isDone, taskId);
 
-        debugPrint('insertSubtask => API result is $result');
+        log('API result is $result', name: 'insertSubtask');
 
         await taskLocalSource.insertSubTask(result);
 
@@ -379,7 +380,7 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await tagRemoteSource.insertTags(name, color);
 
-        debugPrint('insertTag => API result is $result');
+        log('API result is $result', name: 'insertTag');
 
         await taskLocalSource.insertTag(result);
 
@@ -415,7 +416,7 @@ class TaskRepoImpl extends TaskRepo {
         final result = await taskRemoteSource.insertTask(name, note, tags,
             checklist, date, reminder, deadline, priority, done);
 
-        debugPrint('insertTask => API result is $result');
+        log('API result is $result', name: 'insertTask');
 
         await taskLocalSource.insertTask(result);
 
@@ -442,7 +443,7 @@ class TaskRepoImpl extends TaskRepo {
       try {
         final result = await taskTagRemoteSource.insertTaskTag(taskId, tagId);
 
-        debugPrint('insertTaskTag => API result is $result');
+        log('API result is $result', name: 'insertTaskTag');
 
         return Right(result);
       } on UnAuthException {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:diana/core/constants/_constants.dart';
@@ -34,7 +35,7 @@ class AuthRepoImpl extends AuthRepo {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await remoteSource.changePass(newPass1, newPass2);
-        debugPrint('changePass => API result is $result');
+        log('API result is $result', name: 'changePass');
         return Right(result);
       } on FieldsException catch (error) {
         return Left(ChangePassFieldsFailure.fromFieldsException(
@@ -57,7 +58,7 @@ class AuthRepoImpl extends AuthRepo {
         final result = await remoteSource.editUser(
             firstName, lastName, username, email, birthdate, password);
 
-        debugPrint('editUser => API result is $result');
+        log('API result is $result', name: 'editUser');
 
         await authLocalSource.insertUser(result);
 
@@ -81,7 +82,7 @@ class AuthRepoImpl extends AuthRepo {
       try {
         final result = await remoteSource.getUser();
 
-        debugPrint('getUser => API result is $result');
+        log('API result is $result', name: 'getUser');
 
         await authLocalSource.insertUser(result);
         await authLocalSource.cacheToken(result.userId);
@@ -104,7 +105,7 @@ class AuthRepoImpl extends AuthRepo {
       try {
         final result = await remoteSource.loginUser(username, password);
 
-        debugPrint('loginUser => API result is $result');
+        log('API result is $result', name: 'loginUser');
 
         //Haven't test these lines
         result.user.timeZone = await FlutterNativeTimezone.getLocalTimezone();
@@ -116,6 +117,7 @@ class AuthRepoImpl extends AuthRepo {
 
         return Right(result);
       } on UnknownException catch (error) {
+        print(error.message);
         return Left(UnknownFailure(message: error.message));
       } on NonFieldsException catch (error) {
         return Left(NonFieldsFailure.fromNonFieldsException(
@@ -132,7 +134,7 @@ class AuthRepoImpl extends AuthRepo {
       try {
         final result = await remoteSource.logoutUser();
 
-        debugPrint('logoutUser => API result is $result');
+        log('API result is $result', name: 'logoutUser');
 
         //TODO: DELETE TOKEN AND REFRESHTOKEN
         return Right(result);
@@ -152,7 +154,7 @@ class AuthRepoImpl extends AuthRepo {
         final user = await remoteSource.registerUser(
             firstName, lastName, username, email, birthdate, password);
 
-        debugPrint('registerUser => API result is $user');
+        log('API result is $user', name: 'registerUser');
 
         // user.timeZone = await FlutterNativeTimezone.getLocalTimezone();
 
@@ -179,12 +181,12 @@ class AuthRepoImpl extends AuthRepo {
       try {
         kRefreshToken = await authLocalSource.getRefreshToken();
 
-        debugPrint(
-            'requestToken => requesting token with refresh: $kRefreshToken');
+        log('requesting token with refresh: $kRefreshToken',
+            name: 'requestToken');
 
         final result = await remoteSource.requestToken(kRefreshToken);
 
-        debugPrint('requestToken => API result is $result');
+        log('API result is $result', name: 'requestToken');
 
         await authLocalSource.cacheToken(result.access);
         await authLocalSource.cacheRefreshToken(result.refresh);
@@ -206,7 +208,7 @@ class AuthRepoImpl extends AuthRepo {
       try {
         final result = await remoteSource.resetPass(email);
 
-        debugPrint('resetPass => API result is $result');
+        log('API result is $result', name: 'resetPass');
 
         return Right(result);
       } on UnknownException catch (error) {

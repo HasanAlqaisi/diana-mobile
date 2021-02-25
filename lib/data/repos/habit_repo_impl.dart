@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 
@@ -39,7 +40,7 @@ class HabitRepoImpl extends HabitRepo {
       try {
         final result = await habitRemoteSource.getHabits(habitOffset);
 
-        debugPrint('getHabits => API result is $result');
+        log('API result is ${result.results}', name: 'getHabits');
 
         if (habitOffset == 0) {
           await habitLocalSource.deleteAndinsertHabits(result);
@@ -69,7 +70,7 @@ class HabitRepoImpl extends HabitRepo {
       try {
         final result = await habitRemoteSource.insertHabit(name, days, time);
 
-        debugPrint('insertHabit => API result is $result');
+        log('API result is $result', name: 'insertHabit');
 
         await habitLocalSource.insertHabit(result);
 
@@ -96,7 +97,7 @@ class HabitRepoImpl extends HabitRepo {
         final result =
             await habitRemoteSource.editHabit(habitId, name, days, time);
 
-        debugPrint('editHabit => API result is $result');
+        log('API result is $result', name: 'editHabit');
 
         await habitLocalSource.insertHabit(result);
 
@@ -123,7 +124,7 @@ class HabitRepoImpl extends HabitRepo {
       try {
         final result = await habitRemoteSource.deleteHabit(habitId);
 
-        debugPrint('deleteHabit => API result is $result');
+        log('API result is $result', name: 'deleteHabit');
 
         await habitLocalSource.deleteHabit(habitId);
 
@@ -147,7 +148,7 @@ class HabitRepoImpl extends HabitRepo {
         final result =
             await habitlogRemoteSource.getHabitlogs(habitlogOffset, habitId);
 
-        debugPrint('getHabitLogs => API result is $result');
+        log('API result is ${result.results}', name: 'getHabitLogs');
 
         if (habitlogOffset == 0) {
           await habitLocalSource.deleteAndinsertHabitlogs(result);
@@ -176,7 +177,7 @@ class HabitRepoImpl extends HabitRepo {
       try {
         final result = await habitlogRemoteSource.insertHabitlog(habitId);
 
-        debugPrint('insertHabitLog => API result is $result');
+        log('API result is $result', name: 'insertHabitLog');
 
         await habitLocalSource.insertHabitlog(result);
 

@@ -11,6 +11,7 @@ class TaskResult extends Equatable {
   final String taskId;
   @JsonKey(name: 'user')
   final String userId;
+  @JsonKey(name: 'title')
   final String name;
   @JsonKey(nullable: true)
   final String note;

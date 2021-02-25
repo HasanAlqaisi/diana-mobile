@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:diana/core/constants/_constants.dart';
 import 'package:diana/domain/usecases/home/get_refresh_token_usecase.dart';
 import 'package:diana/domain/usecases/home/get_token_usecase.dart';
@@ -24,12 +26,12 @@ class HomeController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    debugPrint('${Home.route} => getting refresh token, userid, token');
+    log('getting refresh token, userid, token', name: Home.route);
     kRefreshToken = await getRefreshTokenUseCase();
     kUserId = await getUserIdUseCase();
     kToken = await getTokenUseCase();
-    debugPrint(
-        '${Home.route} => got them\nrefresh token is $kRefreshToken\nuserid is : $kUserId\ntoken is $kToken');
+    log('got them\nrefresh token is $kRefreshToken\nuserid is : $kUserId\ntoken is $kToken',
+        name: Home.route);
     isLogged.value = kToken != null ? true : false;
   }
 }

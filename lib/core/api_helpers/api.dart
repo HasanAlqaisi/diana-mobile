@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:diana/core/constants/_constants.dart';
 import 'package:diana/core/errors/failure.dart';
 import 'package:diana/domain/usecases/auth/request_token_usecase.dart';
@@ -25,14 +27,20 @@ class API {
     Function successBody,
   }) async {
     return (await body?.call()).fold((fail) async {
-      debugPrint(
-          "doRequest => ${body.toString()} FAIL happen => ${fail.runtimeType}");
+      log(
+        "${body.toString()} ",
+        name: 'doRequest',
+        error: {"data": '${fail.runtimeType} happen => ${fail.toString()}'},
+      );
       if (fail is UnAuthFailure) {
-        debugPrint('doRequest => Requesting token');
+        log('Requesting token', name: 'doRequest');
         final requestTokenResult = await _requestTokenUsecase();
         requestTokenResult.fold((requestTokenFail) {
-          debugPrint(
-              "doRequest => fail happen in requesting token => ${requestTokenFail.runtimeType}");
+          log(
+            "${body.toString()} happened in requesting token",
+            name: 'doRequest',
+            error: {"data": '${fail.runtimeType} happen => ${fail.toString()}'},
+          );
           if (requestTokenFail is UnAuthFailure) {
             Fluttertoast.showToast(msg: 'Session ended');
             Get.offAllNamed(LoginScreen.route);
