@@ -142,7 +142,7 @@ class RegisterForm extends StatelessWidget {
                           lastDate: DateTime.now(),
                         );
                         controller.birthString.value =
-                            dateToYMDString(controller.birthdate);
+                            dateToDjangotring(controller.birthdate);
                       },
                       isReadOnly: true,
                       isObsecure: false,

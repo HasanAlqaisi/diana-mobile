@@ -26,4 +26,8 @@ class DateHelper {
     return currentDate
         .add(Duration(days: DateTime.daysPerWeek - currentDate.weekday));
   }
+
+  static String stringDateOrNull(DateTime date){
+    return date == null ? null : date.toString();
+  }
 }

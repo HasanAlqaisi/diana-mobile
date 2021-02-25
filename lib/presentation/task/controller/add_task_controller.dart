@@ -4,6 +4,7 @@ import 'package:diana/domain/usecases/auth/request_token_usecase.dart';
 import 'package:diana/domain/usecases/task/get_tags_usecase.dart';
 import 'package:diana/domain/usecases/task/insert_tag_usecase.dart';
 import 'package:diana/domain/usecases/task/insert_task_usecase.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -24,6 +25,7 @@ class AddTaskController extends GetxController {
   RxBool shouldRemind = false.obs;
   RxString reminderTime = ''.obs, startingDate = ''.obs, deadlineDate = ''.obs;
   String taskName, note, tag;
+  var date = DateTime(2021).obs;
   List<String> subtasksNames = [];
   List<String> tags = [];
   RxInt priority = 0.obs;
