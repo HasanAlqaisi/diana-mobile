@@ -10,6 +10,7 @@ import 'package:diana/domain/usecases/task/edit_subtask_usecase.dart';
 import 'package:diana/domain/usecases/task/edit_task_usecase.dart';
 import 'package:diana/domain/usecases/task/get_subtasks_usecase.dart';
 import 'package:diana/domain/usecases/task/insert_task_usecase.dart';
+import 'package:diana/domain/usecases/task/make_task_done_usecase.dart';
 import 'package:diana/domain/usecases/task/watch_tags_for_task.dart';
 import 'package:diana/presentation/login/pages/login_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -45,6 +46,8 @@ class TaskController extends GetxController {
   final GetSubtasksUseCase getSubtasksUseCase;
   final EditTaskUseCase editTaskUseCase;
   final DeleteTaskUseCase deleteTaskUseCase;
+  final MakeTaskDoneUseCase makeTaskDoneUseCase;
+  final EditSubTaskUseCase editSubTaskUseCase;
 
   StreamController<TaskWithTags> _taskWithTagsController;
   Failure failure;
@@ -52,20 +55,21 @@ class TaskController extends GetxController {
   RxString selectedTask = ''.obs;
 
   TaskController(
-    this.requestTokenUsecase,
-    this.getTagsUseCase,
-    this.getTasksUseCase,
-    this.watchTodayTasksUseCase,
-    this.watchAllTasksUseCase,
-    this.watchCompletedTasksUseCase,
-    this.watchMissedTasksUseCase,
-    this.watchAllTagsUseCase,
-    this.insertTaskUseCase,
-    this.watchTagsForTaskUseCase,
-    this.getSubtasksUseCase,
-    this.editTaskUseCase,
-    this.deleteTaskUseCase,
-  );
+      this.requestTokenUsecase,
+      this.getTagsUseCase,
+      this.getTasksUseCase,
+      this.watchTodayTasksUseCase,
+      this.watchAllTasksUseCase,
+      this.watchCompletedTasksUseCase,
+      this.watchMissedTasksUseCase,
+      this.watchAllTagsUseCase,
+      this.insertTaskUseCase,
+      this.watchTagsForTaskUseCase,
+      this.getSubtasksUseCase,
+      this.editTaskUseCase,
+      this.deleteTaskUseCase,
+      this.makeTaskDoneUseCase,
+      this.editSubTaskUseCase);
 
   @override
   void onInit() async {
@@ -157,10 +161,33 @@ class TaskController extends GetxController {
     );
   }
 
+  Future<void> makeTaskDone(String taskId) async {
+    await API.doRequest(
+      body: () async {
+        return await makeTaskDoneUseCase(taskId);
+      },
+      failedBody: (failure) {
+        Fluttertoast.showToast(msg: failureToString(failure));
+      },
+    );
+  }
+
   Future<void> onDeleteTaskClicked(String taskId) async {
     await API.doRequest(
       body: () async {
         return await deleteTaskUseCase(taskId);
+      },
+      failedBody: (failure) {
+        Fluttertoast.showToast(msg: failureToString(failure));
+      },
+    );
+  }
+
+  Future<void> changeSubtaskState(SubTaskData subTask) async {
+    await API.doRequest(
+      body: () async {
+        return await editSubTaskUseCase(
+            subTask.id, subTask.name, !subTask.done, subTask.taskId);
       },
       failedBody: (failure) {
         Fluttertoast.showToast(msg: failureToString(failure));

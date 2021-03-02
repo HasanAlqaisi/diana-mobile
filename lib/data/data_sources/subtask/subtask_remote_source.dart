@@ -59,7 +59,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
         'Authorization': 'Bearer $kToken',
       },
       body: {
-        "name": name,
+        "title": name,
         "done": isDone,
         "task": taskId,
       },
@@ -83,12 +83,14 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
       '$baseUrl/subtask/$subtaskId/',
       headers: {
         'Authorization': 'Bearer $kToken',
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
       },
-      body: {
-        "name": name,
+      body: jsonEncode({
+        "title": name,
         "done": isDone,
         "task": taskId,
-      },
+      }),
     );
 
     if (response.statusCode == 200) {

@@ -6,6 +6,7 @@ part 'subtask_result.g.dart';
 @JsonSerializable(explicitToJson: true)
 class SubtaskResult extends Equatable {
   final String id;
+  @JsonKey(name: 'title')
   final String name;
   final bool done;
   @JsonKey(name: 'task')

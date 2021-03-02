@@ -24,10 +24,12 @@ class DoneSubtasksList extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(subtask.name,
-                    style: TextStyle(
-                        color: Color(0xFFA8FFF9),
-                        decoration: TextDecoration.lineThrough)),
+                Expanded(
+                  child: Text(subtask.name,
+                      style: TextStyle(
+                          color: Color(0xFFA8FFF9),
+                          decoration: TextDecoration.lineThrough)),
+                ),
                 // Icon(Icons.check, color: Color(0xFFB0B0B0)),
               ],
             ),

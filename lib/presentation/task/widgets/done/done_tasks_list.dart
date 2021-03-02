@@ -133,18 +133,7 @@ class DoneTasksList extends StatelessWidget {
           GestureDetector(
               onTap: () {
                 print('check mark cliked');
-                TaskController.to.editTask(
-                  taskData.task.id,
-                  taskData.task.name,
-                  taskData.task.note,
-                  taskData.task.date.toString(),
-                  tagsData.tags.map((tag) => tag.id).toList(),
-                  taskData.subtasks.map((subtask) => subtask.name).toList(),
-                  taskData.task.reminder.toString(),
-                  taskData.task.deadline.toString(),
-                  taskData.task.priority,
-                  true,
-                );
+                TaskController.to.makeTaskDone(taskData.task.id);
               },
               child: Icon(Icons.check_circle, color: Colors.white, size: 30.0)),
         ],

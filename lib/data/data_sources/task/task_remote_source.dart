@@ -34,6 +34,8 @@ abstract class TaskRemoteSource {
     bool done,
   );
 
+  Future<TaskResult> makeTaskDone(String taskId);
+
   Future<bool> deleteTask(String taskId);
 }
 
@@ -94,8 +96,8 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
           {
             "title": name,
             "note": note,
-            "with_tags": tags,
-            "with_subtasks": checkList,
+            "with_tag": tags,
+            "with_subtask": checkList,
             "date": date.isEmpty ? null : date,
             "reminder": reminder.isEmpty ? null : reminder,
             "deadline": deadline.isEmpty ? null : deadline,
@@ -150,8 +152,8 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
         {
           "title": name,
           "note": note,
-          "with_tags": tags,
-          "with_subtasks": checkList,
+          "with_tag": tags,
+          "with_subtask": checkList,
           "date": date,
           "reminder": reminder,
           "deadline": deadline,
@@ -187,6 +189,35 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
       return true;
     } else if (response.statusCode == 401) {
       throw UnAuthException();
+    } else if (response.statusCode == 404) {
+      throw NotFoundException();
+    } else {
+      throw UnknownException(message: response.body);
+    }
+  }
+
+  @override
+  Future<TaskResult> makeTaskDone(String taskId) async{
+    final response = await client.patch(
+      '$baseUrl/task/$taskId/',
+      headers: {
+        'Authorization': 'Bearer $kToken',
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(
+        {
+          "done": true,
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      return TaskResult.fromJson(json.decode(response.body));
+    } else if (response.statusCode == 401) {
+      throw UnAuthException();
+    } else if (response.statusCode == 400) {
+      throw FieldsException(body: response.body);
     } else if (response.statusCode == 404) {
       throw NotFoundException();
     } else {

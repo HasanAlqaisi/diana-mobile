@@ -151,18 +151,7 @@ class AllTasksList extends StatelessWidget {
           SizedBox(width: 5),
           GestureDetector(
               onTap: () {
-                TaskController.to.editTask(
-                  taskData.task.id,
-                  taskData.task.name,
-                  taskData.task.note,
-                  DateHelper.stringDateOrNull(taskData.task.date),
-                  tagsData.tags.map((tag) => tag.id).toList(),
-                  taskData.subtasks.map((subtask) => subtask.name).toList(),
-                  DateHelper.stringDateOrNull(taskData.task.reminder),
-                  DateHelper.stringDateOrNull(taskData.task.deadline),
-                  taskData.task.priority,
-                  true,
-                );
+                TaskController.to.makeTaskDone(taskData.task.id);
               },
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),

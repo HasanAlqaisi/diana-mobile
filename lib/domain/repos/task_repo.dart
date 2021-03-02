@@ -35,6 +35,8 @@ abstract class TaskRepo {
     String taskId,
   );
 
+  Future<Either<Failure, TaskResult>> makeTaskDone(String taskId);
+
   Future<Either<Failure, bool>> deleteSubtask(String subtaskId);
 
   Future<Either<Failure, TaskResponse>> getTasks();

@@ -120,27 +120,51 @@ class TodayTasksList extends StatelessWidget {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.priority_high),
+          Row(
+              children: List.generate(
+            taskData.task.priority,
+            (index) => Row(
+              children: [
+                Container(
+                  height: 10,
+                  width: 10,
+                  decoration: BoxDecoration(
+                    color: _priorityColor(taskData.task),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                index + 1 != taskData.task.priority
+                    ? SizedBox(
+                        width: 10,
+                        child: Divider(
+                          color: _priorityColor(taskData.task),
+                          thickness: 1,
+                        ))
+                    : Container(),
+              ],
+            ),
+          )),
           SizedBox(width: 5),
           GestureDetector(
               onTap: () {
-                print('check mark cliked');
-                TaskController.to.editTask(
-                  taskData.task.id,
-                  taskData.task.name,
-                  taskData.task.note,
-                  taskData.task.date.toString(),
-                  tagsData.tags.map((tag) => tag.id).toList(),
-                  taskData.subtasks.map((subtask) => subtask.name).toList(),
-                  taskData.task.reminder.toString(),
-                  taskData.task.deadline.toString(),
-                  taskData.task.priority,
-                  true,
-                );
+                TaskController.to.makeTaskDone(taskData.task.id);
               },
-              child: Icon(Icons.check_circle, color: Colors.grey, size: 30.0)),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Icon(Icons.check_circle, color: Colors.grey, size: 30.0),
+              )),
         ],
       );
+    }
+  }
+
+  Color _priorityColor(TaskData taskData) {
+    if (taskData.priority == 1) {
+      return Colors.green;
+    } else if (taskData.priority == 2) {
+      return Colors.yellow;
+    } else {
+      return Colors.red;
     }
   }
 }

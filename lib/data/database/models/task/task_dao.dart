@@ -80,12 +80,13 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
   /// How do we know it's for today? compare time with date field
   Stream<List<TaskWithSubtasks>> watchTodayTasks(String userId) {
     return (((select(taskTable)
-          ..where((tbl) =>
-              tbl.userId.equals(userId) &
-              isNull(tbl.doneAt) &
-              tbl.date.day.equals(DateTime.now().toUtc().day) &
-              (tbl.deadline.isBiggerThanValue(DateTime.now().toUtc()) |
-                  isNull(tbl.deadline))))
+          ..where((tbl) {
+            return tbl.userId.equals(userId) &
+                isNull(tbl.doneAt) &
+                tbl.date.day.equalsExp(currentDate.day) &
+                (tbl.deadline.isBiggerThan(currentDateAndTime) |
+                    isNull(tbl.deadline));
+          }))
         .join([
           leftOuterJoin(
               subTaskTable, subTaskTable.taskId.equalsExp(taskTable.id))
@@ -113,7 +114,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
           ..where((tbl) =>
               tbl.userId.equals(userId) &
               isNull(tbl.doneAt) &
-              (tbl.deadline.isBiggerThanValue(DateTime.now().toUtc()) |
+              (tbl.deadline.isBiggerThan(currentDateAndTime) |
                   isNull(tbl.deadline))))
         .join([
           leftOuterJoin(
@@ -164,7 +165,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
     return ((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))
           ..where(
             (tbl) =>
-                tbl.deadline.isSmallerThanValue(DateTime.now().toUtc()) &
+                tbl.deadline.isSmallerThan(currentDateAndTime) &
                 isNull(tbl.doneAt),
           ))
         .join([

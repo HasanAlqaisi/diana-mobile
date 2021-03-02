@@ -1,3 +1,5 @@
+import 'package:diana/core/date/date_helper.dart';
+import 'package:diana/core/mappers/date_to_ymd_string.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/relations/task_with_subtasks/task_with_subtasks.dart';
 import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
@@ -128,18 +130,7 @@ class MissedTasksList extends StatelessWidget {
           GestureDetector(
               onTap: () {
                 print('check mark cliked');
-                TaskController.to.editTask(
-                  taskData.task.id,
-                  taskData.task.name,
-                  taskData.task.note,
-                  taskData.task.date.toString(),
-                  tagsData.tags.map((tag) => tag.id).toList(),
-                  taskData.subtasks.map((subtask) => subtask.name).toList(),
-                  taskData.task.reminder.toString(),
-                  taskData.task.deadline.toString(),
-                  taskData.task.priority,
-                  true,
-                );
+                TaskController.to.makeTaskDone(taskData.task.id);
               },
               child: Icon(Icons.check_circle,
                   color: Color(0xFFEAAE13), size: 30.0)),

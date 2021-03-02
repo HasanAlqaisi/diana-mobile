@@ -485,4 +485,31 @@ class TaskRepoImpl extends TaskRepo {
   Stream<TaskWithTags> watchTagsForTask(String taskId) {
     return taskLocalSource.watchTagsForTask(kUserId, taskId);
   }
+
+  @override
+  Future<Either<Failure, TaskResult>> makeTaskDone(String taskId) async {
+    if (await netWorkInfo.isConnected()) {
+      try {
+        final result = await taskRemoteSource.makeTaskDone(taskId);
+
+        log('API result is $result', name: 'makeTaskDone');
+
+        await taskLocalSource.insertTask(result);
+
+        return Right(result);
+      } on FieldsException catch (error) {
+        return Left(
+          TaskFieldsFailure.fromFieldsException(json.decode(error.body)),
+        );
+      } on UnAuthException {
+        return Left(UnAuthFailure());
+      } on NotFoundException {
+        return Left(NotFoundFailure());
+      } on UnknownException catch (error) {
+        return Left(UnknownFailure(message: error.message));
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
+  }
 }

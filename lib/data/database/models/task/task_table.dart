@@ -29,7 +29,9 @@ class TaskTable extends Table {
               name: Value(task.name),
               note: Value(task.note),
               date: Value(
-                task.date != null ? DateTime.tryParse(task.date) : null,
+                task.date != null
+                    ? DateTime.tryParse(task.date + ' 00:00:00.000Z')
+                    : null,
               ),
               reminder: Value(task.reminder != null
                   ? DateTime.tryParse(task.reminder)
@@ -51,6 +53,11 @@ class TaskTable extends Table {
       userId: Value(task.userId),
       name: Value(task.name),
       note: Value(task.note),
+      date: Value(
+        task.date != null
+            ? DateTime.tryParse(task.date)?.add(Duration(hours: 12))
+            : null,
+      ),
       reminder: Value(
           task.reminder != null ? DateTime.tryParse(task.reminder) : null),
       deadline: Value(
