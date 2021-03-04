@@ -16,5 +16,5 @@ This is the way that our database is designed
 
 ## Other links
 
-- The backend/db/api lives in [Diana server](https://github.com/softshape-team/diana-server)
-- The design lives in [Diana Design](https://www.figma.com/file/OVStyBsD5yMP7xy8vaH0KJ/Diana-design)
+- [Diana backend](https://github.com/softshapeorg/diana-backend)
+- [Diana frontend](https://github.com/softshapeorg/diana-frontend)
