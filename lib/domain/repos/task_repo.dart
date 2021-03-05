@@ -79,13 +79,13 @@ abstract class TaskRepo {
 
   Future<Either<Failure, bool>> deleteTaskTag(String id);
 
-  Stream<List<TaskWithSubtasks>> watchTodayTasks();
+  Stream<List<TaskWithSubtasks>> watchTodayTasks(List<String> tags);
 
-  Stream<List<TaskWithSubtasks>> watchAllTasks();
+  Stream<List<TaskWithSubtasks>> watchAllTasks(List<String> tags);
 
-  Stream<List<TaskWithSubtasks>> watchCompletedTasks();
+  Stream<List<TaskWithSubtasks>> watchCompletedTasks(List<String> tags);
 
-  Stream<List<TaskWithSubtasks>> watchMissedTasks();
+  Stream<List<TaskWithSubtasks>> watchMissedTasks(List<String> tags);
 
   Stream<List<TagData>> watchAllTags();
 

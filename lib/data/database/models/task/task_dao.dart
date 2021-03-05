@@ -78,7 +78,8 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
 
   /// Return today incompleted tasks with its subtasks, for specific user
   /// How do we know it's for today? compare time with date field
-  Stream<List<TaskWithSubtasks>> watchTodayTasks(String userId) {
+  Stream<List<TaskWithSubtasks>> watchTodayTasks(
+      String userId, List<String> tags) {
     return (((select(taskTable)
           ..where((tbl) {
             return tbl.userId.equals(userId) &
@@ -109,7 +110,8 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
   }
 
   /// Return all incompleted tasks with its subtasks
-  Stream<List<TaskWithSubtasks>> watchAllTasks(String userId) {
+  Stream<List<TaskWithSubtasks>> watchAllTasks(
+      String userId, List<String> tags) {
     return ((select(taskTable)
           ..where((tbl) =>
               tbl.userId.equals(userId) &
@@ -137,7 +139,8 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
         }));
   }
 
-  Stream<List<TaskWithSubtasks>> watchCompletedTasks(String userId) {
+  Stream<List<TaskWithSubtasks>> watchCompletedTasks(
+      String userId, List<String> tags) {
     return ((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))
           ..where((tbl) => isNotNull(tbl.doneAt)))
         .join([
@@ -161,7 +164,8 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
         });
   }
 
-  Stream<List<TaskWithSubtasks>> watchMissedTasks(String userId) {
+  Stream<List<TaskWithSubtasks>> watchMissedTasks(
+      String userId, List<String> tags) {
     return ((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))
           ..where(
             (tbl) =>

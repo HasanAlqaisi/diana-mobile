@@ -17,7 +17,32 @@ class DoneTaskTab extends StatelessWidget {
     return ListView(
       // physics: NeverScrollableScrollPhysics(),
       children: [
-        TagChips(),
+        StreamBuilder<List<TagData>>(
+            stream: TaskController.to.watchAllTags(),
+            initialData: [],
+            builder: (context, snapshot) {
+              final data = snapshot?.data;
+              if (data != null && data.isNotEmpty) {
+                return Obx(() => ChipsChoice<String>.multiple(
+                      // choiceStyle: C2ChoiceStyle(color: Colors.red),
+                      // value is list of clicked tags (with mark on it)
+                      value: TaskController.to.tags(),
+                      // onChanged will generate a list with selected tags, u need to assign it
+                      // to the value above
+                      onChanged: (tags) =>
+                          TaskController.to.tags.assignAll(tags),
+                      choiceItems: C2Choice.listFrom<String, String>(
+                        // All tags
+                        source: data.map((tag) => tag.name).toList(),
+                        value: (i, v) => v,
+                        label: (i, v) => v,
+                      ),
+                    ));
+              } else {
+                print('TAGS UI: data is empty ${data?.isEmpty}');
+                return Container();
+              }
+            }),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: QuickAddField(

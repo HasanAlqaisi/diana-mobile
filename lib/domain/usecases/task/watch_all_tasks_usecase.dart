@@ -6,7 +6,7 @@ class WatchAllTasksUseCase {
 
   WatchAllTasksUseCase(this.taskRepo);
 
-  Stream<List<TaskWithSubtasks>> call() {
-    return taskRepo.watchAllTasks();
+  Stream<List<TaskWithSubtasks>> call(List<String> tags) {
+    return taskRepo.watchAllTasks(tags);
   }
 }

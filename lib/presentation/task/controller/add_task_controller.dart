@@ -27,7 +27,7 @@ class AddTaskController extends GetxController {
   String taskName, note, tag;
   var date = DateTime(2021).obs;
   List<String> subtasksNames = [];
-  List<String> tags = [];
+  var tags = List<String>().obs;
   RxInt priority = 0.obs;
 
   @override

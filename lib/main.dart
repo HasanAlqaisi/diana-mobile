@@ -2,6 +2,7 @@ import 'package:diana/presentation/habit/pages/habit_screen.dart';
 import 'package:diana/presentation/home/home.dart';
 import 'package:diana/presentation/login/pages/login_screen.dart';
 import 'package:diana/presentation/nav/nav.dart';
+import 'package:diana/presentation/profile/pages/profile_screen.dart';
 import 'package:diana/presentation/register/pages/register_screen.dart';
 import 'package:diana/presentation/task/pages/add_task_screen.dart';
 import 'package:diana/presentation/task/pages/task_screen.dart';
@@ -41,7 +42,7 @@ class Diana extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: Home.route,
+      initialRoute: ProfileScreen.route,
       routes: {
         LoginScreen.route: (context) => LoginScreen(),
         RegisterScreen.route: (context) => RegisterScreen(),
@@ -50,6 +51,7 @@ class Diana extends StatelessWidget {
         TaskScreen.route: (context) => TaskScreen(),
         AddTaskScreen.route: (context) => AddTaskScreen(),
         HabitScreen.route: (context) => HabitScreen(),
+        ProfileScreen.route: (context) => ProfileScreen(),
       },
     );
   }

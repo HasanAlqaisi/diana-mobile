@@ -20,13 +20,17 @@ abstract class TaskLocalSource {
 
   Future<void> insertTasks(TaskResponse taskResponse);
 
-  Stream<List<TaskWithSubtasks>> watchTodayTasks(String userId);
+  Stream<List<TaskWithSubtasks>> watchTodayTasks(
+      String userId, List<String> tags);
 
-  Stream<List<TaskWithSubtasks>> watchAllTasks(String userId);
+  Stream<List<TaskWithSubtasks>> watchAllTasks(
+      String userId, List<String> tags);
 
-  Stream<List<TaskWithSubtasks>> watchCompletedTasks(String userId);
+  Stream<List<TaskWithSubtasks>> watchCompletedTasks(
+      String userId, List<String> tags);
 
-  Stream<List<TaskWithSubtasks>> watchMissedTasks(String userId);
+  Stream<List<TaskWithSubtasks>> watchMissedTasks(
+      String userId, List<String> tags);
 
   Stream<List<TagData>> watchAllTags(String userId);
 
@@ -85,23 +89,27 @@ class TaskLocalSourceImpl extends TaskLocalSource {
   }
 
   @override
-  Stream<List<TaskWithSubtasks>> watchAllTasks(String userId) {
-    return taskDao.watchAllTasks(userId);
+  Stream<List<TaskWithSubtasks>> watchAllTasks(
+      String userId, List<String> tags) {
+    return taskDao.watchAllTasks(userId, tags);
   }
 
   @override
-  Stream<List<TaskWithSubtasks>> watchCompletedTasks(String userId) {
-    return taskDao.watchCompletedTasks(userId);
+  Stream<List<TaskWithSubtasks>> watchCompletedTasks(
+      String userId, List<String> tags) {
+    return taskDao.watchCompletedTasks(userId, tags);
   }
 
   @override
-  Stream<List<TaskWithSubtasks>> watchMissedTasks(String userId) {
-    return taskDao.watchMissedTasks(userId);
+  Stream<List<TaskWithSubtasks>> watchMissedTasks(
+      String userId, List<String> tags) {
+    return taskDao.watchMissedTasks(userId, tags);
   }
 
   @override
-  Stream<List<TaskWithSubtasks>> watchTodayTasks(String userId) {
-    return taskDao.watchTodayTasks(userId);
+  Stream<List<TaskWithSubtasks>> watchTodayTasks(
+      String userId, List<String> tags) {
+    return taskDao.watchTodayTasks(userId, tags);
   }
 
   @override

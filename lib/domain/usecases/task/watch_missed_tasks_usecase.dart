@@ -6,7 +6,7 @@ class WatchMissedTasksUseCase {
 
   WatchMissedTasksUseCase(this.taskRepo);
 
-  Stream<List<TaskWithSubtasks>> call() {
-    return taskRepo.watchMissedTasks();
+  Stream<List<TaskWithSubtasks>> call(List<String> tags) {
+    return taskRepo.watchMissedTasks(tags);
   }
 }

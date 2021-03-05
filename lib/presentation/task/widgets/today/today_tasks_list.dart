@@ -16,7 +16,7 @@ class TodayTasksList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<TaskWithSubtasks>>(
-        stream: TaskController.to.watchTodayTasks(),
+        stream: TaskController.to.watchTodayTasks(TaskController.to.tags()),
         builder: (context, snapshot) {
           final data = snapshot?.data;
           if (data != null && data.isNotEmpty) {

@@ -53,6 +53,7 @@ class TaskController extends GetxController {
   Failure failure;
   RxBool isLongPressed = false.obs;
   RxString selectedTask = ''.obs;
+  var tags = List<String>().obs;
 
   TaskController(
       this.requestTokenUsecase,
@@ -195,20 +196,20 @@ class TaskController extends GetxController {
     );
   }
 
-  Stream<List<TaskWithSubtasks>> watchTodayTasks() {
-    return watchTodayTasksUseCase();
+  Stream<List<TaskWithSubtasks>> watchTodayTasks(List<String> tags) {
+    return watchTodayTasksUseCase(tags);
   }
 
-  Stream<List<TaskWithSubtasks>> watchAllTasks() {
-    return watchAllTasksUseCase();
+  Stream<List<TaskWithSubtasks>> watchAllTasks(List<String> tags) {
+    return watchAllTasksUseCase(tags);
   }
 
-  Stream<List<TaskWithSubtasks>> watchCompletedTasks() {
-    return watchCompletedTasksUseCase();
+  Stream<List<TaskWithSubtasks>> watchCompletedTasks(List<String> tags) {
+    return watchCompletedTasksUseCase(tags);
   }
 
-  Stream<List<TaskWithSubtasks>> watchMissedTasks() {
-    return watchMissedTasksUseCase();
+  Stream<List<TaskWithSubtasks>> watchMissedTasks(List<String> tags) {
+    return watchMissedTasksUseCase(tags);
   }
 
   Stream<List<TagData>> watchAllTags() {

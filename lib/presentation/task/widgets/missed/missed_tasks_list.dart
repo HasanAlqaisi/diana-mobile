@@ -18,7 +18,7 @@ class MissedTasksList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<TaskWithSubtasks>>(
-        stream: TaskController.to.watchMissedTasks(),
+        stream: TaskController.to.watchMissedTasks(TaskController.to.tags()),
         builder: (context, snapshot) {
           final data = snapshot?.data;
           if (data != null && data.isNotEmpty) {

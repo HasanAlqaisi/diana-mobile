@@ -1,5 +1,7 @@
+import 'package:chips_choice/chips_choice.dart';
 import 'package:diana/core/constants/constants.dart';
 import 'package:diana/core/mappers/date_to_ymd_string.dart';
+import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -251,7 +253,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         children: [
                           Checkbox(
                             value: _.shouldRemind.value &&
-                                _.startingDate.value.isNotEmpty,
+                                (_.startingDate.value != null ||
+                                    _.startingDate.value.isNotEmpty),
                             onChanged: (newValue) {
                               _.shouldRemind.value = newValue;
                               if (newValue == true) {
@@ -266,7 +269,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             'Remind me',
                             style: TextStyle(
                               color: _.shouldRemind.value &&
-                                      _.startingDate.value.isNotEmpty
+                                      (_.startingDate.value != null ||
+                                          _.startingDate.value.isNotEmpty)
                                   ? Colors.white
                                   : Color(0xFF4A15B5),
                               fontSize: 16,
@@ -275,7 +279,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           ),
                           Visibility(
                             visible: _.shouldRemind.value &&
-                                _.startingDate.value.isNotEmpty,
+                                (_.startingDate.value != null ||
+                                    _.startingDate.value.isNotEmpty),
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 14.0),
@@ -403,7 +408,33 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       ),
                     ),
                   ),
-                  TagChips(),
+                  StreamBuilder<List<TagData>>(
+                    stream: TaskController.to.watchAllTags(),
+                    initialData: [],
+                    builder: (context, snapshot) {
+                      final data = snapshot?.data;
+                      if (data != null && data.isNotEmpty) {
+                        return Obx(() => ChipsChoice<String>.multiple(
+                              // choiceStyle: C2ChoiceStyle(color: Colors.red),
+                              // value is list of clicked tags (with mark on it)
+                              value: AddTaskController.to.tags(),
+                              // onChanged will generate a list with selected tags, u need to assign it
+                              // to the value above
+                              onChanged: (tags) =>
+                                  AddTaskController.to.tags.assignAll(tags),
+                              choiceItems: C2Choice.listFrom<String, String>(
+                                // All tags
+                                source: data.map((tag) => tag.name).toList(),
+                                value: (i, v) => v,
+                                label: (i, v) => v,
+                              ),
+                            ));
+                      } else {
+                        print('TAGS UI: data is empty ${data?.isEmpty}');
+                        return Container();
+                      }
+                    },
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Center(
@@ -431,7 +462,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 
   String _dateFieldFormatter(String date) {
-    if (date.isEmpty) {
+    if (date == null || date.isEmpty) {
       return 'Choose a date';
     } else {
       return date;

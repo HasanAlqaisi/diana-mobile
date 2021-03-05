@@ -460,20 +460,20 @@ class TaskRepoImpl extends TaskRepo {
     }
   }
 
-  Stream<List<TaskWithSubtasks>> watchTodayTasks() {
-    return taskLocalSource.watchTodayTasks(kUserId);
+  Stream<List<TaskWithSubtasks>> watchTodayTasks(List<String> tags) {
+    return taskLocalSource.watchTodayTasks(kUserId, tags);
   }
 
-  Stream<List<TaskWithSubtasks>> watchAllTasks() {
-    return taskLocalSource.watchAllTasks(kUserId);
+  Stream<List<TaskWithSubtasks>> watchAllTasks(List<String> tags) {
+    return taskLocalSource.watchAllTasks(kUserId, tags);
   }
 
-  Stream<List<TaskWithSubtasks>> watchCompletedTasks() {
-    return taskLocalSource.watchCompletedTasks(kUserId);
+  Stream<List<TaskWithSubtasks>> watchCompletedTasks(List<String> tags) {
+    return taskLocalSource.watchCompletedTasks(kUserId, tags);
   }
 
-  Stream<List<TaskWithSubtasks>> watchMissedTasks() {
-    return taskLocalSource.watchMissedTasks(kUserId);
+  Stream<List<TaskWithSubtasks>> watchMissedTasks(List<String> tags) {
+    return taskLocalSource.watchMissedTasks(kUserId, tags);
   }
 
   @override
