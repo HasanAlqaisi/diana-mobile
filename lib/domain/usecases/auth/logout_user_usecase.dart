@@ -7,7 +7,7 @@ class LogoutUserUsecase {
 
   LogoutUserUsecase(this.authRepo);
 
-  Future<Either<Failure, bool>> call(String username, String password) {
+  Future<Either<Failure, bool>> call() {
     return authRepo.logoutUser();
   }
 }

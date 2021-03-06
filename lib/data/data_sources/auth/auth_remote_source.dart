@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:diana/core/constants/_constants.dart';
 import 'package:diana/core/errors/exception.dart';
@@ -16,6 +17,7 @@ abstract class AuthRemoteSource {
     String email,
     String birthdate,
     String password,
+    String timezone,
   );
 
   Future<LoginInfo> loginUser(
@@ -35,7 +37,7 @@ abstract class AuthRemoteSource {
     String username,
     String email,
     String birthdate,
-    String password,
+    File image,
   );
 
   Future<bool> resetPass(String email);
@@ -55,6 +57,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     String email,
     String birthdate,
     String password,
+    String timezone,
   ) async {
     final response = await client.post(
       '$baseUrl/accounts/registration/',
@@ -65,6 +68,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
         "email": email,
         "birthdate": birthdate,
         "password": password,
+        "timezone": timezone
       },
     );
 
@@ -138,21 +142,37 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
 
   @override
   Future<User> editUser(String firstName, String lastName, String username,
-      String email, String birthdate, String password) async {
-    final response = await client.patch(
-      '$baseUrl/accounts/user/',
-      headers: {
-        'Authorization': 'Bearer $kToken',
-      },
-      body: {
-        "first_name": firstName,
-        "last_name": lastName,
-        "username": username,
-        "email": email,
-        "birthdate": birthdate,
-        "password": password,
-      },
-    );
+      String email, String birthdate, File image) async {
+    // final response = await http.patch(
+    //   '$baseUrl/accounts/user/',
+    //   headers: {
+    //     'Authorization': 'Bearer $kToken',
+    //   },
+    //   body: {
+    //     "first_name": firstName,
+    //     "last_name": lastName,
+    //     "username": username,
+    //     "email": email,
+    //     "birthdate": birthdate,
+    //     "image": image.readAsBytesSync(),
+    //   },
+    // );
+
+    var request = new http.MultipartRequest(
+        "PATCH", Uri.parse("$baseUrl/accounts/user/"));
+    request.headers['Authorization'] = 'Bearer $kToken';
+    request.fields['first_name'] = firstName;
+    request.fields['last_name'] = lastName;
+    request.fields['username'] = username;
+    request.fields['email'] = email;
+    request.fields['birthdate'] = birthdate;
+    if(image != null){
+    request.files
+        .add(http.MultipartFile.fromBytes('image', image.readAsBytesSync()));
+    }
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
 
     if (response.statusCode == 200) {
       return User.fromJson(json.decode(response.body));

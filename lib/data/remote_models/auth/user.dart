@@ -4,10 +4,9 @@ import 'package:json_annotation/json_annotation.dart';
 part 'user.g.dart';
 
 @JsonSerializable()
-// ignore: must_be_immutable
 class User extends Equatable {
   @JsonKey(name: 'pk')
-  String userId;
+  final String userId;
   @JsonKey(name: 'first_name')
   final String firstName;
   @JsonKey(name: 'last_name')
@@ -16,14 +15,14 @@ class User extends Equatable {
   final String email;
   @JsonKey(nullable: true)
   final String birthdate;
-  // @JsonKey(name: 'picture', nullable: true)
-  // final String picture;
-  @JsonKey(name: 'time_zone', nullable: true)
-  String timeZone;
+  @JsonKey(nullable: true)
+  final String picture;
+  @JsonKey(name: 'timezone', nullable: true)
+  final String timeZone;
   @JsonKey(name: 'daily_progress')
   final double dailyProgress;
 
-  User(
+  User(this.picture, 
       {this.userId,
       this.firstName,
       this.lastName,

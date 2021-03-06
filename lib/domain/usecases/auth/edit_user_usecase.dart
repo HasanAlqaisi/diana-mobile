@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:diana/core/errors/failure.dart';
 import 'package:diana/data/remote_models/auth/user.dart';
@@ -14,9 +16,9 @@ class EditUserUsecase {
     String username,
     String email,
     String birthdate,
-    String password,
+    File image,
   ) {
     return authRepo.editUser(
-        firstName, lastName, username, email, birthdate, password);
+        firstName, lastName, username, email, birthdate, image);
   }
 }

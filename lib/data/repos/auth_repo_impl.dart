@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:diana/core/constants/_constants.dart';
@@ -9,11 +10,11 @@ import 'package:diana/core/errors/failure.dart';
 import 'package:diana/core/network/network_info.dart';
 import 'package:diana/data/data_sources/auth/auth_local_source.dart';
 import 'package:diana/data/data_sources/auth/auth_remote_source.dart';
+import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/remote_models/auth/login_info.dart';
 import 'package:diana/data/remote_models/auth/refresh_info.dart';
 import 'package:diana/data/remote_models/auth/user.dart';
 import 'package:diana/domain/repos/auth_repo.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 
 class AuthRepoImpl extends AuthRepo {
@@ -52,11 +53,11 @@ class AuthRepoImpl extends AuthRepo {
 
   @override
   Future<Either<Failure, User>> editUser(String firstName, String lastName,
-      String username, String email, String birthdate, String password) async {
+      String username, String email, String birthdate, File image) async {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await remoteSource.editUser(
-            firstName, lastName, username, email, birthdate, password);
+            firstName, lastName, username, email, birthdate, image);
 
         log('API result is $result', name: 'editUser');
 
@@ -85,7 +86,7 @@ class AuthRepoImpl extends AuthRepo {
         log('API result is $result', name: 'getUser');
 
         await authLocalSource.insertUser(result);
-        await authLocalSource.cacheToken(result.userId);
+        await authLocalSource.cacheUserId(result.userId);
 
         return Right(result);
       } on UnAuthException {
@@ -107,8 +108,6 @@ class AuthRepoImpl extends AuthRepo {
 
         log('API result is $result', name: 'loginUser');
 
-        //Haven't test these lines
-        result.user.timeZone = await FlutterNativeTimezone.getLocalTimezone();
         await authLocalSource.insertUser(result.user);
 
         await authLocalSource.cacheToken(result.accessToken);
@@ -151,19 +150,17 @@ class AuthRepoImpl extends AuthRepo {
       String username, String email, String birthdate, String password) async {
     if (await netWorkInfo.isConnected()) {
       try {
-        final user = await remoteSource.registerUser(
-            firstName, lastName, username, email, birthdate, password);
+        final timezone = await FlutterNativeTimezone.getLocalTimezone();
+
+        final user = await remoteSource.registerUser(firstName, lastName,
+            username, email, birthdate, password, timezone);
 
         log('API result is $user', name: 'registerUser');
 
         // user.timeZone = await FlutterNativeTimezone.getLocalTimezone();
 
-        return (await loginUser(username, password)).fold((failure) => null,
-            (result) async {
-          user.userId = result.user.userId;
-          // await authLocalSource.insertUser(user);
-          return Right(user);
-        });
+        return (await loginUser(username, password))
+            .fold((failure) => null, (result) async => Right(user));
       } on FieldsException catch (error) {
         return Left(
             UserFieldsFailure.fromFieldsException(json.decode(error.body)));
@@ -232,5 +229,25 @@ class AuthRepoImpl extends AuthRepo {
   @override
   Future<String> getUserId() {
     return authLocalSource.getUserId();
+  }
+
+  @override
+  Stream<UserData> watchUser() {
+    return authLocalSource.watchUser(kUserId);
+  }
+
+  @override
+  Future<void> deleteRefreshToken() async {
+    return await authLocalSource.deleteRefreshToken();
+  }
+
+  @override
+  Future<void> deleteToken() async {
+    return await authLocalSource.deleteToken();
+  }
+
+  @override
+  Future<void> deleteUserId() async {
+    return await authLocalSource.deleteUserId();
   }
 }

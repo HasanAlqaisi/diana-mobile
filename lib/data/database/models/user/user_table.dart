@@ -11,7 +11,7 @@ class UserTable extends Table {
   TextColumn get email => text()();
   TextColumn get birthdate => text().nullable()();
   TextColumn get picture => text().nullable()();
-  TextColumn get timeZone => text()();
+  TextColumn get timeZone => text().nullable()();
   RealColumn get dailyTaskProgress => real().nullable()();
 
   @override
@@ -27,7 +27,7 @@ class UserTable extends Table {
       lastName: Value(user.lastName),
       username: Value(user.username),
       email: Value(user.email),
-      // picture: Value(user.picture),
+      picture: Value(user.picture),
       birthdate: Value(user.birthdate),
       timeZone: Value(user.timeZone),
       dailyTaskProgress: Value(user.dailyProgress),

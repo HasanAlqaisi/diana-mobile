@@ -24,9 +24,17 @@ import 'package:diana/data/repos/task_repo_impl.dart';
 import 'package:diana/domain/repos/auth_repo.dart';
 import 'package:diana/domain/repos/habit_repo.dart';
 import 'package:diana/domain/repos/task_repo.dart';
+import 'package:diana/domain/usecases/auth/change_pass_usecase.dart';
+import 'package:diana/domain/usecases/auth/delete_refreshtoken_usecase.dart';
+import 'package:diana/domain/usecases/auth/delete_token_usecase.dart';
+import 'package:diana/domain/usecases/auth/delete_userid_usecase.dart';
+import 'package:diana/domain/usecases/auth/edit_user_usecase.dart';
+import 'package:diana/domain/usecases/auth/get_user_usecase.dart';
 import 'package:diana/domain/usecases/auth/login_user_usecase.dart';
+import 'package:diana/domain/usecases/auth/logout_user_usecase.dart';
 import 'package:diana/domain/usecases/auth/register_user_usecase.dart';
 import 'package:diana/domain/usecases/auth/request_token_usecase.dart';
+import 'package:diana/domain/usecases/auth/watch_user_usecase.dart';
 import 'package:diana/domain/usecases/habit/edit_habit_usecase.dart';
 import 'package:diana/domain/usecases/habit/get_habit_logs.dart';
 import 'package:diana/domain/usecases/habit/get_habits_usecase.dart';
@@ -55,6 +63,7 @@ import 'package:diana/domain/usecases/task/watch_today_tasks_usecase.dart';
 import 'package:diana/presentation/habit/controllers/habit_controller.dart';
 import 'package:diana/presentation/home/home_controller.dart';
 import 'package:diana/presentation/login/controller/login_controller.dart';
+import 'package:diana/presentation/profile/controller/profile_controller.dart';
 import 'package:diana/presentation/register/controller/registeration_controller.dart';
 import 'package:diana/presentation/task/controller/add_task_controller.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
@@ -105,6 +114,8 @@ void controllersInjection() {
   sl.registerFactory(() => HomeController(sl(), sl(), sl()));
 
   sl.registerFactory(() => LoginController(sl()));
+  sl.registerFactory(
+      () => ProfileController(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory(() => RegistrationController(sl()));
   sl.registerFactory(() => TaskController(sl(), sl(), sl(), sl(), sl(), sl(),
       sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
@@ -121,6 +132,14 @@ void usecasesInjection() {
   sl.registerLazySingleton(() => GetTokenUseCase(authRepo: sl()));
   sl.registerLazySingleton(() => GetRefreshTokenUseCase(authRepo: sl()));
   sl.registerLazySingleton(() => GetUserIdUseCase(authRepo: sl()));
+  sl.registerLazySingleton(() => GetUserUsecase(sl()));
+  sl.registerLazySingleton(() => EditUserUsecase(sl()));
+  sl.registerLazySingleton(() => ChangePassUsecase(authRepo: sl()));
+  sl.registerLazySingleton(() => WatchUserUsecase(authRepo: sl()));
+  sl.registerLazySingleton(() => LogoutUserUsecase(sl()));
+  sl.registerLazySingleton(() => DeleteTokenUsecase(authRepo: sl()));
+  sl.registerLazySingleton(() => DeleteRefreshTokenUsecase(authRepo: sl()));
+  sl.registerLazySingleton(() => DeleteUserIdUsecase(authRepo: sl()));
 
   sl.registerLazySingleton(() => GetTagsUseCase(taskRepo: sl()));
   sl.registerLazySingleton(() => GetTasksUseCase(taskRepo: sl()));

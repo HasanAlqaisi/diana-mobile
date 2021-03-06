@@ -98,9 +98,9 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
             "note": note,
             "with_tag": tags,
             "with_subtask": checkList,
-            "date": date.isEmpty ? null : date,
-            "reminder": reminder.isEmpty ? null : reminder,
-            "deadline": deadline.isEmpty ? null : deadline,
+            "date": date,
+            "reminder": reminder,
+            "deadline": deadline,
             "priority": priority,
             "done": done,
           },
@@ -197,7 +197,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
   }
 
   @override
-  Future<TaskResult> makeTaskDone(String taskId) async{
+  Future<TaskResult> makeTaskDone(String taskId) async {
     final response = await client.patch(
       '$baseUrl/task/$taskId/',
       headers: {
