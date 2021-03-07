@@ -1,3 +1,4 @@
+import 'package:diana/presentation/habit/pages/add_habit_screen.dart';
 import 'package:diana/presentation/habit/pages/habit_screen.dart';
 import 'package:diana/presentation/home/home.dart';
 import 'package:diana/presentation/login/pages/login_screen.dart';
@@ -50,6 +51,7 @@ class Diana extends StatelessWidget {
         Nav.route: (context) => Nav(),
         TaskScreen.route: (context) => TaskScreen(),
         AddTaskScreen.route: (context) => AddTaskScreen(),
+        AddHabitScreen.route: (context) => AddHabitScreen(),
         HabitScreen.route: (context) => HabitScreen(),
         ProfileScreen.route: (context) => ProfileScreen(),
       },
