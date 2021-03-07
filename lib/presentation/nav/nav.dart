@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diana/presentation/habit/pages/add_habit_screen.dart';
 import 'package:diana/presentation/habit/pages/habit_screen.dart';
 import 'package:diana/presentation/nav/tabbar_cupertino_widget.dart';
+import 'package:diana/presentation/nav/tabbar_material_widget.dart';
 import 'package:diana/presentation/profile/pages/profile_screen.dart';
 import 'package:diana/presentation/task/pages/add_task_screen.dart';
 import 'package:diana/presentation/task/pages/task_screen.dart';
@@ -48,7 +49,7 @@ class _NavState extends State<Nav> {
         toolbarHeight: 0,
       ),
       body: navigationWidgets[index],
-      bottomNavigationBar: TabBarCupertinoWidget(
+      bottomNavigationBar: TabBarMaterialWidget(
         index: index,
         onChangedTab: onChangedTab,
       ),
