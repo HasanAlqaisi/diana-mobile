@@ -32,15 +32,21 @@ class HabitScreen extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: CircularStepProgressIndicator(
                 totalSteps: 100,
-                currentStep: 80,
+                currentStep: 50,
                 selectedColor: Colors.blue,
                 unselectedColor: Colors.white,
                 padding: 0,
                 width: 40,
-                stepSize: 7,
-                child: CachedNetworkImage(
-                  imageUrl:
-                      'https://i.pinimg.com/564x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg',
+                stepSize: 3,
+                child: CircleAvatar(
+                  radius: 45,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(45),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          'https://i.pinimg.com/564x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg',
+                    ),
+                  ),
                 ),
               ),
             )
