@@ -31,7 +31,7 @@ class ProfileScreen extends StatelessWidget {
                 heightFactor: 1.0,
                 widthFactor: 1.0,
                 child: Container(
-                  color: Color(0xFF6504C2),
+                  color: Color(0xFF612EF3),
                 ),
               ),
               Align(
