@@ -8,6 +8,7 @@ import 'package:diana/presentation/register/pages/register_screen.dart';
 import 'package:diana/presentation/task/pages/add_task_screen.dart';
 import 'package:diana/presentation/task/pages/task_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'injection_container.dart' as di;
 
@@ -24,6 +25,13 @@ class Diana extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          color: Color(0xFF612EF3),
+          backwardsCompatibility: true,
+          systemOverlayStyle:
+              SystemUiOverlayStyle(statusBarColor: Color(0xFF612EF3)),
+          brightness: Brightness.dark,
+        ),
         backgroundColor: Color(0xFFE5E5E5),
         primarySwatch: MaterialColor(
           0xFF6504C2,
