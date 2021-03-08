@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class TabBarMaterialWidget extends StatefulWidget {
   final int index;
@@ -24,7 +25,7 @@ class _TabBarMaterialWidgetState extends State<TabBarMaterialWidget> {
 
     return BottomAppBar(
       shape: CircularNotchedRectangle(),
-      notchMargin: 2,
+      notchMargin: 3.5,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       color: Color(0xFF612EF3),
       child: Row(
@@ -32,13 +33,19 @@ class _TabBarMaterialWidgetState extends State<TabBarMaterialWidget> {
         children: [
           buildTabItem(
             index: 0,
-            icon: Icons.home_outlined,
+            icon: SvgPicture.asset(
+              'assets/tasks_icon.svg',
+              color: widget.index == 0 ? Colors.white : Color(0xFFA585FF),
+            ),
             label: 'Tasks',
           ),
           placeholder,
           buildTabItem(
             index: 1,
-            icon: Icons.apps_outlined,
+            icon: SvgPicture.asset(
+              'assets/habits_icon.svg',
+              color: widget.index == 1 ? Colors.white : Color(0xFFA585FF),
+            ),
             label: 'Habits',
           ),
         ],
@@ -48,7 +55,7 @@ class _TabBarMaterialWidgetState extends State<TabBarMaterialWidget> {
 
   Widget buildTabItem({
     @required int index,
-    @required IconData icon,
+    @required SvgPicture icon,
     String label,
   }) {
     final isSelected = index == widget.index;
@@ -62,7 +69,7 @@ class _TabBarMaterialWidgetState extends State<TabBarMaterialWidget> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: color),
+            icon,
             SizedBox(width: 8),
             Text(
               label,
