@@ -8,7 +8,6 @@ import 'package:diana/presentation/task/pages/add_task_screen.dart';
 import 'package:diana/presentation/task/pages/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -54,7 +53,6 @@ class _NavState extends State<Nav> {
         onChangedTab: onChangedTab,
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
         onPressed: () {
           if (index == 0) {
             Get.toNamed(AddTaskScreen.route);
@@ -64,6 +62,15 @@ class _NavState extends State<Nav> {
         },
         elevation: 0,
         highlightElevation: 0,
+        child: Container(
+          height: 60, // Specified to make the gradient fill the entire FAB
+          width: 60,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: _fillGradient(index),
+          ),
+          child: Icon(Icons.add),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
@@ -73,6 +80,26 @@ class _NavState extends State<Nav> {
     setState(() {
       this.index = index;
     });
+  }
+
+  LinearGradient _fillGradient(int index) {
+    return index == 0
+        ? LinearGradient(
+            colors: [
+              Color(0xFF492EF3),
+              Color(0xFF852EF3),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          )
+        : LinearGradient(
+            colors: [
+              Color(0xFF00A3FF),
+              Color(0xFF612EF3),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          );
   }
 
   // List<PersistentBottomNavBarItem> _buildItems() {
