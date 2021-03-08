@@ -33,7 +33,7 @@ class HabitScreen extends StatelessWidget {
               child: CircularStepProgressIndicator(
                 totalSteps: 100,
                 currentStep: 50,
-                selectedColor: Colors.blue,
+                selectedColor: Color(0xFF00FFEF),
                 unselectedColor: Colors.white,
                 padding: 0,
                 width: 40,

@@ -8,6 +8,7 @@ import 'package:diana/presentation/task/pages/tabs/today_task_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
@@ -23,6 +24,7 @@ class TaskScreen extends StatelessWidget {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          // flexibleSpace:
           title: Padding(
             padding: EdgeInsets.symmetric(vertical: 10.0), //Not working
             child: Text(
@@ -39,7 +41,7 @@ class TaskScreen extends StatelessWidget {
                 child: CircularStepProgressIndicator(
                   totalSteps: 100,
                   currentStep: 50,
-                  selectedColor: Colors.blue,
+                  selectedColor: Color(0xFF00FFEF),
                   unselectedColor: Colors.white,
                   padding: 0,
                   width: 40,
