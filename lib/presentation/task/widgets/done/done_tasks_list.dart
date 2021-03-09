@@ -1,3 +1,4 @@
+import 'package:diana/core/constants/enums.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/relations/task_with_subtasks/task_with_subtasks.dart';
 import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
@@ -90,8 +91,9 @@ class DoneTasksList extends StatelessWidget {
                                           taskWithSubtasks: data[index]),
                                     ),
                                     TagsRow(
-                                        taskWithTags:
-                                            taskWithTagsSnapshot?.data),
+                                      taskWithTags: taskWithTagsSnapshot?.data,
+                                      taskType: TaskType.done,
+                                    ),
                                   ],
                                 ),
                               ),

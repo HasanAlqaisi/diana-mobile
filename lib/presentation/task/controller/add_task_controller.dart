@@ -29,6 +29,7 @@ class AddTaskController extends GetxController {
   List<String> subtasksNames = [];
   var tags = List<String>().obs;
   RxInt priority = 0.obs;
+  var selectedTags = <int>[];
 
   @override
   void onInit() {
@@ -41,6 +42,15 @@ class AddTaskController extends GetxController {
       },
     );
     super.onInit();
+  }
+
+  void updateSelectedTags({int index}) {
+    if (selectedTags.contains(index)) {
+      selectedTags.remove(index);
+    } else {
+      selectedTags.add(index);
+    }
+    update();
   }
 
   void onTagPlusClicked() {

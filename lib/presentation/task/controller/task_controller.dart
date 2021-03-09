@@ -54,6 +54,7 @@ class TaskController extends GetxController {
   RxBool isLongPressed = false.obs;
   RxString selectedTask = ''.obs;
   var tags = List<String>().obs;
+  var selectedTags = <int>[];
 
   TaskController(
       this.requestTokenUsecase,
@@ -95,11 +96,14 @@ class TaskController extends GetxController {
     //   }
     // }, (r) => null);
 
-    await API.doRequest(body: () async {
-      return await getTagsUseCase();
-    }, failedBody: (failure) {
-      Fluttertoast.showToast(msg: failureToString(failure));
-    });
+    await API.doRequest(
+      body: () async {
+        return await getTagsUseCase();
+      },
+      failedBody: (failure) {
+        Fluttertoast.showToast(msg: failureToString(failure));
+      },
+    );
 
     await API.doRequest(
       body: () async {
@@ -115,6 +119,15 @@ class TaskController extends GetxController {
   void onClose() async {
     super.onClose();
     _taskWithTagsController.close();
+  }
+
+  void updateSelectedTags({bool isSelected, int index, int length}) {
+    if (selectedTags.contains(index)) {
+      selectedTags.remove(index);
+    } else {
+      selectedTags.add(index);
+    }
+    update();
   }
 
   Future<void> addTask(

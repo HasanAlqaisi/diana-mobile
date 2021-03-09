@@ -23,21 +23,12 @@ class DoneTaskTab extends StatelessWidget {
             builder: (context, snapshot) {
               final data = snapshot?.data;
               if (data != null && data.isNotEmpty) {
-                return Obx(() => ChipsChoice<String>.multiple(
-                      // choiceStyle: C2ChoiceStyle(color: Colors.red),
-                      // value is list of clicked tags (with mark on it)
-                      value: TaskController.to.tags(),
-                      // onChanged will generate a list with selected tags, u need to assign it
-                      // to the value above
-                      onChanged: (tags) =>
-                          TaskController.to.tags.assignAll(tags),
-                      choiceItems: C2Choice.listFrom<String, String>(
-                        // All tags
-                        source: data.map((tag) => tag.name).toList(),
-                        value: (i, v) => v,
-                        label: (i, v) => v,
-                      ),
-                    ));
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: _buildChips(data),
+                  ),
+                );
               } else {
                 print('TAGS UI: data is empty ${data?.isEmpty}');
                 return Container();
@@ -56,5 +47,29 @@ class DoneTaskTab extends StatelessWidget {
         DoneTasksList(),
       ],
     );
+  }
+
+  List<Widget> _buildChips(List<TagData> tags) {
+    List<Widget> chips = [];
+
+    for (int i = 0; i < tags.length; i++) {
+      ChoiceChip choiceChip = ChoiceChip(
+        selected: TaskController.to.selectedTags.contains(i),
+        label: Text(tags[i].name, style: TextStyle(color: Color(0xFF8E8E8E))),
+        avatar: TaskController.to.selectedTags.contains(i)
+            ? Icon(Icons.check, color: Color(0xFF8E8E8E))
+            : null,
+        pressElevation: 5,
+        labelPadding: EdgeInsets.symmetric(horizontal: 12),
+        backgroundColor: Color(0xFFEDEDED),
+        selectedColor: Colors.grey[300],
+        onSelected: (bool isSelected) {
+          TaskController.to.updateSelectedTags(index: i);
+        },
+      );
+      chips.add(Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10), child: choiceChip));
+    }
+    return chips;
   }
 }
