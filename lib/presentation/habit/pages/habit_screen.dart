@@ -23,8 +23,15 @@ class HabitScreen extends StatelessWidget {
         appBar: AppBar(
           title: Padding(
             padding: EdgeInsets.symmetric(vertical: 10.0), //Not working
-            child: Text(
-              'Hey, Hasan',
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                      text: 'Hey, ',
+                      style: TextStyle(fontWeight: FontWeight.w300)),
+                  TextSpan(text: 'Hasan! '),
+                ],
+              ),
             ),
           ),
           actions: [
