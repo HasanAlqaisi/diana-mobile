@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:dartz/dartz.dart';
 import 'package:diana/core/constants/_constants.dart';
 import 'package:diana/core/errors/failure.dart';
+import 'package:diana/data/remote_models/auth/user.dart';
 import 'package:diana/domain/usecases/auth/request_token_usecase.dart';
 import 'package:diana/presentation/login/pages/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +24,11 @@ class API {
   }
 
   static Future<void> doRequest({
-    Function body,
+    Future<dynamic>  body(),
     void failedBody(Failure fail),
     Function successBody,
   }) async {
-    return (await body?.call()).fold((fail) async {
+    return (await body.call()).fold((fail) async {
       log(
         "${body.toString()} ",
         name: 'doRequest',
@@ -47,7 +49,7 @@ class API {
           } else {
             failedBody?.call(fail);
           }
-        }, (r) => body?.call());
+        }, (r) async => (await body)?.call());
       } else {
         return failedBody?.call(fail);
       }

@@ -163,7 +163,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     request.headers['Authorization'] = 'Bearer $kToken';
     request.fields['first_name'] = firstName;
     request.fields['last_name'] = lastName;
-    request.fields['username'] = username;
+    // request.fields['username'] = username;
     request.fields['email'] = email;
     request.fields['birthdate'] = birthdate;
     if(image != null){

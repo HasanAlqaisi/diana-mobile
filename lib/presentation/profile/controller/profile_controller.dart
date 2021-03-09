@@ -30,11 +30,13 @@ class ProfileController extends GetxController {
 
   final formKey = GlobalKey<FormState>();
   final passwordFormKey = GlobalKey<FormState>();
-  final nameControlerField = TextEditingController();
+  final firstNameControlerField = TextEditingController();
+  final lastNameControlerField = TextEditingController();
+  final usernameControlerField = TextEditingController();
   final emailControlerField = TextEditingController();
   final birthControlerField = TextEditingController();
 
-  final isEditLoading = false.obs;
+  bool shouldReturn = false;
   File image;
   String pass1, pass2;
 
@@ -62,28 +64,49 @@ class ProfileController extends GetxController {
     );
   }
 
-  @override
-  void onClose() async {
+  Future<void> onWillPopExcute() async {
     await API.doRequest(body: () async {
-      isEditLoading.value = true;
+      shouldReturn = false;
       return await editUserUsecase(
-        nameControlerField.text,
-        nameControlerField.text,
-        nameControlerField.text,
+        firstNameControlerField.text,
+        lastNameControlerField.text,
+        usernameControlerField.text,
         emailControlerField.text,
         birthControlerField.text,
         image,
       );
     }, failedBody: (failure) {
-      isEditLoading.value = false;
+      shouldReturn = false;
       Fluttertoast.showToast(msg: failureToString(failure));
     }, successBody: () {
-      isEditLoading.value = false;
+      shouldReturn = true;
     });
-    nameControlerField.dispose();
+  }
+
+  @override
+  void onClose() async {
+    // await API.doRequest(body: () async {
+    //   isEditLoading.value = true;
+    //   return await editUserUsecase(
+    //     firstNameControlerField.text,
+    //     lastNameControlerField.text,
+    //     usernameControlerField.text,
+    //     emailControlerField.text,
+    //     birthControlerField.text,
+    //     image,
+    //   );
+    // }, failedBody: (failure) {
+    //   isEditLoading.value = false;
+    //   Fluttertoast.showToast(msg: failureToString(failure));
+    // }, successBody: () {
+    //   isEditLoading.value = false;
+    // });
+    super.onClose();
+    firstNameControlerField.dispose();
+    lastNameControlerField.dispose();
+    lastNameControlerField.dispose();
     emailControlerField.dispose();
     birthControlerField.dispose();
-    super.onClose();
   }
 
   Stream<UserData> watchUser() => watchUserUsecase();
