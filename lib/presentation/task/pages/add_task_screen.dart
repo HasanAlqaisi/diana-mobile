@@ -253,13 +253,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         children: [
                           Checkbox(
                             value: _.shouldRemind.value &&
-                                (_.startingDate.value != null ||
+                                (_.startingDate.value != null &&
                                     _.startingDate.value.isNotEmpty),
                             onChanged: (newValue) {
                               _.shouldRemind.value = newValue;
                               if (newValue == true) {
                                 _.reminderTime.value =
                                     '${_.startingDate.value}T${TimeOfDay.now().hour}:${TimeOfDay.now().minute}';
+                              } else {
+                                _.reminderTime.value = '';
                               }
                             },
                             checkColor: Colors.black,
@@ -269,7 +271,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             'Remind me',
                             style: TextStyle(
                               color: _.shouldRemind.value &&
-                                      (_.startingDate.value != null ||
+                                      (_.startingDate.value != null &&
                                           _.startingDate.value.isNotEmpty)
                                   ? Colors.white
                                   : Color(0xFF4A15B5),
@@ -279,7 +281,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           ),
                           Visibility(
                             visible: _.shouldRemind.value &&
-                                (_.startingDate.value != null ||
+                                (_.startingDate.value != null &&
                                     _.startingDate.value.isNotEmpty),
                             child: Padding(
                               padding:
@@ -296,21 +298,30 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                             context: context,
                                             initialTime: TimeOfDay.now())
                                         .then((time) {
-                                      _.date.value = DateTime(
-                                        _.date.value.year,
-                                        _.date.value.month,
-                                        _.date.value.day,
-                                        time.hour,
-                                        time.minute,
-                                      );
-                                      AddTaskController.to.reminderTime.value =
-                                          dateAndTimeToDjango(_.date.value);
+                                      if (time != null) {
+                                        _.date.value = DateTime(
+                                          _.date.value.year,
+                                          _.date.value.month,
+                                          _.date.value.day,
+                                          time.hour,
+                                          time.minute,
+                                        );
+
+                                        AddTaskController
+                                                .to.reminderTime.value =
+                                            dateAndTimeToDjango(_.date.value);
+                                      }
                                     });
                                   },
-                                  child: Text(
-                                    '${_.date.value.toLocal()?.hour}:${_.date.value.toLocal()?.minute}',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                  child: _.reminderTime.value.isNotEmpty
+                                      ? Text(
+                                          '${_.date.value?.toLocal()?.hour}:${_.date.value?.toLocal()?.minute}',
+                                          style: TextStyle(color: Colors.white),
+                                        )
+                                      : Text(
+                                          '00:00',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                 ),
                               ),
                             ),

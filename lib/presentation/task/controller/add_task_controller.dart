@@ -70,11 +70,17 @@ class AddTaskController extends GetxController {
         return await insertTaskUseCase(
           taskName,
           note,
-          startingDate.value,
+          startingDate.value != null && startingDate.value.isNotEmpty
+              ? startingDate.value
+              : null,
           tags,
           subtasksNames,
-          reminderTime.value,
-          deadlineDate.value,
+          startingDate.value != null && reminderTime.value.isNotEmpty
+              ? reminderTime.value
+              : null,
+          startingDate.value != null && deadlineDate.value.isNotEmpty
+              ? deadlineDate.value
+              : null,
           priority.value,
           false,
         );
