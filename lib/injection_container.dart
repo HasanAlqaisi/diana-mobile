@@ -67,6 +67,7 @@ import 'package:diana/presentation/profile/controller/profile_controller.dart';
 import 'package:diana/presentation/register/controller/registeration_controller.dart';
 import 'package:diana/presentation/task/controller/add_task_controller.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path/path.dart' as p;
 import 'package:http/http.dart' as http;
@@ -108,6 +109,16 @@ void externalLibsInjection() {
   sl.registerLazySingleton(() => http.Client());
 
   sl.registerLazySingleton(() => FlutterSecureStorage());
+
+  sl.registerLazySingleton<NotificationDetails>(() {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails('reminderId', 'Task Reminder',
+            'Here you can see how Diana helps you remember your tasks',
+            importance: Importance.max,
+            priority: Priority.high,
+            showWhen: true);
+    return NotificationDetails(android: androidPlatformChannelSpecifics);
+  });
 }
 
 void controllersInjection() {
@@ -118,7 +129,7 @@ void controllersInjection() {
       () => ProfileController(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory(() => RegistrationController(sl()));
   sl.registerFactory(() => TaskController(sl(), sl(), sl(), sl(), sl(), sl(),
-      sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+      sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory(() => AddTaskController(sl(), sl(), sl(), sl()));
   sl.registerFactory(
       () => HabitController(sl(), sl(), sl(), sl(), sl(), sl(), sl()));

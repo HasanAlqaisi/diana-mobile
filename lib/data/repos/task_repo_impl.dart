@@ -25,7 +25,9 @@ import 'package:diana/data/remote_models/task/task_response.dart';
 import 'package:diana/data/remote_models/task/task_result.dart';
 import 'package:diana/data/remote_models/tasktag/tasktag.dart';
 import 'package:diana/domain/repos/task_repo.dart';
-import 'package:flutter/material.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:diana/injection_container.dart' as di;
 
 class TaskRepoImpl extends TaskRepo {
   final NetWorkInfo netWorkInfo;
@@ -417,6 +419,20 @@ class TaskRepoImpl extends TaskRepo {
             checklist, date, reminder, deadline, priority, done);
 
         log('API result is $result', name: 'insertTask');
+
+        if (result.reminder != null) {
+          print('reminder scheduled at ${result.reminder}');
+          await FlutterLocalNotificationsPlugin().zonedSchedule(
+            result.taskId.hashCode,
+            result.name,
+            result.note,
+            tz.TZDateTime.parse(tz.local, result.reminder),
+            di.sl<NotificationDetails>(),
+            androidAllowWhileIdle: true,
+            uiLocalNotificationDateInterpretation:
+                UILocalNotificationDateInterpretation.absoluteTime,
+          );
+        }
 
         await taskLocalSource.insertTask(result);
 
