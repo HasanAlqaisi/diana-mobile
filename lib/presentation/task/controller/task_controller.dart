@@ -5,6 +5,8 @@ import 'package:diana/core/api_helpers/api.dart';
 import 'package:diana/core/mappers/failure_to_string.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
+import 'package:diana/domain/usecases/auth/get_user_usecase.dart';
+import 'package:diana/domain/usecases/auth/watch_user_usecase.dart';
 import 'package:diana/domain/usecases/task/delete_task_usecase.dart';
 import 'package:diana/domain/usecases/task/edit_subtask_usecase.dart';
 import 'package:diana/domain/usecases/task/edit_task_usecase.dart';
@@ -48,6 +50,8 @@ class TaskController extends GetxController {
   final DeleteTaskUseCase deleteTaskUseCase;
   final MakeTaskDoneUseCase makeTaskDoneUseCase;
   final EditSubTaskUseCase editSubTaskUseCase;
+  final GetUserUsecase getUserUsecase;
+  final WatchUserUsecase watchUserUsecase;
 
   StreamController<TaskWithTags> _taskWithTagsController;
   Failure failure;
@@ -57,21 +61,24 @@ class TaskController extends GetxController {
   var selectedTags = <int>[];
 
   TaskController(
-      this.requestTokenUsecase,
-      this.getTagsUseCase,
-      this.getTasksUseCase,
-      this.watchTodayTasksUseCase,
-      this.watchAllTasksUseCase,
-      this.watchCompletedTasksUseCase,
-      this.watchMissedTasksUseCase,
-      this.watchAllTagsUseCase,
-      this.insertTaskUseCase,
-      this.watchTagsForTaskUseCase,
-      this.getSubtasksUseCase,
-      this.editTaskUseCase,
-      this.deleteTaskUseCase,
-      this.makeTaskDoneUseCase,
-      this.editSubTaskUseCase);
+    this.requestTokenUsecase,
+    this.getTagsUseCase,
+    this.getTasksUseCase,
+    this.watchTodayTasksUseCase,
+    this.watchAllTasksUseCase,
+    this.watchCompletedTasksUseCase,
+    this.watchMissedTasksUseCase,
+    this.watchAllTagsUseCase,
+    this.insertTaskUseCase,
+    this.watchTagsForTaskUseCase,
+    this.getSubtasksUseCase,
+    this.editTaskUseCase,
+    this.deleteTaskUseCase,
+    this.makeTaskDoneUseCase,
+    this.editSubTaskUseCase,
+    this.getUserUsecase,
+    this.watchUserUsecase,
+  );
 
   @override
   void onInit() async {
@@ -95,6 +102,15 @@ class TaskController extends GetxController {
     //     Fluttertoast.showToast(msg: failureToString(fail));
     //   }
     // }, (r) => null);
+
+    await API.doRequest(
+      body: () async {
+        return await getUserUsecase();
+      },
+      failedBody: (failure) {
+        Fluttertoast.showToast(msg: failureToString(failure));
+      },
+    );
 
     await API.doRequest(
       body: () async {
@@ -207,6 +223,10 @@ class TaskController extends GetxController {
         Fluttertoast.showToast(msg: failureToString(failure));
       },
     );
+  }
+
+  Stream<UserData> watchUser() {
+    return watchUserUsecase();
   }
 
   Stream<List<TaskWithSubtasks>> watchTodayTasks(List<String> tags) {
