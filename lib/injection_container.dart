@@ -72,10 +72,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path/path.dart' as p;
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
-import 'package:moor_ffi/moor_ffi.dart';
+import 'package:moor/ffi.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-
 import 'data/data_sources/habitlog/habitlog_remote_source.dart';
 import 'data/database/models/habit/habit_dao.dart';
 import 'data/repos/habit_repo_impl.dart';
