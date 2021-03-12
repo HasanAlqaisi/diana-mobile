@@ -85,7 +85,8 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
             return tbl.userId.equals(userId) &
                 isNull(tbl.doneAt) &
                 tbl.date.day.equalsExp(currentDate.day) &
-                (tbl.deadline.isBiggerThan(currentDateAndTime) |
+                (tbl.deadline.isBiggerThan(currentDateAndTime) &
+                    tbl.deadline.isBiggerThan(tbl.date) |
                     isNull(tbl.deadline));
           })
           ..orderBy([
@@ -120,7 +121,8 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
           ..where((tbl) =>
               tbl.userId.equals(userId) &
               isNull(tbl.doneAt) &
-              (tbl.deadline.isBiggerThan(currentDateAndTime) |
+              (tbl.deadline.isBiggerThan(currentDateAndTime) &
+                  tbl.deadline.isBiggerThan(tbl.date) |
                   isNull(tbl.deadline)))
           ..orderBy([
             (u) =>
@@ -177,7 +179,8 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
     return ((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))
           ..where(
             (tbl) =>
-                tbl.deadline.isSmallerThan(currentDateAndTime) &
+                (tbl.deadline.isSmallerThan(currentDateAndTime) |
+                    tbl.deadline.isSmallerThan(tbl.date)) &
                 isNull(tbl.doneAt),
           ))
         .join([
