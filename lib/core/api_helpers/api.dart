@@ -49,7 +49,7 @@ class API {
           } else {
             failedBody?.call(fail);
           }
-        }, (r) async => (await body)?.call());
+        }, (r) async => (await body?.call()));
       } else {
         return failedBody?.call(fail);
       }
