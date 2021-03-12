@@ -86,22 +86,6 @@ class TaskController extends GetxController {
     _taskWithTagsController = StreamController();
 
     print('[onInit] getting tasks');
-    // (await getTagsUseCase()).fold((fail) async {
-    //   print("FAIL happen => ${fail.runtimeType}");
-    //   if (fail is UnAuthFailure) {
-    //     final requestTokenResult = await requestTokenUsecase(kRefreshToken);
-    //     requestTokenResult.fold((requestTokenFail) {
-    //       if (requestTokenFail is UnAuthFailure) {
-    //         Fluttertoast.showToast(msg: 'خلص الرفرش');
-    //         Get.offAllNamed(LoginScreen.route);
-    //       } else {
-    //         Fluttertoast.showToast(msg: failureToString(fail));
-    //       }
-    //     }, (r) => null);
-    //   } else {
-    //     Fluttertoast.showToast(msg: failureToString(fail));
-    //   }
-    // }, (r) => null);
 
     await API.doRequest(
       body: () async {
@@ -110,23 +94,25 @@ class TaskController extends GetxController {
       failedBody: (failure) {
         Fluttertoast.showToast(msg: failureToString(failure));
       },
-    );
-
-    await API.doRequest(
-      body: () async {
-        return await getTagsUseCase();
-      },
-      failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
-      },
-    );
-
-    await API.doRequest(
-      body: () async {
-        return await getTasksUseCase();
-      },
-      failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
+      successBody: () async {
+        await API.doRequest(
+          body: () async {
+            return await getTagsUseCase();
+          },
+          failedBody: (failure) {
+            Fluttertoast.showToast(msg: failureToString(failure));
+          },
+          successBody: () async {
+            await API.doRequest(
+              body: () async {
+                return await getTasksUseCase();
+              },
+              failedBody: (failure) {
+                Fluttertoast.showToast(msg: failureToString(failure));
+              },
+            );
+          },
+        );
       },
     );
   }
