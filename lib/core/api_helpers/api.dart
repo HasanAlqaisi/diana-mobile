@@ -24,19 +24,24 @@ class API {
   }
 
   static Future<void> doRequest({
-    Future<dynamic>  body(),
+    Future<dynamic> body(),
     void failedBody(Failure fail),
     Function successBody,
   }) async {
+    // execute the actuall body request
     return (await body.call()).fold((fail) async {
       log(
         "${body.toString()} ",
         name: 'doRequest',
         error: {"data": '${fail.runtimeType} happen => ${fail.toString()}'},
       );
+      // If the response failed because of the user is not authenticated
+      // then request a new token for him
       if (fail is UnAuthFailure) {
         log('Requesting token', name: 'doRequest');
         final requestTokenResult = await _requestTokenUsecase();
+        // If the token requesting failed, check why
+        // If it is also authentication issue, log him out
         requestTokenResult.fold((requestTokenFail) {
           log(
             "${body.toString()} happened in requesting token",
@@ -49,10 +54,14 @@ class API {
           } else {
             failedBody?.call(fail);
           }
-        }, (r) async => (await body?.call()));
+        },
+            // If the token requesting went well, execute the body again!
+            (r) async => (await body?.call()).fold((fail) {
+                  failedBody?.call(fail);
+                }, (r) async => await successBody?.call()));
       } else {
         return failedBody?.call(fail);
       }
-    }, (r) => successBody?.call());
+    }, (r) async => await successBody?.call());
   }
 }
