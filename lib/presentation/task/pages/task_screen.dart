@@ -1,18 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diana/core/constants/enums.dart';
+import 'package:diana/core/global_widgets/user_progress_image.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/presentation/profile/pages/profile_screen.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
-import 'package:diana/presentation/task/pages/tabs/done_task_tab.dart';
-import 'package:diana/presentation/task/pages/tabs/missed_task_tab.dart';
-import 'package:diana/presentation/task/pages/tabs/inbox_task_tab.dart';
-import 'package:diana/presentation/task/pages/tabs/today_task_tab.dart';
+import 'package:diana/presentation/task/pages/tabs/tasks_tab.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:diana/injection_container.dart' as di;
 
 class TaskScreen extends StatelessWidget {
@@ -49,36 +44,14 @@ class TaskScreen extends StatelessWidget {
                     ),
                     actions: [
                       Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              Get.toNamed(ProfileScreen.route);
-                            },
-                            child: CircularStepProgressIndicator(
-                              totalSteps: 100,
-                              currentStep:
-                                  user?.dailyTaskProgress?.round() ?? 0,
-                              selectedColor: Color(0xFF00FFEF),
-                              unselectedColor: Colors.white,
-                              padding: 0,
-                              width: 40,
-                              stepSize: 3,
-                              child: CircleAvatar(
-                                radius: 45,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(45),
-                                  child: user?.picture != null
-                                      ? CachedNetworkImage(
-                                          imageUrl: user.picture,
-                                          placeholder: (context, str) =>
-                                              Image.asset(
-                                                  'assets/profile_holder.jpg'))
-                                      : Image.asset(
-                                          'assets/profile_holder.jpg'),
-                                ),
-                              ),
-                            ),
-                          ))
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.toNamed(ProfileScreen.route);
+                          },
+                          child: UserProgressImage(user: user),
+                        ),
+                      )
                     ],
                     bottom: TabBar(
                       tabs: [
@@ -91,10 +64,10 @@ class TaskScreen extends StatelessWidget {
                   ),
                   body: TabBarView(
                     children: [
-                      TodayTaskTab(),
-                      InboxTaskTab(),
-                      DoneTaskTab(),
-                      MissedTaskTab(),
+                      TasksTab(type: TaskType.today),
+                      TasksTab(type: TaskType.inbox),
+                      TasksTab(type: TaskType.done),
+                      TasksTab(type: TaskType.missed),
                     ],
                   ),
                 ),

@@ -1,20 +1,18 @@
-import 'package:chips_choice/chips_choice.dart';
+import 'package:diana/core/constants/enums.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
-import 'package:diana/data/database/relations/task_with_subtasks/task_with_subtasks.dart';
-import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
 import 'package:diana/presentation/task/widgets/quick_add_field.dart';
-import 'package:diana/presentation/task/widgets/tags_chips.dart';
-import 'package:diana/presentation/task/widgets/inbox/all_tasks_list.dart';
+import 'package:diana/presentation/task/widgets/tasks_list.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:diana/injection_container.dart' as di;
 
-class InboxTaskTab extends StatelessWidget {
+class TasksTab extends StatelessWidget {
+  final TaskType type;
+
+  const TasksTab({Key key, this.type}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ListView(
-      // physics: NeverScrollableScrollPhysics(),
       children: [
         StreamBuilder<List<TagData>>(
             stream: TaskController.to.watchAllTags(),
@@ -43,7 +41,7 @@ class InboxTaskTab extends StatelessWidget {
             },
           ),
         ),
-        AllTasksList(),
+        _buildTaskList(taskType: type),
       ],
     );
   }
@@ -70,5 +68,19 @@ class InboxTaskTab extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 10), child: choiceChip));
     }
     return chips;
+  }
+
+  Widget _buildTaskList({TaskType taskType}) {
+    if (taskType == TaskType.today) {
+      return TasksList(type: TaskType.today);
+    } else if (taskType == TaskType.inbox) {
+      return TasksList(type: TaskType.inbox);
+    } else if (taskType == TaskType.done) {
+      return TasksList(type: TaskType.done);
+    } else if (taskType == TaskType.missed) {
+      return TasksList(type: TaskType.missed);
+    } else {
+      return Container();
+    }
   }
 }
