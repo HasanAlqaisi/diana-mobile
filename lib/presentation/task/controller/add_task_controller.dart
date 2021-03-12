@@ -27,7 +27,7 @@ class AddTaskController extends GetxController {
   String taskName, note, tag;
   var date = DateTime(2021).obs;
   List<String> subtasksNames = [];
-  var tags = List<String>().obs;
+  var tags = <String>[].obs;
   RxInt priority = 0.obs;
   var selectedTags = <int>[];
 
@@ -44,17 +44,19 @@ class AddTaskController extends GetxController {
     super.onInit();
   }
 
-  void updateSelectedTags({int index}) {
+  void updateSelectedTags({int index, String tagName}) {
     if (selectedTags.contains(index)) {
       selectedTags.remove(index);
+      tags.removeAt(index);
     } else {
       selectedTags.add(index);
+      tags.add(tagName);
     }
     update();
   }
 
-  void onTagPlusClicked() {
-    API.doRequest(
+  Future<void> onTagPlusClicked() async {
+    return await API.doRequest(
       body: () async {
         return await insertTagUseCase(tag, priority.value);
       },
