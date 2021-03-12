@@ -4,7 +4,7 @@ import 'package:diana/data/database/relations/task_with_subtasks/task_with_subta
 import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
 import 'package:diana/presentation/habit/controllers/habit_controller.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
-import 'package:diana/presentation/task/widgets/general_subtasks_list.dart';
+import 'package:diana/presentation/task/widgets/subtasks_list.dart';
 import 'package:diana/presentation/task/widgets/tags_row.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

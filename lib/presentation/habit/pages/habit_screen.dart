@@ -4,8 +4,6 @@ import 'package:diana/presentation/habit/controllers/habit_controller.dart';
 import 'package:diana/presentation/habit/pages/tabs/all_habits_tab.dart';
 import 'package:diana/presentation/habit/pages/tabs/today_habits_tab.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
-import 'package:diana/presentation/task/pages/tabs/inbox_task_tab.dart';
-import 'package:diana/presentation/task/pages/tabs/today_task_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
