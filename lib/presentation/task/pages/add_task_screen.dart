@@ -1,6 +1,7 @@
 import 'package:chips_choice/chips_choice.dart';
 import 'package:diana/core/constants/constants.dart';
 import 'package:diana/core/mappers/date_to_ymd_string.dart';
+import 'package:diana/core/utils/progress_loader.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
 import 'package:flutter/cupertino.dart';
@@ -411,8 +412,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         hintStyle: TextStyle(color: Color(0xFFA687FF)),
                         // labelStyle: TextStyle(color: Colors.white),
                         suffixIcon: GestureDetector(
-                          onTap: () {
-                            _.onTagPlusClicked();
+                          onTap: () async {
+                            showLoaderDialog(context);
+                            await _.onTagPlusClicked();
+                            Navigator.pop(context);
                           },
                           child: Icon(Icons.add, color: Color(0xFFA687FF)),
                         ),
@@ -441,9 +444,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     padding: const EdgeInsets.all(16.0),
                     child: Center(
                       child: GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           if (_formKey.currentState.validate()) {
-                            _.onTaskPlusClicked();
+                            showLoaderDialog(context);
+                            await _.onTaskPlusClicked();
+                            Navigator.pop(context);
                           }
                         },
                         child: Icon(
@@ -478,7 +483,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         backgroundColor: Color(0xFFEDEDED),
         selectedColor: Colors.grey[300],
         onSelected: (bool isSelected) {
-          AddTaskController.to.updateSelectedTags(index: i);
+          AddTaskController.to.updateSelectedTags(index: i, tagName: tags[i].name);
         },
       );
       chips.add(Padding(
