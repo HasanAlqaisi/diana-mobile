@@ -15,7 +15,7 @@ class HomeController extends GetxController {
   final GetTokenUseCase getTokenUseCase;
   final GetRefreshTokenUseCase getRefreshTokenUseCase;
   final GetUserIdUseCase getUserIdUseCase;
-  RxBool isLogged = false.obs;
+  bool isLogged;
 
   HomeController(
     this.getTokenUseCase,
@@ -32,6 +32,7 @@ class HomeController extends GetxController {
     kToken = await getTokenUseCase();
     log('got them\nrefresh token is $kRefreshToken\nuserid is : $kUserId\ntoken is $kToken',
         name: Home.route);
-    isLogged.value = kToken != null ? true : false;
+    isLogged = kToken != null ? true : false;
+    update();
   }
 }

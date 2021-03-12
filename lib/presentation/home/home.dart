@@ -12,16 +12,21 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(
-      init: di.sl<HomeController>(),
-      builder: (controller) {
-        return Obx(() {
-          if (controller.isLogged.value) {
+        init: di.sl<HomeController>(),
+        builder: (controller) {
+          if (controller.isLogged == null) {
+            return Scaffold(
+              body: Center(
+                child: Image.asset('assets/logo_splash.png',
+                    width: 40, height: 40),
+              ),
+            );
+          }
+          if (controller.isLogged) {
             return Nav();
           } else {
             return LoginScreen();
           }
         });
-      },
-    );
   }
 }
