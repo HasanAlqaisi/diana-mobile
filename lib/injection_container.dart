@@ -63,6 +63,7 @@ import 'package:diana/domain/usecases/task/watch_today_tasks_usecase.dart';
 import 'package:diana/presentation/habit/controllers/habit_controller.dart';
 import 'package:diana/presentation/home/home_controller.dart';
 import 'package:diana/presentation/login/controller/login_controller.dart';
+import 'package:diana/presentation/nav/nav_controller.dart';
 import 'package:diana/presentation/profile/controller/profile_controller.dart';
 import 'package:diana/presentation/register/controller/registeration_controller.dart';
 import 'package:diana/presentation/task/controller/add_task_controller.dart';
@@ -124,6 +125,9 @@ void controllersInjection() {
   sl.registerFactory(() => HomeController(sl(), sl(), sl()));
 
   sl.registerFactory(() => LoginController(sl()));
+
+  sl.registerFactory(() => NavController());
+
   sl.registerFactory(
       () => ProfileController(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory(() => RegistrationController(sl()));
