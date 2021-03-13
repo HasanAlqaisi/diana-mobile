@@ -2,7 +2,9 @@ import 'package:diana/core/errors/failure.dart';
 import 'package:diana/core/mappers/date_to_ymd_string.dart';
 import 'package:diana/core/mappers/failure_to_string.dart';
 import 'package:diana/domain/usecases/auth/register_user_usecase.dart';
+import 'package:diana/presentation/login/pages/login_screen.dart';
 import 'package:diana/presentation/nav/nav.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
@@ -14,21 +16,31 @@ class RegistrationController extends GetxController {
   Failure failure;
   bool isLoading = false;
 
+  final formKey = GlobalKey<FormState>();
+
   RegistrationController(this.registerUserUseCase);
 
-  void onRegisterClicked() async {
-    isLoading = true;
-    failure = null;
-    update();
+  void onSignupPressed() async {
+    if (isLoading) return;
 
-    final result = await registerUserUseCase(
-        firstName, lastName, username, email, birthString.value, password);
-    isLoading = false;
-    update();
+    if (formKey.currentState.validate()) {
+      isLoading = true;
+      failure = null;
+      update();
 
-    result.fold((failure) {
-      this.failure = failure;
-      Fluttertoast.showToast(msg: failureToString(failure));
-    }, (_) => Get.offAndToNamed(Nav.route));
+      final result = await registerUserUseCase(
+          firstName, lastName, username, email, birthString.value, password);
+      isLoading = false;
+      update();
+
+      result.fold((failure) {
+        this.failure = failure;
+        Fluttertoast.showToast(msg: failureToString(failure));
+      }, (_) => Get.offAndToNamed(Nav.route));
+    }
+  }
+
+  void onLoginPressed(){
+    Get.toNamed(LoginScreen.route);
   }
 }

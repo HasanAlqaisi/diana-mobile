@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class TabBarMaterialWidget extends StatefulWidget {
-  final int index;
+class TabBarMaterialWidget extends StatelessWidget {
+  final int passedIndex;
   final ValueChanged<int> onChangedTab;
 
   const TabBarMaterialWidget({
-    @required this.index,
+    @required this.passedIndex,
     @required this.onChangedTab,
     Key key,
   }) : super(key: key);
-
-  @override
-  _TabBarMaterialWidgetState createState() => _TabBarMaterialWidgetState();
-}
-
-class _TabBarMaterialWidgetState extends State<TabBarMaterialWidget> {
   @override
   Widget build(BuildContext context) {
     final placeholder = Opacity(
@@ -35,7 +29,7 @@ class _TabBarMaterialWidgetState extends State<TabBarMaterialWidget> {
             index: 0,
             icon: SvgPicture.asset(
               'assets/tasks_icon.svg',
-              color: widget.index == 0 ? Colors.white : Color(0xFFA585FF),
+              color: passedIndex == 0 ? Colors.white : Color(0xFFA585FF),
             ),
             label: 'Tasks',
           ),
@@ -44,7 +38,7 @@ class _TabBarMaterialWidgetState extends State<TabBarMaterialWidget> {
             index: 1,
             icon: SvgPicture.asset(
               'assets/habits_icon.svg',
-              color: widget.index == 1 ? Colors.white : Color(0xFFA585FF),
+              color: passedIndex == 1 ? Colors.white : Color(0xFFA585FF),
             ),
             label: 'Habits',
           ),
@@ -58,7 +52,7 @@ class _TabBarMaterialWidgetState extends State<TabBarMaterialWidget> {
     @required SvgPicture icon,
     String label,
   }) {
-    final isSelected = index == widget.index;
+    final isSelected = index == passedIndex;
     final color = isSelected ? Colors.white : Color(0xFFA585FF);
 
     return IconTheme(
@@ -77,7 +71,7 @@ class _TabBarMaterialWidgetState extends State<TabBarMaterialWidget> {
             ),
           ],
         ),
-        onPressed: () => widget.onChangedTab(index),
+        onPressed: () => onChangedTab(index),
       ),
     );
   }

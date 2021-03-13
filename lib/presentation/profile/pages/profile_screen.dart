@@ -1,20 +1,13 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:diana/core/api_helpers/api.dart';
 import 'package:diana/core/constants/constants.dart';
-import 'package:diana/core/global_widgets/rounded_textfield.dart';
-import 'package:diana/core/mappers/failure_to_string.dart';
+import 'package:diana/core/mappers/date_to_ymd_string.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/presentation/profile/controller/profile_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:diana/injection_container.dart' as di;
-import 'package:get/route_manager.dart';
-import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const route = '/profile';
@@ -24,16 +17,7 @@ class ProfileScreen extends StatelessWidget {
     return GetBuilder<ProfileController>(
       init: di.sl<ProfileController>(),
       builder: (_) => WillPopScope(
-        onWillPop: () async {
-          showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                  title: Center(child: CircularProgressIndicator())));
-          await _.onWillPopExcute();
-          Navigator.of(context, rootNavigator: true).pop();
-
-          return _.shouldReturn;
-        },
+        onWillPop: _.onWillPopExcute,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           body: SafeArea(
@@ -67,15 +51,9 @@ class ProfileScreen extends StatelessWidget {
                     heightFactor: 0.9,
                     child: StreamBuilder<UserData>(
                       stream: _.watchUser(),
-                      // ignore: missing_required_param
-                      // initialData: UserData(),
                       builder: (context, userSnapshot) {
                         final user = userSnapshot.data;
-                        _.firstNameControlerField.text = user?.firstName;
-                        _.lastNameControlerField.text = user?.lastName;
-                        _.usernameControlerField.text = user?.username;
-                        _.emailControlerField.text = user?.email;
-                        _.birthControlerField.text = user?.birthdate;
+                        _.setInfo(user);
 
                         return Form(
                           key: _.formKey,
@@ -83,28 +61,7 @@ class ProfileScreen extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               GestureDetector(
-                                onTap: () async {
-                                  final picker = ImagePicker();
-                                  final pickedFile = await picker.getImage(
-                                      source: ImageSource.gallery);
-                                  _.image = File(pickedFile?.path);
-                                  // await API.doRequest(body: () async {
-                                  //   _.isEditLoading.value = true;
-                                  //   return await _.editUserUsecase(
-                                  //       _.firstName.value,
-                                  //       _.lastName.value,
-                                  //       _.username.value,
-                                  //       _.email.value,
-                                  //       _.birthdate.value,
-                                  //       _.image);
-                                  // }, failedBody: (failure) {
-                                  //   _.isEditLoading.value = false;
-                                  //   Fluttertoast.showToast(
-                                  //       msg: failureToString(failure));
-                                  // }, successBody: () {
-                                  //   _.isEditLoading.value = false;
-                                  // });
-                                },
+                                onTap: _.onProfileTapped,
                                 child: CircleAvatar(
                                   radius: 45,
                                   child: ClipRRect(
@@ -174,14 +131,14 @@ class ProfileScreen extends StatelessWidget {
                                 child: TextField(
                                   controller: _.birthControlerField,
                                   onTap: () async {
-                                    // controller.birthdate = await showDatePicker(
-                                    //   context: context,
-                                    //   initialDate: DateTime(2010),
-                                    //   firstDate: DateTime(1910),
-                                    //   lastDate: DateTime.now(),
-                                    // );
-                                    // controller.birthString.value =
-                                    //     dateToDjangotring(controller.birthdate);
+                                    final birthdate = await showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime(2010),
+                                      firstDate: DateTime(1910),
+                                      lastDate: DateTime.now(),
+                                    );
+                                    _.birthControlerField.text =
+                                        dateToDjangotring(birthdate);
                                   },
                                   readOnly: true,
                                   keyboardType: TextInputType.text,
@@ -198,83 +155,17 @@ class ProfileScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     TextButton(
-                                      child: Text(
-                                        'Forgot Password?',
-                                        style: TextStyle(
-                                            color: Color(0xFF636363),
-                                            decoration:
-                                                TextDecoration.underline),
-                                      ),
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title:
-                                                    Text('Enter new password'),
-                                                content: Form(
-                                                  key: _.passwordFormKey,
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                vertical: 16.0),
-                                                        child: RoundedTextField(
-                                                          labelText: 'Password',
-                                                          isObsecure: true,
-                                                          validateRules:
-                                                              (value) {
-                                                            _.pass1 = value;
-                                                            if (value.isEmpty) {
-                                                              return requireFieldMessage;
-                                                            }
-                                                            return null;
-                                                          },
-                                                        ),
-                                                      ),
-                                                      RoundedTextField(
-                                                        labelText:
-                                                            'Confirm password',
-                                                        isObsecure: true,
-                                                        validateRules: (value) {
-                                                          _.pass2 = value;
-                                                          if (value.isEmpty) {
-                                                            return requireFieldMessage;
-                                                          }
-                                                          return null;
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        Get.back();
-                                                      },
-                                                      child: Text('close')),
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        if (_.passwordFormKey
-                                                            .currentState
-                                                            .validate()) {
-                                                          _.changePass();
-                                                        }
-                                                      },
-                                                      child: Text('OK')),
-                                                ],
-                                              );
-                                            });
-                                      },
-                                    ),
+                                        child: Text(
+                                          'Forgot Password?',
+                                          style: TextStyle(
+                                              color: Color(0xFF636363),
+                                              decoration:
+                                                  TextDecoration.underline),
+                                        ),
+                                        onPressed: _.onForgotPassPressed),
                                     TextButton(
                                       child: Text('Log Out?'),
-                                      onPressed: () {
-                                        _.onLogoutClicked();
-                                      },
+                                      onPressed: _.onLogoutClicked,
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(

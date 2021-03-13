@@ -18,6 +18,8 @@ class AddTaskController extends GetxController {
   final InsertTagUseCase insertTagUseCase;
   final InsertTaskUseCase insertTaskUseCase;
 
+  final formKey = GlobalKey<FormState>();
+
   AddTaskController(this.requestTokenUsecase, this.getTagsUseCase,
       this.insertTagUseCase, this.insertTaskUseCase);
 

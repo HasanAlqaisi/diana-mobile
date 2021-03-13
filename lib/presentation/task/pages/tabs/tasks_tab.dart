@@ -15,22 +15,22 @@ class TasksTab extends StatelessWidget {
     return ListView(
       children: [
         StreamBuilder<List<TagData>>(
-            stream: TaskController.to.watchAllTags(),
-            initialData: [],
-            builder: (context, snapshot) {
-              final data = snapshot?.data;
-              if (data != null && data.isNotEmpty) {
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: _buildChips(data),
-                  ),
-                );
-              } else {
-                print('TAGS UI: data is empty ${data?.isEmpty}');
-                return Container();
-              }
-            }),
+          stream: TaskController.to.watchAllTags(),
+          initialData: [],
+          builder: (context, snapshot) {
+            final data = snapshot?.data;
+            if (data != null && data.isNotEmpty) {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: _buildChips(data),
+                ),
+              );
+            } else {
+              return Container();
+            }
+          },
+        ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: QuickAddField(

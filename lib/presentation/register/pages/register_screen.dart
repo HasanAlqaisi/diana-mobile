@@ -12,6 +12,7 @@ import 'package:diana/injection_container.dart' as di;
 
 import 'package:diana/core/constants/constants.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/utils.dart';
 
 class RegisterScreen extends StatelessWidget {
   static String route = '/register';
@@ -29,16 +30,14 @@ class RegisterScreen extends StatelessWidget {
 }
 
 class RegisterForm extends StatelessWidget {
-  final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: GetBuilder<RegistrationController>(
-        init: di.sl<RegistrationController>(),
-        builder: (controller) {
-          return Column(
+    return GetBuilder<RegistrationController>(
+      init: di.sl<RegistrationController>(),
+      builder: (controller) {
+        return Form(
+          key: controller.formKey,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
@@ -127,7 +126,7 @@ class RegisterForm extends StatelessWidget {
                       : null,
                   validateRules: (value) {
                     controller.email = value;
-                    return LocalValidators.emailValidation(value);
+                    return GetUtils.isEmail(value);
                   },
                 ),
               ),
@@ -182,13 +181,7 @@ class RegisterForm extends StatelessWidget {
                       fontWeight: FontWeight.normal,
                     ),
                   ),
-                  onPressed: controller.isLoading
-                      ? null
-                      : () {
-                          if (_formKey.currentState.validate()) {
-                            controller.onRegisterClicked();
-                          }
-                        },
+                  onPressed: controller.onSignupPressed,
                 ),
               ),
               FlatButton(
@@ -205,21 +198,12 @@ class RegisterForm extends StatelessWidget {
                     ],
                   ),
                 ),
-                onPressed: () {
-                  Navigator.pushNamed(context, LoginScreen.route);
-                },
+                onPressed: controller.onLoginPressed,
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
-  }
-
-  Failure userFieldsFailureCasting(Failure failure) {
-    if (failure is UserFieldsFailure) {
-      return failure;
-    }
-    return null;
   }
 }

@@ -1,4 +1,3 @@
-import 'package:chips_choice/chips_choice.dart';
 import 'package:diana/core/constants/constants.dart';
 import 'package:diana/core/mappers/date_to_ymd_string.dart';
 import 'package:diana/core/utils/progress_loader.dart';
@@ -12,17 +11,9 @@ import 'package:get/get.dart';
 
 import 'package:diana/injection_container.dart' as di;
 import 'package:diana/presentation/task/controller/add_task_controller.dart';
-import 'package:diana/presentation/task/widgets/tags_chips.dart';
 
-class AddTaskScreen extends StatefulWidget {
+class AddTaskScreen extends StatelessWidget {
   static const route = '/add_task';
-
-  @override
-  _AddTaskScreenState createState() => _AddTaskScreenState();
-}
-
-class _AddTaskScreenState extends State<AddTaskScreen> {
-  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +31,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           child: GetBuilder<AddTaskController>(
             init: di.sl<AddTaskController>(),
             builder: (_) => Form(
-              key: _formKey,
+              key: _.formKey,
               child: ListView(
                 children: [
                   Center(
@@ -71,7 +62,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       },
                     ),
                   ),
-
                   Obx(() => ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
@@ -79,10 +69,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             _.subtasks.length == 0 ? 1 : _.subtasks.length + 1,
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
                         itemBuilder: (context, index) {
-                          return SubtaskField(
-                            // key: ValueKey<int>(_.subtasks.length),
-                            index: index,
-                          );
+                          return SubtaskField(index: index);
                         },
                       )),
                   Padding(
@@ -100,8 +87,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       },
                     ),
                   ),
-
-                  ///Starting date, priority, reminder (same starting date but different time) and deadline
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -331,7 +316,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       ),
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -445,7 +429,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     child: Center(
                       child: GestureDetector(
                         onTap: () async {
-                          if (_formKey.currentState.validate()) {
+                          if (_.formKey.currentState.validate()) {
                             showLoaderDialog(context);
                             await _.onTaskPlusClicked();
                             Navigator.pop(context);
@@ -483,7 +467,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         backgroundColor: Color(0xFFEDEDED),
         selectedColor: Colors.grey[300],
         onSelected: (bool isSelected) {
-          AddTaskController.to.updateSelectedTags(index: i, tagName: tags[i].name);
+          AddTaskController.to
+              .updateSelectedTags(index: i, tagName: tags[i].name);
         },
       );
       chips.add(Padding(

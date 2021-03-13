@@ -1,13 +1,11 @@
 import 'package:diana/core/constants/enums.dart';
 import 'package:diana/core/global_widgets/user_progress_image.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
-import 'package:diana/presentation/profile/pages/profile_screen.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
 import 'package:diana/presentation/task/pages/tabs/tasks_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:get/route_manager.dart';
 import 'package:diana/injection_container.dart' as di;
 
 class TaskScreen extends StatelessWidget {
@@ -46,9 +44,7 @@ class TaskScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: GestureDetector(
-                          onTap: () {
-                            Get.toNamed(ProfileScreen.route);
-                          },
+                          onTap: _.onProfileImageTapped,
                           child: UserProgressImage(user: user),
                         ),
                       )
