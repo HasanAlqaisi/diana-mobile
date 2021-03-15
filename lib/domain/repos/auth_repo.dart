@@ -33,11 +33,12 @@ abstract class AuthRepo {
   Future<Either<Failure, User>> editUser(
     String firstName,
     String lastName,
-    String username,
+    // String username,
     String email,
     String birthdate,
-    File image,
   );
+
+  Future<Either<Failure, User>> uploadProfileImage(File image);
 
   Future<Either<Failure, bool>> resetPass(String email);
 

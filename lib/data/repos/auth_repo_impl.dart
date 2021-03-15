@@ -52,12 +52,12 @@ class AuthRepoImpl extends AuthRepo {
   }
 
   @override
-  Future<Either<Failure, User>> editUser(String firstName, String lastName,
-      String username, String email, String birthdate, File image) async {
+  Future<Either<Failure, User>> editUser(
+      String firstName, String lastName, String email, String birthdate) async {
     if (await netWorkInfo.isConnected()) {
       try {
-        final result = await remoteSource.editUser(
-            firstName, lastName, username, email, birthdate, image);
+        final result =
+            await remoteSource.editUser(firstName, lastName, email, birthdate);
 
         log('API result is $result', name: 'editUser');
 
@@ -249,5 +249,29 @@ class AuthRepoImpl extends AuthRepo {
   @override
   Future<void> deleteUserId() async {
     return await authLocalSource.deleteUserId();
+  }
+
+  @override
+  Future<Either<Failure, User>> uploadProfileImage(File image) async {
+    if (await netWorkInfo.isConnected()) {
+      try {
+        final result = await remoteSource.uploadProfileImage(image);
+
+        log('API result is $result', name: 'uploadProfileImage');
+
+        await authLocalSource.insertUser(result);
+
+        return Right(result);
+      } on FieldsException catch (error) {
+        return Left(
+            UserFieldsFailure.fromFieldsException(json.decode(error.body)));
+      } on UnAuthException {
+        return Left(UnAuthFailure());
+      } on UnknownException catch (error) {
+        return Left(UnknownFailure(message: error.message));
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
   }
 }

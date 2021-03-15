@@ -1,9 +1,11 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:diana/core/api_helpers/api.dart';
 import 'package:diana/core/constants/constants.dart';
 import 'package:diana/core/global_widgets/rounded_textfield.dart';
 import 'package:diana/core/mappers/failure_to_string.dart';
+import 'package:diana/core/utils/progress_loader.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/domain/usecases/auth/change_pass_usecase.dart';
 import 'package:diana/domain/usecases/auth/delete_refreshtoken_usecase.dart';
@@ -12,10 +14,13 @@ import 'package:diana/domain/usecases/auth/delete_userid_usecase.dart';
 import 'package:diana/domain/usecases/auth/edit_user_usecase.dart';
 import 'package:diana/domain/usecases/auth/get_user_usecase.dart';
 import 'package:diana/domain/usecases/auth/logout_user_usecase.dart';
+import 'package:diana/domain/usecases/auth/upload_profile_image_usecase.dart';
 import 'package:diana/domain/usecases/auth/watch_user_usecase.dart';
 import 'package:diana/presentation/login/pages/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_rx/src/rx_workers/rx_workers.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,6 +34,7 @@ class ProfileController extends GetxController {
   final DeleteRefreshTokenUsecase deleteRefreshTokenUsecase;
   final DeleteUserIdUsecase deleteUserIdUsecase;
   final ChangePassUsecase changePassUsecase;
+  final UploadProfileImageUsecase uploadProfileImageUsecase;
 
   final formKey = GlobalKey<FormState>();
   final passwordFormKey = GlobalKey<FormState>();
@@ -42,6 +48,8 @@ class ProfileController extends GetxController {
   File image;
   String pass1, pass2;
 
+  var isImageUploading = false.obs;
+
   ProfileController(
     this.getUserUsecase,
     this.editUserUsecase,
@@ -51,6 +59,7 @@ class ProfileController extends GetxController {
     this.deleteRefreshTokenUsecase,
     this.deleteUserIdUsecase,
     this.changePassUsecase,
+    this.uploadProfileImageUsecase,
   );
 
   @override
@@ -62,6 +71,30 @@ class ProfileController extends GetxController {
       },
       failedBody: (failure) {
         Fluttertoast.showToast(msg: failureToString(failure));
+      },
+    );
+
+    ever(isImageUploading, (bool loading) {
+      if (loading) {
+        showLoaderDialog();
+      } else {
+        if (Get.isDialogOpen) Get.back();
+      }
+    });
+  }
+
+  Future<void> uploadProfileImage(File image) async {
+    return await API.doRequest(
+      body: () async {
+        isImageUploading(true);
+        return await uploadProfileImageUsecase(image);
+      },
+      successBody: () {
+        isImageUploading(false);
+      },
+      failedBody: (fail) {
+        isImageUploading(false);
+        Fluttertoast.showToast(msg: fail.toString());
       },
     );
   }
@@ -76,10 +109,8 @@ class ProfileController extends GetxController {
       return await editUserUsecase(
         firstNameControlerField.text,
         lastNameControlerField.text,
-        usernameControlerField.text,
         emailControlerField.text,
         birthControlerField.text,
-        image,
       );
     }, failedBody: (failure) {
       shouldReturn = false;
@@ -100,10 +131,11 @@ class ProfileController extends GetxController {
     birthControlerField.text = user?.birthdate;
   }
 
-  void onProfileTapped() async {
+  Future<void> onProfileTapped() async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     image = File(pickedFile?.path);
+    await uploadProfileImage(image);
   }
 
   Stream<UserData> watchUser() => watchUserUsecase();

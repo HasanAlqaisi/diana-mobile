@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:diana/core/constants/_constants.dart';
@@ -34,11 +35,12 @@ abstract class AuthRemoteSource {
   Future<User> editUser(
     String firstName,
     String lastName,
-    String username,
+    // String username,
     String email,
     String birthdate,
-    File image,
   );
+
+  Future<User> uploadProfileImage(File image);
 
   Future<bool> resetPass(String email);
 
@@ -141,38 +143,26 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
   }
 
   @override
-  Future<User> editUser(String firstName, String lastName, String username,
-      String email, String birthdate, File image) async {
-    // final response = await http.patch(
-    //   '$baseUrl/accounts/user/',
-    //   headers: {
-    //     'Authorization': 'Bearer $kToken',
-    //   },
-    //   body: {
-    //     "first_name": firstName,
-    //     "last_name": lastName,
-    //     "username": username,
-    //     "email": email,
-    //     "birthdate": birthdate,
-    //     "image": image.readAsBytesSync(),
-    //   },
-    // );
-
-    var request = new http.MultipartRequest(
-        "PATCH", Uri.parse("$baseUrl/accounts/user/"));
-    request.headers['Authorization'] = 'Bearer $kToken';
-    request.fields['first_name'] = firstName;
-    request.fields['last_name'] = lastName;
-    // request.fields['username'] = username;
-    request.fields['email'] = email;
-    request.fields['birthdate'] = birthdate;
-    if(image != null){
-    request.files
-        .add(http.MultipartFile.fromBytes('image', image.readAsBytesSync()));
-    }
-
-    final streamedResponse = await request.send();
-    final response = await http.Response.fromStream(streamedResponse);
+  Future<User> editUser(
+    String firstName,
+    String lastName,
+    // String username,
+    String email,
+    String birthdate,
+  ) async {
+    final response = await http.patch(
+      '$baseUrl/accounts/user/',
+      headers: {
+        'Authorization': 'Bearer $kToken',
+      },
+      body: {
+        "first_name": firstName,
+        "last_name": lastName,
+        // "username": username,
+        "email": email,
+        "birthdate": birthdate,
+      },
+    );
 
     if (response.statusCode == 200) {
       return User.fromJson(json.decode(response.body));
@@ -232,6 +222,36 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
       throw UnAuthException();
     } else {
       throw UnknownException();
+    }
+  }
+
+  @override
+  Future<User> uploadProfileImage(File image) async {
+    log('Uploading will begin...');
+    var request = new http.MultipartRequest(
+        "PATCH", Uri.parse("$baseUrl/accounts/user/"));
+
+    request.headers['Authorization'] = 'Bearer $kToken';
+
+    request.files.add(http.MultipartFile.fromBytes(
+        'image', image.readAsBytesSync(),
+        filename: image.path.split('/').last));
+
+    log('sending the request...');
+
+    final streamedResponse = await request.send();
+    log('converting from stream-to-response...');
+    final response = await http.Response.fromStream(streamedResponse);
+    log('DONE!');
+
+    if (response.statusCode == 200) {
+      return User.fromJson(json.decode(response.body));
+    } else if (response.statusCode == 400) {
+      throw FieldsException(body: response.body);
+    } else if (response.statusCode == 401) {
+      throw UnAuthException();
+    } else {
+      throw UnknownException(message: response.body);
     }
   }
 }

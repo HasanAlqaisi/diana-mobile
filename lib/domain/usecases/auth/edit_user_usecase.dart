@@ -13,12 +13,11 @@ class EditUserUsecase {
   Future<Either<Failure, User>> call(
     String firstName,
     String lastName,
-    String username,
+    // String username,
     String email,
     String birthdate,
-    File image,
+    // File image,
   ) {
-    return authRepo.editUser(
-        firstName, lastName, username, email, birthdate, image);
+    return authRepo.editUser(firstName, lastName, email, birthdate);
   }
 }
