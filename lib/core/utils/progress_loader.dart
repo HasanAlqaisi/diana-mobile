@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-showLoaderDialog(BuildContext context) {
+showLoaderDialog() {
   AlertDialog alert = AlertDialog(
     content: new Row(
       children: [
@@ -9,11 +10,8 @@ showLoaderDialog(BuildContext context) {
       ],
     ),
   );
-  showDialog(
+  Get.dialog(
+    alert,
     barrierDismissible: false,
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
   );
 }
