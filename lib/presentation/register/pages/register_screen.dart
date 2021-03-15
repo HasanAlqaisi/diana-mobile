@@ -126,7 +126,9 @@ class RegisterForm extends StatelessWidget {
                       : null,
                   validateRules: (value) {
                     controller.email = value;
-                    return GetUtils.isEmail(value);
+                    return GetUtils.isEmail(value)
+                        ? null
+                        : enterValidEmailMessage;
                   },
                 ),
               ),
