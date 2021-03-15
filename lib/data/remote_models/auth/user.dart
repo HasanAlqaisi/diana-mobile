@@ -15,14 +15,14 @@ class User extends Equatable {
   final String email;
   @JsonKey(nullable: true)
   final String birthdate;
-  @JsonKey(nullable: true)
+  @JsonKey(name: 'image', nullable: true)
   final String picture;
   @JsonKey(name: 'timezone', nullable: true)
   final String timeZone;
   @JsonKey(name: 'daily_progress')
   final double dailyProgress;
 
-  User(this.picture, 
+  User(this.picture,
       {this.userId,
       this.firstName,
       this.lastName,
