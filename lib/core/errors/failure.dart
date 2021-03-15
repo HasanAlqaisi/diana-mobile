@@ -53,6 +53,7 @@ class UserFieldsFailure extends Equatable implements Failure {
   final List<String> email;
   final List<String> birthdate;
   final List<String> password;
+  final List<String> image;
 
   UserFieldsFailure({
     this.firstName,
@@ -61,6 +62,7 @@ class UserFieldsFailure extends Equatable implements Failure {
     this.email,
     this.birthdate,
     this.password,
+    this.image
   });
 
   factory UserFieldsFailure.fromFieldsException(Map<String, dynamic> body) {
@@ -71,6 +73,7 @@ class UserFieldsFailure extends Equatable implements Failure {
       email: body['email']?.cast<String>() as List<String> ?? null,
       birthdate: body['birthdate']?.cast<String>() as List<String> ?? null,
       password: body['password']?.cast<String>() as List<String> ?? null,
+      image: body['image']?.cast<String>() as List<String> ?? null,
     );
   }
 
