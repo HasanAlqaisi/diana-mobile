@@ -9,6 +9,7 @@ import 'package:diana/data/remote_models/auth/refresh_info.dart';
 import 'package:diana/data/remote_models/auth/user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 
 abstract class AuthRemoteSource {
   Future<User> registerUser(
@@ -234,8 +235,10 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     request.headers['Authorization'] = 'Bearer $kToken';
 
     request.files.add(http.MultipartFile.fromBytes(
-        'image', image.readAsBytesSync(),
-        filename: image.path.split('/').last));
+      'image',
+      image.readAsBytesSync(),
+      filename: basename(image.path),
+    ));
 
     log('sending the request...');
 
