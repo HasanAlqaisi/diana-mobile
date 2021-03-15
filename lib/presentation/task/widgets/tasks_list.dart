@@ -198,7 +198,7 @@ class TasksList extends StatelessWidget {
         children: [
           GestureDetector(
               onTap: () async {
-                showLoaderDialog(context);
+                showLoaderDialog();
                 await TaskController.to.onDeleteTaskClicked(taskData.task.id);
                 Navigator.pop(context);
               },
@@ -239,7 +239,7 @@ class TasksList extends StatelessWidget {
           SizedBox(width: 5),
           GestureDetector(
               onTap: () async {
-                showLoaderDialog(context);
+                showLoaderDialog();
                 await TaskController.to.makeTaskDone(taskData.task.id);
                 Navigator.pop(context);
               },

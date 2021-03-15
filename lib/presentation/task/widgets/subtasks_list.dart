@@ -42,7 +42,7 @@ class SubtasksList extends StatelessWidget {
               if (type != TaskType.done)
                 GestureDetector(
                     onTap: () async {
-                      showLoaderDialog(context);
+                      showLoaderDialog();
                       await TaskController.to.changeSubtaskState(subtask);
                       Navigator.pop(context);
                     },

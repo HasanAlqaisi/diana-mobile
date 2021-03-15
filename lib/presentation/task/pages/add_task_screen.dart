@@ -397,7 +397,7 @@ class AddTaskScreen extends StatelessWidget {
                         // labelStyle: TextStyle(color: Colors.white),
                         suffixIcon: GestureDetector(
                           onTap: () async {
-                            showLoaderDialog(context);
+                            showLoaderDialog();
                             await _.onTagPlusClicked();
                             Navigator.pop(context);
                           },
@@ -430,7 +430,7 @@ class AddTaskScreen extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () async {
                           if (_.formKey.currentState.validate()) {
-                            showLoaderDialog(context);
+                            showLoaderDialog();
                             await _.onTaskPlusClicked();
                             Navigator.pop(context);
                           }
