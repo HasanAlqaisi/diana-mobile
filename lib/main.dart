@@ -59,14 +59,14 @@ class Diana extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: Home.route,
       routes: {
-        LoginScreen.route: (context) => LoginScreen(),
-        RegisterScreen.route: (context) => RegisterScreen(),
         Home.route: (context) => Home(),
         Nav.route: (context) => Nav(),
+        LoginScreen.route: (context) => LoginScreen(),
+        RegisterScreen.route: (context) => RegisterScreen(),
         TaskScreen.route: (context) => TaskScreen(),
         AddTaskScreen.route: (context) => AddTaskScreen(),
-        AddHabitScreen.route: (context) => AddHabitScreen(),
         HabitScreen.route: (context) => HabitScreen(),
+        AddHabitScreen.route: (context) => AddHabitScreen(),
         ProfileScreen.route: (context) => ProfileScreen(),
       },
     );
