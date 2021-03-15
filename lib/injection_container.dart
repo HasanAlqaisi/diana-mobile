@@ -34,6 +34,7 @@ import 'package:diana/domain/usecases/auth/login_user_usecase.dart';
 import 'package:diana/domain/usecases/auth/logout_user_usecase.dart';
 import 'package:diana/domain/usecases/auth/register_user_usecase.dart';
 import 'package:diana/domain/usecases/auth/request_token_usecase.dart';
+import 'package:diana/domain/usecases/auth/upload_profile_image_usecase.dart';
 import 'package:diana/domain/usecases/auth/watch_user_usecase.dart';
 import 'package:diana/domain/usecases/habit/edit_habit_usecase.dart';
 import 'package:diana/domain/usecases/habit/get_habit_logs.dart';
@@ -128,8 +129,8 @@ void controllersInjection() {
 
   sl.registerFactory(() => NavController());
 
-  sl.registerFactory(
-      () => ProfileController(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory(() =>
+      ProfileController(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory(() => RegistrationController(sl()));
   sl.registerFactory(() => TaskController(sl(), sl(), sl(), sl(), sl(), sl(),
       sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
@@ -148,6 +149,7 @@ void usecasesInjection() {
   sl.registerLazySingleton(() => GetUserIdUseCase(authRepo: sl()));
   sl.registerLazySingleton(() => GetUserUsecase(sl()));
   sl.registerLazySingleton(() => EditUserUsecase(sl()));
+  sl.registerLazySingleton(() => UploadProfileImageUsecase(sl()));
   sl.registerLazySingleton(() => ChangePassUsecase(authRepo: sl()));
   sl.registerLazySingleton(() => WatchUserUsecase(authRepo: sl()));
   sl.registerLazySingleton(() => LogoutUserUsecase(sl()));
