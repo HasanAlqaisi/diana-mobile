@@ -4,6 +4,7 @@ import 'package:diana/domain/usecases/auth/request_token_usecase.dart';
 import 'package:diana/domain/usecases/task/get_tags_usecase.dart';
 import 'package:diana/domain/usecases/task/insert_tag_usecase.dart';
 import 'package:diana/domain/usecases/task/insert_task_usecase.dart';
+import 'package:diana/presentation/task/widgets/subtask_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -23,7 +24,7 @@ class AddTaskController extends GetxController {
   AddTaskController(this.requestTokenUsecase, this.getTagsUseCase,
       this.insertTagUseCase, this.insertTaskUseCase);
 
-  RxList<dynamic> subtasks = [].obs;
+  var subtasks = <SubtaskField>[].obs;
   RxBool shouldRemind = false.obs;
   RxString reminderTime = ''.obs, startingDate = ''.obs, deadlineDate = ''.obs;
   String taskName, note, tag;
@@ -44,6 +45,10 @@ class AddTaskController extends GetxController {
       },
     );
     super.onInit();
+  }
+
+  void removeField(index) {
+    subtasks.remove(index);
   }
 
   void updateSelectedTags({int index, String tagName}) {

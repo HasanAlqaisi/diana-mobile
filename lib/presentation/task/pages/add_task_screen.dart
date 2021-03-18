@@ -3,6 +3,7 @@ import 'package:diana/core/mappers/date_to_ymd_string.dart';
 import 'package:diana/core/utils/progress_loader.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
+import 'package:diana/presentation/task/widgets/subtask_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -57,21 +58,39 @@ class AddTaskScreen extends StatelessWidget {
                       ),
                       validator: (title) {
                         _.taskName = title;
-                        if (title.isEmpty) return requireFieldMessage;
+                        if (title.trim().isEmpty) return requireFieldMessage;
                         return null;
                       },
                     ),
                   ),
-                  Obx(() => ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount:
-                            _.subtasks.length == 0 ? 1 : _.subtasks.length + 1,
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        itemBuilder: (context, index) {
-                          return SubtaskField(index: index);
-                        },
-                      )),
+                  Obx(
+                    () => ListView(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: [
+                        ..._.subtasks,
+                        GestureDetector(
+                          onTap: () {
+                            _.subtasks.add(
+                              SubtaskField(
+                                key: UniqueKey(),
+                                index: _.subtasks.length,
+                                removeField: _.removeField,
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 16),
+                            child: Text(
+                              '+ Sub task',
+                              style: TextStyle(color: Color(0xFFD6C8FF)),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 16.0, horizontal: 24),
@@ -483,62 +502,5 @@ class AddTaskScreen extends StatelessWidget {
     } else {
       return date;
     }
-  }
-}
-
-class SubtaskField extends StatelessWidget {
-  final int index;
-
-  const SubtaskField({
-    Key key,
-    this.index,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (index == AddTaskController.to.subtasks.length)
-          GestureDetector(
-            onTap: () {
-              AddTaskController.to.subtasks.add(SubtaskField(
-                  key: key, index: AddTaskController.to.subtasks.length));
-            },
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-              child: Text(
-                '+ Sub task',
-                style: TextStyle(color: Color(0xFFD6C8FF)),
-              ),
-            ),
-          )
-        else
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              style: TextStyle(color: Color(0xFFA687FF)),
-              decoration: InputDecoration(
-                  hintText: 'New sub task',
-                  hintStyle: TextStyle(color: Color(0xFFA687FF)),
-                  prefixIcon: GestureDetector(
-                    onTap: () {
-                      AddTaskController.to.subtasks.removeAt(index);
-                    },
-                    child: Icon(FontAwesomeIcons.minus, color: Colors.white),
-                  )
-                  // suffixIcon: Icon(Icons.add,
-                  //     color: Color(0xFFA687FF)),
-                  ),
-              validator: (subtaskName) {
-                if (subtaskName.isEmpty) return requireFieldMessage;
-                AddTaskController.to.subtasksNames.add(subtaskName);
-                return null;
-              },
-            ),
-          ),
-      ],
-    );
   }
 }
