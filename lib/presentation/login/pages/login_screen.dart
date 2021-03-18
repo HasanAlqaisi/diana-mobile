@@ -56,7 +56,7 @@ class LoginForm extends StatelessWidget {
                     hintText: 'John203',
                     validateRules: (value) {
                       controller.username = value;
-                      if (value.isEmpty) {
+                      if (value.trim().isEmpty) {
                         return requireFieldMessage;
                       }
                       return null;
@@ -71,7 +71,7 @@ class LoginForm extends StatelessWidget {
                     hintText: '********',
                     validateRules: (value) {
                       controller.password = value;
-                      if (value.isEmpty) {
+                      if (value.trim().isEmpty) {
                         return requireFieldMessage;
                       }
                       return null;

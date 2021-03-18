@@ -66,7 +66,7 @@ class RegisterForm extends StatelessWidget {
                       : null,
                   validateRules: (value) {
                     controller.firstName = value;
-                    if (value.isEmpty) {
+                    if (value.trim().isEmpty) {
                       return requireFieldMessage;
                     }
                     return null;
@@ -86,7 +86,7 @@ class RegisterForm extends StatelessWidget {
                       : null,
                   validateRules: (value) {
                     controller.lastName = value;
-                    if (value.isEmpty) {
+                    if (value.trim().isEmpty) {
                       return requireFieldMessage;
                     }
                     return null;
@@ -107,7 +107,7 @@ class RegisterForm extends StatelessWidget {
                       : null,
                   validateRules: (value) {
                     controller.username = value;
-                    if (value.isEmpty) {
+                    if (value.trim().isEmpty) {
                       return requireFieldMessage;
                     }
                     return null;
@@ -165,7 +165,7 @@ class RegisterForm extends StatelessWidget {
                       : null,
                   validateRules: (value) {
                     controller.password = value;
-                    if (value.isEmpty) {
+                    if (value.trim().isEmpty) {
                       return requireFieldMessage;
                     }
                     return null;

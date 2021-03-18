@@ -85,7 +85,7 @@ class ProfileScreen extends StatelessWidget {
                                       labelStyle:
                                           TextStyle(color: Color(0xFF612EF3))),
                                   validator: (value) {
-                                    if (value.isEmpty) {
+                                    if (value.trim().isEmpty) {
                                       return requireFieldMessage;
                                     }
                                     return null;
@@ -102,7 +102,7 @@ class ProfileScreen extends StatelessWidget {
                                       labelStyle:
                                           TextStyle(color: Color(0xFF612EF3))),
                                   validator: (value) {
-                                    if (value.isEmpty) {
+                                    if (value.trim().isEmpty) {
                                       return requireFieldMessage;
                                     }
                                     return null;
@@ -119,7 +119,7 @@ class ProfileScreen extends StatelessWidget {
                                         labelStyle: TextStyle(
                                             color: Color(0xFF612EF3))),
                                     validator: (value) {
-                                      if (value.isEmpty) {
+                                      if (value.trim().isEmpty) {
                                         return requireFieldMessage;
                                       }
                                       return null;

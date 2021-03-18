@@ -183,7 +183,7 @@ class ProfileController extends GetxController {
                   isObsecure: true,
                   validateRules: (value) {
                     pass1 = value;
-                    if (value.isEmpty) {
+                    if (value.trim().isEmpty) {
                       return requireFieldMessage;
                     }
                     return null;
@@ -195,7 +195,7 @@ class ProfileController extends GetxController {
                 isObsecure: true,
                 validateRules: (value) {
                   pass2 = value;
-                  if (value.isEmpty) {
+                  if (value.trim().isEmpty) {
                     return requireFieldMessage;
                   }
                   return null;
