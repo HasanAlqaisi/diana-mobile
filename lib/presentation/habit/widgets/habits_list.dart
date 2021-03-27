@@ -1,3 +1,4 @@
+import 'package:diana/core/constants/enums.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/relations/habit_with_habitlogs/habit_with_habitlogs.dart';
 import 'package:diana/data/database/relations/task_with_subtasks/task_with_subtasks.dart';
@@ -10,21 +11,33 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
-class AllHabitsList extends StatelessWidget {
-  const AllHabitsList({
+import 'day_text.dart';
+
+class HabitsList extends StatelessWidget {
+  final HabitType type;
+
+  HabitsList({
     Key key,
+    @required this.type,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final controller = HabitController.to;
+    final now = DateTime.now();
+
     return StreamBuilder<Future<List<HabitWitLogsWithDays>>>(
-        stream: HabitController.to.watchAllHabits(),
+        stream: controller.watch(habitType: type),
         builder: (context, snapshot) {
           return FutureBuilder<List<HabitWitLogsWithDays>>(
             future: snapshot?.data,
             builder: (context, asyncData) {
               final data = asyncData.hasData ? asyncData?.requireData : null;
               if (data != null && data.isNotEmpty) {
+                for (int i = 0; i < data.length; i++) {
+                  data[i].doneDays =
+                      controller.getLogsInCurrentWeekRange(data[i]);
+                }
                 return Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -38,7 +51,7 @@ class AllHabitsList extends StatelessWidget {
                         child: GestureDetector(
                           onLongPress: () {
                             print('long tapped!');
-                            HabitController.to.isLongPressed.value = true;
+                            controller.isLongPressed.value = true;
                           },
                           child: Material(
                             elevation: 0.8,
@@ -58,17 +71,15 @@ class AllHabitsList extends StatelessWidget {
                                   tilePadding:
                                       EdgeInsets.symmetric(horizontal: 16),
                                   onExpansionChanged: (isExpanded) {
-                                    HabitController.to.isLongPressed.value =
-                                        false;
+                                    controller.isLongPressed.value = false;
 
                                     if (isExpanded) {
                                       print('tapped to Expanded');
-                                      HabitController.to.selectedHabit.value =
+                                      controller.selectedHabit.value =
                                           data[index].habit.id;
                                     } else {
                                       print('tapped to close');
-                                      HabitController.to.selectedHabit.value =
-                                          '';
+                                      controller.selectedHabit.value = '';
                                     }
                                   },
                                   children: [
@@ -76,19 +87,75 @@ class AllHabitsList extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text('Sun'),
+                                        DayText(
+                                          text: 'Mon',
+                                          color: controller.dayColor(
+                                            DateTime.monday - 1,
+                                            data[index],
+                                          ),
+                                          hasBorder:
+                                              now.weekday == DateTime.monday,
+                                        ),
                                         Text(' | '),
-                                        Text('Mon'),
+                                        DayText(
+                                          text: 'Tue',
+                                          color: controller.dayColor(
+                                            DateTime.tuesday - 1,
+                                            data[index],
+                                          ),
+                                          hasBorder:
+                                              now.weekday == DateTime.tuesday,
+                                        ),
                                         Text(' | '),
-                                        Text('Tue'),
+                                        DayText(
+                                          text: 'Wed',
+                                          color: controller.dayColor(
+                                            DateTime.wednesday - 1,
+                                            data[index],
+                                          ),
+                                          hasBorder:
+                                              now.weekday == DateTime.wednesday,
+                                        ),
                                         Text(' | '),
-                                        Text('Wed'),
+                                        DayText(
+                                          text: 'Thu',
+                                          color: controller.dayColor(
+                                            DateTime.thursday - 1,
+                                            data[index],
+                                          ),
+                                          hasBorder:
+                                              now.weekday == DateTime.thursday,
+                                        ),
                                         Text(' | '),
-                                        Text('Thu'),
+                                        DayText(
+                                          text: 'Fri',
+                                          color: controller.dayColor(
+                                            DateTime.friday - 1,
+                                            data[index],
+                                          ),
+                                          hasBorder:
+                                              now.weekday == DateTime.friday,
+                                        ),
                                         Text(' | '),
-                                        Text('Fri'),
+                                        DayText(
+                                          text: 'Sat',
+                                          color: controller.dayColor(
+                                            DateTime.saturday - 1,
+                                            data[index],
+                                          ),
+                                          hasBorder:
+                                              now.weekday == DateTime.saturday,
+                                        ),
                                         Text(' | '),
-                                        Text('Sat'),
+                                        DayText(
+                                          text: 'Sun',
+                                          color: controller.dayColor(
+                                            DateTime.sunday - 1,
+                                            data[index],
+                                          ),
+                                          hasBorder:
+                                              now.weekday == DateTime.sunday,
+                                        )
                                       ],
                                     )
                                   ],
@@ -143,16 +210,6 @@ class AllHabitsList extends StatelessWidget {
               child: Icon(Icons.check_circle, color: Colors.grey, size: 30.0)),
         ],
       );
-    }
-  }
-
-  Color _priorityColor(TaskData taskData) {
-    if (taskData.priority == 1) {
-      return Colors.green;
-    } else if (taskData.priority == 2) {
-      return Colors.yellow;
-    } else {
-      return Colors.red;
     }
   }
 }
