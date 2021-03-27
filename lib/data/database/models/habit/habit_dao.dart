@@ -70,15 +70,15 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
           habitlogTable, habitlogTable.habitId.equalsExp(habitTable.id)),
       leftOuterJoin(daysTable, daysTable.habitId.equalsExp(habitTable.id))
     ])
+
+              /// Check if the current weekday is somewhere in daystable
               ..where((daysTable.dayZero.equals(todayInt) |
-                      daysTable.dayOne.equals(todayInt) |
-                      daysTable.dayTwo.equals(todayInt) |
-                      daysTable.dayThree.equals(todayInt) |
-                      daysTable.dayFour.equals(todayInt) |
-                      daysTable.dayFive.equals(todayInt) |
-                      daysTable.daySix.equals(todayInt)) &
-                  habitlogTable.doneAt.isBiggerOrEqualValue(firstDayOfWeek) &
-                  habitlogTable.doneAt.isSmallerOrEqualValue(lastDayOfWeek)))
+                  daysTable.dayOne.equals(todayInt) |
+                  daysTable.dayTwo.equals(todayInt) |
+                  daysTable.dayThree.equals(todayInt) |
+                  daysTable.dayFour.equals(todayInt) |
+                  daysTable.dayFive.equals(todayInt) |
+                  daysTable.daySix.equals(todayInt))))
         .watch()
         .map((rows) async {
       final result = <HabitData, List<HabitlogData>>{};
@@ -107,34 +107,31 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
     final lastDayOfWeek = DateHelper.getLastDayOfWeek(DateTime.now());
 
     return ((select(habitTable)..where((tbl) => tbl.userId.equals(userId)))
-            .join([
-      leftOuterJoin(
-          habitlogTable, habitlogTable.habitId.equalsExp(habitTable.id)),
-      leftOuterJoin(daysTable, daysTable.habitId.equalsExp(habitTable.id))
-    ])
-              // ..where(habitlogTable.doneAt
-              //         .isBiggerOrEqualValue(firstDayOfWeek) &
-              //     habitlogTable.doneAt.isSmallerOrEqualValue(lastDayOfWeek)))
+        .join([
+          leftOuterJoin(
+              habitlogTable, habitlogTable.habitId.equalsExp(habitTable.id)),
+          leftOuterJoin(daysTable, daysTable.habitId.equalsExp(habitTable.id))
+        ])
         .watch()
         .map((rows) async {
-      final result = <HabitData, List<HabitlogData>>{};
-      for (final row in rows) {
-        final habit = row.readTable(habitTable);
-        final habitLog = row.readTable(habitlogTable);
+          final result = <HabitData, List<HabitlogData>>{};
+          for (final row in rows) {
+            final habit = row.readTable(habitTable);
+            final habitLog = row.readTable(habitlogTable);
 
-        final list = result.putIfAbsent(habit, () => []);
-        if (habitLog != null) list.add(habitLog);
-      }
-      return [
-        for (final entry in result.entries)
-          HabitWitLogsWithDays(
-            habit: entry.key,
-            habitLogs: entry.value,
-            days: await (select(daysTable)
-                  ..where((tbl) => tbl.habitId.equals(entry.key.id)))
-                .getSingle(),
-          )
-      ];
-    }));
+            final list = result.putIfAbsent(habit, () => []);
+            if (habitLog != null) list.add(habitLog);
+          }
+          return [
+            for (final entry in result.entries)
+              HabitWitLogsWithDays(
+                habit: entry.key,
+                habitLogs: entry.value,
+                days: await (select(daysTable)
+                      ..where((tbl) => tbl.habitId.equals(entry.key.id)))
+                    .getSingle(),
+              )
+          ];
+        }));
   }
 }

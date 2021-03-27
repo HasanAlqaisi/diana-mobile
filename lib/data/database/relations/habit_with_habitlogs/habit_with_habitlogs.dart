@@ -4,7 +4,8 @@ import 'package:diana/data/database/app_database/app_database.dart';
 /// one-to-one relationship between habit and days
 class HabitWitLogsWithDays {
   final HabitData habit;
-  final List<HabitlogData> habitLogs;
+  List<HabitlogData> habitLogs;
+  HabitDoneDays doneDays;
   final DaysData days;
 
   HabitWitLogsWithDays({this.habit, this.habitLogs, this.days});
@@ -16,4 +17,8 @@ class HabitWitLogsWithDays {
     days info: $days
     ''';
   }
+}
+
+class HabitDoneDays {
+  List<int> weekDays = [];
 }
