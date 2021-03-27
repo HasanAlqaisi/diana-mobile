@@ -1,6 +1,6 @@
 class DateHelper {
-  static int mapToCorrectDayValue(int day) {
-    return (day > 7 || day < 1) ? null : day - 1;
+  static int mapWeekDayToDjangoWay(int weekDay) {
+    return (weekDay > 7 || weekDay < 1) ? null : weekDay - 1;
   }
 
   static DateTime getFirstDayOfWeek(DateTime currentDate) {
