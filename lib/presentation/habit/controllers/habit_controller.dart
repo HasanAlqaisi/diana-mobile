@@ -1,8 +1,10 @@
 import 'package:diana/core/api_helpers/api.dart';
 import 'package:diana/core/errors/failure.dart';
 import 'package:diana/core/mappers/failure_to_string.dart';
+import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/relations/habit_with_habitlogs/habit_with_habitlogs.dart';
 import 'package:diana/domain/usecases/auth/request_token_usecase.dart';
+import 'package:diana/domain/usecases/auth/watch_user_usecase.dart';
 import 'package:diana/domain/usecases/habit/edit_habit_usecase.dart';
 import 'package:diana/domain/usecases/habit/get_habit_logs.dart';
 import 'package:diana/domain/usecases/habit/get_habits_usecase.dart';
@@ -22,6 +24,7 @@ class HabitController extends GetxController {
   final WatchAllHabitUseCase watchAllHabitsUseCase;
   final InsertHabitUseCase insertHabitUseCase;
   final EditHabitUseCase editHabitUseCase;
+  final WatchUserUsecase watchUserUsecase;
 
   Failure failure;
   RxBool isLongPressed = false.obs;
@@ -35,6 +38,7 @@ class HabitController extends GetxController {
     this.getHabitLogsUseCase,
     this.watchTodayHabitsUseCase,
     this.watchAllHabitsUseCase,
+    this.watchUserUsecase,
   );
 
   @override
@@ -56,5 +60,9 @@ class HabitController extends GetxController {
 
   Stream<Future<List<HabitWitLogsWithDays>>> watchTodayHabits(int day) {
     return watchTodayHabitsUseCase(day);
+  }
+
+  Stream<UserData> watchUser() {
+    return watchUserUsecase();
   }
 }

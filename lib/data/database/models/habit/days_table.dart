@@ -5,7 +5,7 @@ import 'package:moor_flutter/moor_flutter.dart';
 @DataClassName('DaysData')
 class DaysTable extends Table {
   TextColumn get habitId =>
-      text().customConstraint('REFERENCES habit_table(id)')();
+      text().customConstraint('REFERENCES habit_table(id) ON DELETE CASCADE')();
   IntColumn get dayZero => integer().nullable()();
   IntColumn get dayOne => integer().nullable()();
   IntColumn get dayTwo => integer().nullable()();
@@ -22,15 +22,16 @@ class DaysTable extends Table {
 
   static List<DaysTableCompanion> fromHabitResponse(List<HabitResult> habits) {
     return habits.map((habit) {
+      int lastIndex = habit.days.length-1;
       return DaysTableCompanion(
         habitId: Value(habit.habitId),
-        dayZero: Value(habit.days[0] ?? null),
-        dayOne: Value(habit.days[1] ?? null),
-        dayTwo: Value(habit.days[2] ?? null),
-        // dayThree: Value(habit.days[3] ?? null),
-        // dayFour: Value(habit.days[4] ?? null),
-        // dayFive: Value(habit.days[5] ?? null),
-        // daySix: Value(habit.days[6] ?? null),
+        dayZero: Value(lastIndex >= 0 ? habit.days[0] : null),
+        dayOne: Value(lastIndex >= 1 ? habit.days[1] : null),
+        dayTwo: Value(lastIndex >= 2 ? habit.days[2] : null),
+        dayThree: Value(lastIndex >= 3 ? habit.days[3] : null),
+        dayFour: Value(lastIndex >= 4 ? habit.days[4] : null),
+        dayFive: Value(lastIndex >= 5 ? habit.days[5] : null),
+        daySix: Value(lastIndex >= 6 ? habit.days[6] : null),
       );
     }).toList();
   }

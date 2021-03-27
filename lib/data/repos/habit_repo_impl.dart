@@ -17,7 +17,6 @@ import 'package:diana/data/remote_models/habit/habit_result.dart';
 import 'package:diana/data/remote_models/habitlog/habitlog_response.dart';
 import 'package:diana/data/remote_models/habitlog/habitlog_result.dart';
 import 'package:diana/domain/repos/habit_repo.dart';
-import 'package:flutter/material.dart';
 
 class HabitRepoImpl extends HabitRepo {
   final NetWorkInfo netWorkInfo;
@@ -44,8 +43,10 @@ class HabitRepoImpl extends HabitRepo {
 
         if (habitOffset == 0) {
           await habitLocalSource.deleteAndinsertHabits(result);
+          await habitLocalSource.deleteAndinsertHabitlogs(result.results);
         } else {
           await habitLocalSource.insertHabits(result);
+          await habitLocalSource.insertHabitlogs(result.results);
         }
 
         final offset = API.offsetExtractor(result.next);
@@ -73,6 +74,7 @@ class HabitRepoImpl extends HabitRepo {
         log('API result is $result', name: 'insertHabit');
 
         await habitLocalSource.insertHabit(result);
+        await habitLocalSource.insertHabitlog(result);
 
         return Right(result);
       } on FieldsException catch (error) {
@@ -100,6 +102,7 @@ class HabitRepoImpl extends HabitRepo {
         log('API result is $result', name: 'editHabit');
 
         await habitLocalSource.insertHabit(result);
+        await habitLocalSource.insertHabitlog(result);
 
         return Right(result);
       } on FieldsException catch (error) {
@@ -141,60 +144,60 @@ class HabitRepoImpl extends HabitRepo {
     }
   }
 
-  @override
-  Future<Either<Failure, HabitlogResponse>> getHabitlogs(String habitId) async {
-    if (await netWorkInfo.isConnected()) {
-      try {
-        final result =
-            await habitlogRemoteSource.getHabitlogs(habitlogOffset, habitId);
+  // @override
+  // Future<Either<Failure, HabitlogResponse>> getHabitlogs(String habitId) async {
+  //   if (await netWorkInfo.isConnected()) {
+  //     try {
+  //       final result =
+  //           await habitlogRemoteSource.getHabitlogs(habitlogOffset, habitId);
 
-        log('API result is ${result.results}', name: 'getHabitLogs');
+  //       log('API result is ${result.results}', name: 'getHabitLogs');
 
-        if (habitlogOffset == 0) {
-          await habitLocalSource.deleteAndinsertHabitlogs(result);
-        } else {
-          await habitLocalSource.insertHabitlogs(result);
-        }
+  //       if (habitlogOffset == 0) {
+  //         await habitLocalSource.deleteAndinsertHabitlogs(result);
+  //       } else {
+  //         await habitLocalSource.insertHabitlogs(result);
+  //       }
 
-        final offset = API.offsetExtractor(result.next);
+  //       final offset = API.offsetExtractor(result.next);
 
-        habitlogOffset = offset;
+  //       habitlogOffset = offset;
 
-        return Right(result);
-      } on UnAuthException {
-        return Left(UnAuthFailure());
-      } on UnknownException catch (error) {
-        return Left(UnknownFailure(message: error.message));
-      }
-    } else {
-      return Left(NoInternetFailure());
-    }
-  }
+  //       return Right(result);
+  //     } on UnAuthException {
+  //       return Left(UnAuthFailure());
+  //     } on UnknownException catch (error) {
+  //       return Left(UnknownFailure(message: error.message));
+  //     }
+  //   } else {
+  //     return Left(NoInternetFailure());
+  //   }
+  // }
 
-  @override
-  Future<Either<Failure, HabitlogResult>> insertHabitlog(String habitId) async {
-    if (await netWorkInfo.isConnected()) {
-      try {
-        final result = await habitlogRemoteSource.insertHabitlog(habitId);
+  // @override
+  // Future<Either<Failure, HabitlogResult>> insertHabitlog(String habitId) async {
+  //   if (await netWorkInfo.isConnected()) {
+  //     try {
+  //       final result = await habitlogRemoteSource.insertHabitlog(habitId);
 
-        log('API result is $result', name: 'insertHabitLog');
+  //       log('API result is $result', name: 'insertHabitLog');
 
-        await habitLocalSource.insertHabitlog(result);
+  //       await habitLocalSource.insertHabitlog(result);
 
-        return Right(result);
-      } on UnAuthException {
-        return Left(UnAuthFailure());
-      } on FieldsException catch (error) {
-        return Left(
-          HabitlogFieldsFailure.fromFieldsException(json.decode(error.body)),
-        );
-      } on UnknownException catch (error) {
-        return Left(UnknownFailure(message: error.message));
-      }
-    } else {
-      return Left(NoInternetFailure());
-    }
-  }
+  //       return Right(result);
+  //     } on UnAuthException {
+  //       return Left(UnAuthFailure());
+  //     } on FieldsException catch (error) {
+  //       return Left(
+  //         HabitlogFieldsFailure.fromFieldsException(json.decode(error.body)),
+  //       );
+  //     } on UnknownException catch (error) {
+  //       return Left(UnknownFailure(message: error.message));
+  //     }
+  //   } else {
+  //     return Left(NoInternetFailure());
+  //   }
+  // }
 
   @override
   Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits() {
@@ -204,5 +207,15 @@ class HabitRepoImpl extends HabitRepo {
   @override
   Stream<Future<List<HabitWitLogsWithDays>>> watchTodayHabits(int day) {
     return habitLocalSource.watchTodayHabits(kUserId, day);
+  }
+
+  @override
+  Future<Either<Failure, HabitlogResponse>> getHabitlogs(String habitId) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, HabitlogResult>> insertHabitlog(String habitId) {
+    throw UnimplementedError();
   }
 }

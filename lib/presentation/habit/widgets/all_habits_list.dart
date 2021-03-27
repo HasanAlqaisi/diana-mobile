@@ -111,8 +111,8 @@ class AllHabitsList extends StatelessWidget {
   }
 
   Widget _buildTrailing(HabitWitLogsWithDays data) {
-    final selectedTask = TaskController.to.selectedTask.value;
-    if (selectedTask == data.habit.id) {
+    final selectedHabit = HabitController.to.selectedHabit.value;
+    if (selectedHabit == data.habit.id) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [

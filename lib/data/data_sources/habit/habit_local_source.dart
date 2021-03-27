@@ -22,11 +22,11 @@ abstract class HabitLocalSource {
 
   Future<int> deleteHabit(String habitId);
 
-  Future<void> deleteAndinsertHabitlogs(HabitlogResponse habitlogs);
+  Future<void> deleteAndinsertHabitlogs(List<HabitResult> habitlogs);
 
-  Future<void> insertHabitlogs(HabitlogResponse habitlogs);
+  Future<void> insertHabitlogs(List<HabitResult> habitlogs);
 
-  Future<void> insertHabitlog(HabitlogResult habitlog);
+  Future<void> insertHabitlog(HabitResult habitlog);
 }
 
 class HabitLocalSourceImpl extends HabitLocalSource {
@@ -82,27 +82,27 @@ class HabitLocalSourceImpl extends HabitLocalSource {
   }
 
   @override
-  Future<void> deleteAndinsertHabitlogs(HabitlogResponse habitlogs) {
+  Future<void> deleteAndinsertHabitlogs(List<HabitResult> habitResults) {
     try {
-      return habitlogDao.deleteAndinsertHabitlogs(habitlogs);
+      return habitlogDao.deleteAndinsertHabitlogs(habitResults);
     } on InvalidDataException {
       rethrow;
     }
   }
 
   @override
-  Future<void> insertHabitlog(HabitlogResult habitlog) {
+  Future<void> insertHabitlog(HabitResult habitResult) {
     try {
-      return habitlogDao.insertHabitlog(habitlog);
+      return habitlogDao.insertHabitlogs([habitResult]);
     } on InvalidDataException {
       rethrow;
     }
   }
 
   @override
-  Future<void> insertHabitlogs(HabitlogResponse habitlogs) {
+  Future<void> insertHabitlogs(List<HabitResult> habitResults) {
     try {
-      return habitlogDao.insertHabitlogs(habitlogs);
+      return habitlogDao.insertHabitlogs(habitResults);
     } on InvalidDataException {
       rethrow;
     }

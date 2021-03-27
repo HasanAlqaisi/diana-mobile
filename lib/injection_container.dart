@@ -136,7 +136,7 @@ void controllersInjection() {
       sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory(() => AddTaskController(sl(), sl(), sl(), sl()));
   sl.registerFactory(
-      () => HabitController(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+      () => HabitController(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
 }
 
 void usecasesInjection() {
@@ -259,9 +259,10 @@ Future<void> databaseInjection() async {
     return LazyDatabase(() async {
       // put the database file, called db.sqlite here, into the documents folder
       // for your app.
-      final dbFolder = await getApplicationDocumentsDirectory();
-      final file = File(p.join(dbFolder.path, 'db.sqlite'));
-      return VmDatabase(file);
+      // final dbFolder = await getApplicationDocumentsDirectory();
+      // final file = File(p.join(dbFolder.path, 'db.sqlite'));
+      return FlutterQueryExecutor.inDatabaseFolder(
+          path: 'db.sqlite', logStatements: true);
     });
   });
 

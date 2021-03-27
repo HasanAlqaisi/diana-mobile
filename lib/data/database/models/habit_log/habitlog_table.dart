@@ -1,4 +1,5 @@
 import 'package:diana/data/database/app_database/app_database.dart';
+import 'package:diana/data/remote_models/habit/habit_result.dart';
 import 'package:diana/data/remote_models/habitlog/habitlog_result.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
@@ -15,25 +16,33 @@ class HabitlogTable extends Table {
   @override
   Set<Column> get primaryKey => {id};
 
-  static List<HabitlogTableCompanion> fromHabitlogResponse(
-      List<HabitlogResult> habitlogs) {
-    return habitlogs
-        .map((habitlog) => HabitlogTableCompanion(
-              id: Value(habitlog.habitlogId),
-              habitId: Value(habitlog.habitId),
-              doneAt: Value(habitlog.doneAt != null
-                  ? DateTime.tryParse(habitlog.doneAt)
-                  : null),
-            ))
-        .toList();
+  static List<HabitlogTableCompanion> fromHabitResults(
+      List<HabitResult> habitResults) {
+    List<HabitlogTableCompanion> histories = [];
+    habitResults?.forEach((habit) {
+      habit?.history?.forEach((history) {
+        histories.add(HabitlogTableCompanion(
+          id: Value(history.habitlogId),
+          habitId: Value(history.habitId),
+          doneAt: Value(history.doneAt != null
+              ? DateTime.tryParse(history.doneAt)
+              : null),
+        ));
+      });
+    });
+    return histories;
   }
 
-  static HabitlogTableCompanion fromHabitlogResult(HabitlogResult habitlog) {
-    return HabitlogTableCompanion(
-      id: Value(habitlog.habitlogId),
-      habitId: Value(habitlog.habitId),
-      doneAt: Value(
-          habitlog.doneAt != null ? DateTime.tryParse(habitlog.doneAt) : null),
-    );
+  static List<HabitlogTableCompanion> fromHabitResult(HabitResult habitResult) {
+    List<HabitlogTableCompanion> histories = [];
+    habitResult.history.map((history) => histories.add(HabitlogTableCompanion(
+          id: Value(history.habitlogId),
+          habitId: Value(history.habitId),
+          doneAt: Value(history.doneAt != null
+              ? DateTime.tryParse(history.doneAt)
+              : null),
+        )));
+
+    return histories;
   }
 }
