@@ -62,18 +62,23 @@ class ProfileScreen extends StatelessWidget {
                             children: [
                               GestureDetector(
                                 onTap: _.onProfileTapped,
-                                child: CircleAvatar(
-                                  radius: 45,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(45),
-                                    child: user?.picture != null
-                                        ? CachedNetworkImage(
-                                            imageUrl: user?.picture,
-                                          )
-                                        : Image.asset(
-                                            'assets/profile_holder.jpg'),
-                                  ),
-                                ),
+                                child: user?.picture != null
+                                    ? CachedNetworkImage(
+                                        imageBuilder: (context, imgProvider) {
+                                          return Container(
+                                              width: 100.0,
+                                              height: 100.0,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                  image: imgProvider,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ));
+                                        },
+                                        imageUrl: user?.picture,
+                                      )
+                                    : Image.asset('assets/profile_holder.jpg'),
                               ),
                               Padding(
                                 padding: EdgeInsets.symmetric(

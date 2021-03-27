@@ -7,7 +7,7 @@ class UserProgressImage extends StatelessWidget {
   final UserData user;
 
   const UserProgressImage({Key key, this.user}) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     return CircularStepProgressIndicator(
@@ -18,18 +18,24 @@ class UserProgressImage extends StatelessWidget {
       padding: 0,
       width: 40,
       stepSize: 3,
-      child: CircleAvatar(
-        radius: 45,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(45),
-          child: user?.picture != null
-              ? CachedNetworkImage(
-                  imageUrl: user.picture,
-                  placeholder: (context, str) =>
-                      Image.asset('assets/profile_holder.jpg'))
-              : Image.asset('assets/profile_holder.jpg'),
-        ),
-      ),
+      child: user?.picture != null
+          ? CachedNetworkImage(
+              imageBuilder: (context, imgProvider) {
+                return Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: imgProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ));
+              },
+              imageUrl: user.picture,
+              placeholder: (context, str) =>
+                  Image.asset('assets/profile_holder.jpg'))
+          : Image.asset(
+              'assets/profile_holder.jpg',
+            ),
     );
   }
 }
