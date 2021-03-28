@@ -9,7 +9,7 @@ class HabitTable extends Table {
       text().customConstraint('REFERENCES user_table(id) ON DELETE CASCADE')();
   TextColumn get name => text()();
   // TextColumn get days => text().map(DaysConverter())();
-  TextColumn get time => text()();
+  TextColumn get time => text().nullable()();
 
   @override
   String get tableName => 'habit_table';
