@@ -174,30 +174,37 @@ class HabitRepoImpl extends HabitRepo {
   //   }
   // }
 
-  // @override
-  // Future<Either<Failure, HabitlogResult>> insertHabitlog(String habitId) async {
-  //   if (await netWorkInfo.isConnected()) {
-  //     try {
-  //       final result = await habitlogRemoteSource.insertHabitlog(habitId);
+  @override
+  Future<Either<Failure, HabitlogResult>> insertHabitlog(String habitId) async {
+    if (await netWorkInfo.isConnected()) {
+      try {
+        final result = await habitlogRemoteSource.insertHabitlog(habitId);
 
-  //       log('API result is $result', name: 'insertHabitLog');
+        log('API result is $result', name: 'insertHabitLog');
 
-  //       await habitLocalSource.insertHabitlog(result);
+        await habitLocalSource.insertHabitlog(
+          HabitResult(history: [
+            History(
+                habitId: result.habitId,
+                habitlogId: result.habitlogId,
+                doneAt: result.doneAt)
+          ]),
+        );
 
-  //       return Right(result);
-  //     } on UnAuthException {
-  //       return Left(UnAuthFailure());
-  //     } on FieldsException catch (error) {
-  //       return Left(
-  //         HabitlogFieldsFailure.fromFieldsException(json.decode(error.body)),
-  //       );
-  //     } on UnknownException catch (error) {
-  //       return Left(UnknownFailure(message: error.message));
-  //     }
-  //   } else {
-  //     return Left(NoInternetFailure());
-  //   }
-  // }
+        return Right(result);
+      } on UnAuthException {
+        return Left(UnAuthFailure());
+      } on FieldsException catch (error) {
+        return Left(
+          HabitlogFieldsFailure.fromFieldsException(json.decode(error.body)),
+        );
+      } on UnknownException catch (error) {
+        return Left(UnknownFailure(message: error.message));
+      }
+    } else {
+      return Left(NoInternetFailure());
+    }
+  }
 
   @override
   Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits() {
@@ -211,11 +218,6 @@ class HabitRepoImpl extends HabitRepo {
 
   @override
   Future<Either<Failure, HabitlogResponse>> getHabitlogs(String habitId) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, HabitlogResult>> insertHabitlog(String habitId) {
     throw UnimplementedError();
   }
 }

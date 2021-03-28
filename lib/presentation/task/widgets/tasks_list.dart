@@ -39,99 +39,84 @@ class TasksList extends StatelessWidget {
                           TaskController.to.isLongPressed.value = true;
                         },
                         child: PhysicalModel(
-                          elevation: 1.8,
-                          color: Colors.white,
+                          elevation: 0.8,
+                          color: type == TaskType.done
+                              ? Color(0xFF1ADACE)
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(15.0),
                           child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15.0),
-                              // border: Border.all(color: Colors.grey, width: 0.5)
-                            ),
-                            child: Container(
-                              decoration: type == TaskType.missed
-                                  ? BoxDecoration(
-                                      color: Colors.white,
-                                      border:
-                                          Border.all(color: Color(0xFFEAAE13)),
-                                      borderRadius: BorderRadius.circular(15.0),
-                                      // border: Border.all(color: Colors.grey, width: 0.5)
-                                    )
-                                  : null,
-                              child: StreamBuilder<TaskWithTags>(
-                                stream: TaskController.to
-                                    .watchTagsForTask(data[index].task.id),
-                                builder: (context, taskWithTagsSnapshot) {
-                                  return Obx(
-                                    () => ListTileTheme(
-                                      tileColor: type != TaskType.done
-                                          ? Colors.white
-                                          : Color(0xFF1ADACE),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: ExpansionTile(
-                                        title: Text(
-                                          data[index].task.name,
-                                          style: TextStyle(
-                                              color: _colorNameAndNote(),
-                                              decoration: type != TaskType.done
-                                                  ? TextDecoration.none
-                                                  : TextDecoration.lineThrough),
-                                        ),
-                                        subtitle: Visibility(
-                                            child: Text(
-                                                data[index].task.note ?? '',
-                                                style: TextStyle(
-                                                    color: _colorNameAndNote(),
-                                                    decoration: type !=
-                                                            TaskType.done
+                            decoration: type == TaskType.missed
+                                ? BoxDecoration(
+                                    color: Colors.white,
+                                    border:
+                                        Border.all(color: Color(0xFFEAAE13)),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    // border: Border.all(color: Colors.grey, width: 0.5)
+                                  )
+                                : null,
+                            child: StreamBuilder<TaskWithTags>(
+                              stream: TaskController.to
+                                  .watchTagsForTask(data[index].task.id),
+                              builder: (context, taskWithTagsSnapshot) {
+                                return Obx(
+                                  () => ExpansionTile(
+                                    title: Text(
+                                      data[index].task.name,
+                                      style: TextStyle(
+                                          color: _colorNameAndNote(),
+                                          decoration: type != TaskType.done
+                                              ? TextDecoration.none
+                                              : TextDecoration.lineThrough),
+                                    ),
+                                    subtitle: Visibility(
+                                        child: Text(data[index].task.note ?? '',
+                                            style: TextStyle(
+                                                color: _colorNameAndNote(),
+                                                decoration:
+                                                    type != TaskType.done
                                                         ? TextDecoration.none
                                                         : TextDecoration
                                                             .lineThrough)),
-                                            visible:
-                                                data[index]?.task?.note != null
-                                                    ? true
-                                                    : false),
-                                        trailing: _buildTrailing(
-                                          taskData: data[index],
-                                          tagsData: taskWithTagsSnapshot?.data,
-                                          context: context,
-                                        ),
-                                        childrenPadding: type != TaskType.done
-                                            ? EdgeInsets.symmetric(
-                                                horizontal: 16)
-                                            : EdgeInsets.zero,
-                                        tilePadding: EdgeInsets.symmetric(
-                                            horizontal: 16),
-                                        onExpansionChanged: (isExpanded) {
-                                          TaskController
-                                              .to.isLongPressed.value = false;
-
-                                          if (isExpanded) {
-                                            print('tapped to Expanded');
-                                            TaskController.to.selectedTask
-                                                .value = data[index].task.id;
-                                          } else {
-                                            print('tapped to close');
-                                            TaskController
-                                                .to.selectedTask.value = '';
-                                          }
-                                        },
-                                        children: [
-                                          SubtasksList(
-                                            type: type,
-                                            taskWithSubtasks: data[index],
-                                          ),
-                                          TagsRow(
-                                              taskType: type,
-                                              taskWithTags:
-                                                  taskWithTagsSnapshot?.data),
-                                        ],
-                                      ),
+                                        visible: data[index]?.task?.note != null
+                                            ? true
+                                            : false),
+                                    trailing: _buildTrailing(
+                                      taskData: data[index],
+                                      tagsData: taskWithTagsSnapshot?.data,
+                                      context: context,
                                     ),
-                                  );
-                                },
-                              ),
+                                    childrenPadding: type != TaskType.done
+                                        ? EdgeInsets.symmetric(horizontal: 16)
+                                        : EdgeInsets.zero,
+                                    tilePadding:
+                                        EdgeInsets.symmetric(horizontal: 16),
+                                    onExpansionChanged: (isExpanded) {
+                                      TaskController.to.isLongPressed.value =
+                                          false;
+
+                                      if (isExpanded) {
+                                        print('tapped to Expanded');
+                                        TaskController.to.selectedTask.value =
+                                            data[index].task.id;
+                                      } else {
+                                        print('tapped to close');
+                                        TaskController.to.selectedTask.value =
+                                            '';
+                                      }
+                                    },
+                                    children: [
+                                      SubtasksList(
+                                        type: type,
+                                        taskWithSubtasks: data[index],
+                                      ),
+                                      TagsRow(
+                                          taskType: type,
+                                          taskWithTags:
+                                              taskWithTagsSnapshot?.data),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),

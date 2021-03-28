@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diana/core/global_widgets/user_progress_image.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/presentation/habit/controllers/habit_controller.dart';
 import 'package:diana/presentation/habit/pages/tabs/all_habits_tab.dart';
@@ -44,29 +45,9 @@ class HabitScreen extends StatelessWidget {
                         actions: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: CircularStepProgressIndicator(
-                              totalSteps: 100,
-                              currentStep:
-                                  user?.dailyTaskProgress?.round() ?? 0,
-                              selectedColor: Color(0xFF00FFEF),
-                              unselectedColor: Colors.white,
-                              padding: 0,
-                              width: 40,
-                              stepSize: 3,
-                              child: CircleAvatar(
-                                radius: 45,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(45),
-                                  child: user?.picture != null
-                                      ? CachedNetworkImage(
-                                          imageUrl: user.picture,
-                                          placeholder: (context, str) =>
-                                              Image.asset(
-                                                  'assets/profile_holder.jpg'))
-                                      : Image.asset(
-                                          'assets/profile_holder.jpg'),
-                                ),
-                              ),
+                            child: GestureDetector(
+                              onTap: _.onProfileImageTapped,
+                              child: UserProgressImage(user: user),
                             ),
                           )
                         ],

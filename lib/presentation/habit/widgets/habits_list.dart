@@ -25,7 +25,6 @@ class HabitsList extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = HabitController.to;
     final now = DateTime.now();
-
     return StreamBuilder<Future<List<HabitWitLogsWithDays>>>(
         stream: controller.watch(habitType: type),
         builder: (context, snapshot) {
@@ -46,28 +45,50 @@ class HabitsList extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: data?.length ?? 0,
                     itemBuilder: (context, index) {
+                      final isHabitDone =
+                          controller.isHabitDone(data[index].doneDays);
                       return Padding(
+                        key: ObjectKey(data[index]),
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: GestureDetector(
                           onLongPress: () {
                             print('long tapped!');
                             controller.isLongPressed.value = true;
                           },
-                          child: Material(
+                          child: PhysicalModel(
+                            color: Colors.white,
                             elevation: 0.8,
+                            borderRadius: BorderRadius.circular(15.0),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                gradient: isHabitDone
+                                    ? LinearGradient(
+                                        colors: [
+                                          Color(0xFF612EF3),
+                                          Color(0xFF0052CC),
+                                        ],
+                                        begin: Alignment.centerRight,
+                                        end: Alignment.centerLeft,
+                                      )
+                                    : null,
                                 borderRadius: BorderRadius.circular(15.0),
-                                // border: Border.all(color: Colors.grey, width: 0.5)
                               ),
                               child: Obx(
                                 () => ExpansionTile(
-                                  title: Text(data[index].habit.name),
-                                  trailing: _buildTrailing(data[index]),
-                                  backgroundColor: Colors.white,
-                                  childrenPadding:
-                                      EdgeInsets.symmetric(horizontal: 16),
+                                  title: Text(data[index].habit.name,
+                                      style: isHabitDone
+                                          ? TextStyle(
+                                              color: Color(0xFF7EF0FF),
+                                              decoration:
+                                                  TextDecoration.lineThrough)
+                                          : null),
+                                  trailing:
+                                      _buildTrailing(data[index], isHabitDone),
+                                  backgroundColor: isHabitDone
+                                      ? Color(0xFF4E34EB)
+                                      : Colors.white,
+                                  // childrenPadding:
+                                  // EdgeInsets.symmetric(horizontal: 16),
                                   tilePadding:
                                       EdgeInsets.symmetric(horizontal: 16),
                                   onExpansionChanged: (isExpanded) {
@@ -83,80 +104,92 @@ class HabitsList extends StatelessWidget {
                                     }
                                   },
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        DayText(
-                                          text: 'Mon',
-                                          color: controller.dayColor(
-                                            DateTime.monday - 1,
-                                            data[index],
+                                    Container(
+                                      color: isHabitDone
+                                          ? Color(0xFF4E34EB)
+                                          : null,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          DayText(
+                                            key: ValueKey('Mon'),
+                                            text: 'Mon',
+                                            color: controller.dayColor(
+                                              DateTime.monday - 1,
+                                              data[index],
+                                            ),
+                                            hasBorder:
+                                                now.weekday == DateTime.monday,
                                           ),
-                                          hasBorder:
-                                              now.weekday == DateTime.monday,
-                                        ),
-                                        Text(' | '),
-                                        DayText(
-                                          text: 'Tue',
-                                          color: controller.dayColor(
-                                            DateTime.tuesday - 1,
-                                            data[index],
+                                          Text(' | '),
+                                          DayText(
+                                            key: ValueKey('Tue'),
+                                            text: 'Tue',
+                                            color: controller.dayColor(
+                                              DateTime.tuesday - 1,
+                                              data[index],
+                                            ),
+                                            hasBorder:
+                                                now.weekday == DateTime.tuesday,
                                           ),
-                                          hasBorder:
-                                              now.weekday == DateTime.tuesday,
-                                        ),
-                                        Text(' | '),
-                                        DayText(
-                                          text: 'Wed',
-                                          color: controller.dayColor(
-                                            DateTime.wednesday - 1,
-                                            data[index],
+                                          Text(' | '),
+                                          DayText(
+                                            key: ValueKey('Wed'),
+                                            text: 'Wed',
+                                            color: controller.dayColor(
+                                              DateTime.wednesday - 1,
+                                              data[index],
+                                            ),
+                                            hasBorder: now.weekday ==
+                                                DateTime.wednesday,
                                           ),
-                                          hasBorder:
-                                              now.weekday == DateTime.wednesday,
-                                        ),
-                                        Text(' | '),
-                                        DayText(
-                                          text: 'Thu',
-                                          color: controller.dayColor(
-                                            DateTime.thursday - 1,
-                                            data[index],
+                                          Text(' | '),
+                                          DayText(
+                                            key: ValueKey('Thu'),
+                                            text: 'Thu',
+                                            color: controller.dayColor(
+                                              DateTime.thursday - 1,
+                                              data[index],
+                                            ),
+                                            hasBorder: now.weekday ==
+                                                DateTime.thursday,
                                           ),
-                                          hasBorder:
-                                              now.weekday == DateTime.thursday,
-                                        ),
-                                        Text(' | '),
-                                        DayText(
-                                          text: 'Fri',
-                                          color: controller.dayColor(
-                                            DateTime.friday - 1,
-                                            data[index],
+                                          Text(' | '),
+                                          DayText(
+                                            key: ValueKey('Fri'),
+                                            text: 'Fri',
+                                            color: controller.dayColor(
+                                              DateTime.friday - 1,
+                                              data[index],
+                                            ),
+                                            hasBorder:
+                                                now.weekday == DateTime.friday,
                                           ),
-                                          hasBorder:
-                                              now.weekday == DateTime.friday,
-                                        ),
-                                        Text(' | '),
-                                        DayText(
-                                          text: 'Sat',
-                                          color: controller.dayColor(
-                                            DateTime.saturday - 1,
-                                            data[index],
+                                          Text(' | '),
+                                          DayText(
+                                            key: ValueKey('Sat'),
+                                            text: 'Sat',
+                                            color: controller.dayColor(
+                                              DateTime.saturday - 1,
+                                              data[index],
+                                            ),
+                                            hasBorder: now.weekday ==
+                                                DateTime.saturday,
                                           ),
-                                          hasBorder:
-                                              now.weekday == DateTime.saturday,
-                                        ),
-                                        Text(' | '),
-                                        DayText(
-                                          text: 'Sun',
-                                          color: controller.dayColor(
-                                            DateTime.sunday - 1,
-                                            data[index],
-                                          ),
-                                          hasBorder:
-                                              now.weekday == DateTime.sunday,
-                                        )
-                                      ],
+                                          Text(' | '),
+                                          DayText(
+                                            key: ValueKey('Sun'),
+                                            text: 'Sun',
+                                            color: controller.dayColor(
+                                              DateTime.sunday - 1,
+                                              data[index],
+                                            ),
+                                            hasBorder:
+                                                now.weekday == DateTime.sunday,
+                                          )
+                                        ],
+                                      ),
                                     )
                                   ],
                                 ),
@@ -177,39 +210,44 @@ class HabitsList extends StatelessWidget {
         });
   }
 
-  Widget _buildTrailing(HabitWitLogsWithDays data) {
-    final selectedHabit = HabitController.to.selectedHabit.value;
+  Widget _buildTrailing(HabitWitLogsWithDays data, bool isHabitDone) {
+    final controller = HabitController.to;
+    final selectedHabit = controller.selectedHabit.value;
     if (selectedHabit == data.habit.id) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(FontAwesomeIcons.trash, color: Colors.red),
+          GestureDetector(
+              onTap: () async {
+                await controller.deleteHabit(data.habit.id);
+              },
+              child: Icon(
+                FontAwesomeIcons.trash,
+                color: isHabitDone ? Colors.white : Colors.red,
+              )),
           SizedBox(width: 10),
-          Icon(FontAwesomeIcons.pencilAlt),
+          Icon(
+            FontAwesomeIcons.pen,
+            color: isHabitDone ? Colors.white : null,
+          ),
         ],
       );
     } else {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          GestureDetector(
-              onTap: () {
-                print('check mark cliked');
-                // HabitController.to.editHabit(
-                //   taskData.id,
-                //   taskData.name,
-                //   taskData.note,
-                //   taskData.date.toString(),
-                //   tagsData.tags.map((tag) => tag.id).toList(),
-                //   taskData.reminder.toString(),
-                //   taskData.deadline.toString(),
-                //   taskData.priority,
-                //   true,
-                // );
-              },
-              child: Icon(Icons.check_circle, color: Colors.grey, size: 30.0)),
-        ],
-      );
+      if (controller.isHabitForThisDay(data.days) && !isHabitDone) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            GestureDetector(
+                onTap: () async {
+                  await controller.onHabitMarked(data.habit.id);
+                },
+                child:
+                    Icon(Icons.check_circle, color: Colors.grey, size: 30.0)),
+          ],
+        );
+      } else {
+        return null;
+      }
     }
   }
 }

@@ -14,7 +14,7 @@ class TodayHabitsTab extends StatelessWidget {
           child: QuickAddField(
             hint: 'Quick habit',
             onSubmitted: (habitName) {
-              HabitController.to.insertHabitUseCase(habitName, [], null);
+              HabitController.to.insertHabit(habitName, [], null);
             },
           ),
         ),

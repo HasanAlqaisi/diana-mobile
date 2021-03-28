@@ -3,16 +3,20 @@ import 'package:diana/core/constants/enums.dart';
 import 'package:diana/core/date/date_helper.dart';
 import 'package:diana/core/errors/failure.dart';
 import 'package:diana/core/mappers/failure_to_string.dart';
+import 'package:diana/core/utils/progress_loader.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/relations/habit_with_habitlogs/habit_with_habitlogs.dart';
 import 'package:diana/domain/usecases/auth/request_token_usecase.dart';
 import 'package:diana/domain/usecases/auth/watch_user_usecase.dart';
+import 'package:diana/domain/usecases/habit/delete_habit_usecase.dart';
 import 'package:diana/domain/usecases/habit/edit_habit_usecase.dart';
 import 'package:diana/domain/usecases/habit/get_habit_logs.dart';
 import 'package:diana/domain/usecases/habit/get_habits_usecase.dart';
 import 'package:diana/domain/usecases/habit/insert_habit_usecase.dart';
+import 'package:diana/domain/usecases/habit/insert_habitlog_usecase.dart';
 import 'package:diana/domain/usecases/habit/watch_all_habits_usecase.dart';
 import 'package:diana/domain/usecases/habit/watch_today_habits_usecase.dart';
+import 'package:diana/presentation/profile/pages/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -28,6 +32,8 @@ class HabitController extends GetxController {
   final InsertHabitUseCase insertHabitUseCase;
   final EditHabitUseCase editHabitUseCase;
   final WatchUserUsecase watchUserUsecase;
+  final InsertHabitLogUseCase insertHabitLogUseCase;
+  final DeleteHabitUseCase deleteHabitUseCase;
 
   Failure failure;
   RxBool isLongPressed = false.obs;
@@ -42,6 +48,8 @@ class HabitController extends GetxController {
     this.watchTodayHabitsUseCase,
     this.watchAllHabitsUseCase,
     this.watchUserUsecase,
+    this.insertHabitLogUseCase,
+    this.deleteHabitUseCase,
   );
 
   @override
@@ -99,6 +107,79 @@ class HabitController extends GetxController {
     }
   }
 
+  bool isHabitForThisDay(DaysData days) {
+    final djangoCurrentWeekDay = DateTime.now().weekday - 1;
+    if (days?.dayZero == djangoCurrentWeekDay ||
+        days?.dayOne == djangoCurrentWeekDay ||
+        days?.dayTwo == djangoCurrentWeekDay ||
+        days?.dayThree == djangoCurrentWeekDay ||
+        days?.dayFour == djangoCurrentWeekDay ||
+        days?.dayFive == djangoCurrentWeekDay ||
+        days?.daySix == djangoCurrentWeekDay) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool isHabitDone(HabitDoneDays doneDays) {
+    final djangoCurrentWeekDay = DateTime.now().weekday - 1;
+    if (doneDays.weekDays.contains(djangoCurrentWeekDay)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> onHabitMarked(String habitId) async {
+    await API.doRequest(
+      body: () async {
+        showLoaderDialog();
+        return await insertHabitLogUseCase(habitId);
+      },
+      successBody: () {
+        Get.back();
+      },
+      failedBody: (fail) {
+        Get.back();
+        Fluttertoast.showToast(msg: failureToString(fail));
+      },
+    );
+  }
+
+  Future<void> insertHabit(
+      String habitName, List<int> days, String time) async {
+    await API.doRequest(
+      body: () async {
+        showLoaderDialog();
+        return await insertHabitUseCase(habitName, days, time);
+      },
+      successBody: () {
+        Get.back();
+      },
+      failedBody: (fail) {
+        Get.back();
+        Fluttertoast.showToast(msg: failureToString(fail));
+      },
+    );
+  }
+
+  Future<void> deleteHabit(String habitId) async {
+    await API.doRequest(
+      body: () async {
+        showLoaderDialog();
+        return await deleteHabitUseCase(habitId);
+      },
+      successBody: () {
+        Get.back();
+      },
+      failedBody: (fail) {
+        Get.back();
+        Fluttertoast.showToast(msg: failureToString(fail));
+      },
+    );
+  }
+
   Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits() {
     return watchAllHabitsUseCase();
   }
@@ -119,5 +200,9 @@ class HabitController extends GetxController {
     } else {
       return watchAllHabits();
     }
+  }
+
+  void onProfileImageTapped() {
+    Get.toNamed(ProfileScreen.route);
   }
 }
