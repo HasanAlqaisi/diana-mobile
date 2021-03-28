@@ -36,6 +36,7 @@ import 'package:diana/domain/usecases/auth/register_user_usecase.dart';
 import 'package:diana/domain/usecases/auth/request_token_usecase.dart';
 import 'package:diana/domain/usecases/auth/upload_profile_image_usecase.dart';
 import 'package:diana/domain/usecases/auth/watch_user_usecase.dart';
+import 'package:diana/domain/usecases/habit/delete_habit_usecase.dart';
 import 'package:diana/domain/usecases/habit/edit_habit_usecase.dart';
 import 'package:diana/domain/usecases/habit/get_habit_logs.dart';
 import 'package:diana/domain/usecases/habit/get_habits_usecase.dart';
@@ -135,8 +136,8 @@ void controllersInjection() {
   sl.registerFactory(() => TaskController(sl(), sl(), sl(), sl(), sl(), sl(),
       sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory(() => AddTaskController(sl(), sl(), sl(), sl()));
-  sl.registerFactory(
-      () => HabitController(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => HabitController(
+      sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
 }
 
 void usecasesInjection() {
@@ -176,6 +177,7 @@ void usecasesInjection() {
   sl.registerLazySingleton(() => InsertHabitUseCase(habitRepo: sl()));
   sl.registerLazySingleton(() => InsertHabitLogUseCase(habitRepo: sl()));
   sl.registerLazySingleton(() => EditHabitUseCase(habitRepo: sl()));
+  sl.registerLazySingleton(() => DeleteHabitUseCase(habitRepo: sl()));
   sl.registerLazySingleton(() => GetHabitsUseCase(habitRepo: sl()));
   sl.registerLazySingleton(() => GetHabitLogsUseCase(habitRepo: sl()));
   sl.registerLazySingleton(() => WatchAllHabitUseCase(sl()));
