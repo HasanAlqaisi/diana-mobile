@@ -59,7 +59,7 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
         'Accept': 'application/json',
       },
       body: jsonEncode({
-        "name": name,
+        "title": name,
         "days": days,
         "time": time,
       }),
@@ -85,7 +85,7 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
         'Authorization': 'Bearer $kToken',
       },
       body: {
-        "name": name,
+        "title": name,
         "days": days,
         "time": time,
       },
