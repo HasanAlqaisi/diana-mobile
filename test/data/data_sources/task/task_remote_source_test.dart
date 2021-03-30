@@ -29,7 +29,7 @@ void main() {
   group('getTasks', () {
     test('should return [TaskResponse] if response code is 200', () async {
       when(client.get(
-        '$baseUrl/task/?limit=10&offset=$offset',
+        '$baseUrl/task/?limit=100&offset=$offset',
         headers: {
           'Authorization': 'Bearer $kToken',
         },
@@ -42,7 +42,7 @@ void main() {
 
     test('should throw UnAuthException if response code is 401', () {
       when(client.get(
-        '$baseUrl/task/?limit=10&offset=$offset',
+        '$baseUrl/task/?limit=100&offset=$offset',
         headers: {
           'Authorization': 'Bearer $kToken',
         },
@@ -56,7 +56,7 @@ void main() {
     test('should throw UnknownException if response code is not listed above',
         () {
       when(client.get(
-        '$baseUrl/task/?limit=10&offset=$offset',
+        '$baseUrl/task/?limit=100&offset=$offset',
         headers: {
           'Authorization': 'Bearer $kToken',
         },

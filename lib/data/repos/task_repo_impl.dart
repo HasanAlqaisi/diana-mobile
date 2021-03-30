@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 
 import 'package:diana/core/api_helpers/api.dart';
 import 'package:diana/core/constants/_constants.dart';
+import 'package:diana/core/constants/constants.dart';
 import 'package:diana/core/errors/exception.dart';
 import 'package:diana/core/errors/failure.dart';
 import 'package:diana/core/network/network_info.dart';
@@ -79,6 +80,8 @@ class TaskRepoImpl extends TaskRepo {
         final result = await taskRemoteSource.deleteTask(taskId);
 
         log('API result is $result', name: 'deleteTask');
+
+        await FlutterLocalNotificationsPlugin().cancel(taskId.hashCode);
 
         await taskLocalSource.deleteTask(taskId);
 
@@ -215,6 +218,19 @@ class TaskRepoImpl extends TaskRepo {
 
         log('API result is $result', name: 'editTask');
 
+        if (result.reminder != null) {
+          await di.sl<FlutterLocalNotificationsPlugin>().zonedSchedule(
+                result.taskId.hashCode,
+                result.name,
+                result.note,
+                tz.TZDateTime.parse(tz.local, result.reminder),
+                di.sl.get(instanceName: taskNotificationInjectionName),
+                androidAllowWhileIdle: true,
+                uiLocalNotificationDateInterpretation:
+                    UILocalNotificationDateInterpretation.absoluteTime,
+              );
+        }
+
         await taskLocalSource.insertTask(result);
 
         return Right(result);
@@ -265,22 +281,25 @@ class TaskRepoImpl extends TaskRepo {
   Future<Either<Failure, SubtaskResponse>> getSubtasks(String taskId) async {
     if (await netWorkInfo.isConnected()) {
       try {
-        final result =
-            await subtaskRemoteSource.getSubtasks(taskId, subtaskOffset);
+        if (subtaskOffset != null) {
+          final result =
+              await subtaskRemoteSource.getSubtasks(taskId, subtaskOffset);
 
-        log('API result is ${result.results}', name: 'getSubtasks');
+          log('API result is ${result.results}', name: 'getSubtasks');
+          if (subtaskOffset == 0) {
+            await taskLocalSource.deleteAndInsertSubTasks(result);
+          } else {
+            await taskLocalSource.insertSubTasks(result);
+          }
 
-        if (subtaskOffset == 0) {
-          await taskLocalSource.deleteAndInsertSubTasks(result);
+          final offset = API.offsetExtractor(result.next);
+
+          subtaskOffset = offset;
+          return Right(result);
         } else {
-          await taskLocalSource.insertSubTasks(result);
+          return Right(null);
+          //TODO: return Left(NoMoreResultsfailure)
         }
-
-        final offset = API.offsetExtractor(result.next);
-
-        subtaskOffset = offset;
-
-        return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
       } on UnknownException catch (error) {
@@ -295,21 +314,26 @@ class TaskRepoImpl extends TaskRepo {
   Future<Either<Failure, TagResponse>> getTags() async {
     if (await netWorkInfo.isConnected()) {
       try {
-        final result = await tagRemoteSource.getTags(tagOffset);
+        if (tagOffset != null) {
+          final result = await tagRemoteSource.getTags(tagOffset);
 
-        log('API result is ${result.results}', name: 'getTags');
+          log('API result is ${result.results}', name: 'getTags');
 
-        if (tagOffset == 0) {
-          await taskLocalSource.deleteAndInsertTags(result);
+          if (tagOffset == 0) {
+            await taskLocalSource.deleteAndInsertTags(result);
+          } else {
+            await taskLocalSource.insertTags(result);
+          }
+
+          final offset = API.offsetExtractor(result.next);
+
+          tagOffset = offset;
+
+          return Right(result);
         } else {
-          await taskLocalSource.insertTags(result);
+          return Right(null);
+          //TODO: return Left(NoMoreResultsFailure)
         }
-
-        final offset = API.offsetExtractor(result.next);
-
-        tagOffset = offset;
-
-        return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
       } on UnknownException catch (error) {
@@ -324,21 +348,25 @@ class TaskRepoImpl extends TaskRepo {
   Future<Either<Failure, TaskResponse>> getTasks() async {
     if (await netWorkInfo.isConnected()) {
       try {
-        final result = await taskRemoteSource.getTasks(taskOffset);
+        if (taskOffset != null) {
+          final result = await taskRemoteSource.getTasks(taskOffset);
 
-        log('API result is ${result.results}', name: 'getTasks');
+          log('API result is ${result.results}', name: 'getTasks');
 
-        if (taskOffset == 0) {
-          await taskLocalSource.deleteAndinsertTasks(result);
+          if (taskOffset == 0) {
+            await taskLocalSource.deleteAndinsertTasks(result);
+          } else {
+            await taskLocalSource.insertTasks(result);
+          }
+          final offset = API.offsetExtractor(result.next);
+
+          taskOffset = offset;
+
+          return Right(result);
         } else {
-          await taskLocalSource.insertTasks(result);
+          return Right(null);
+          //TODO: return Left(NoMoreResultsFailure)
         }
-
-        final offset = API.offsetExtractor(result.next);
-
-        taskOffset = offset;
-
-        return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
       } on UnknownException catch (error) {
@@ -422,16 +450,16 @@ class TaskRepoImpl extends TaskRepo {
 
         if (result.reminder != null) {
           print('reminder scheduled at ${result.reminder}');
-          await FlutterLocalNotificationsPlugin().zonedSchedule(
-            result.taskId.hashCode,
-            result.name,
-            result.note,
-            tz.TZDateTime.parse(tz.local, result.reminder),
-            di.sl<NotificationDetails>(),
-            androidAllowWhileIdle: true,
-            uiLocalNotificationDateInterpretation:
-                UILocalNotificationDateInterpretation.absoluteTime,
-          );
+          await di.sl<FlutterLocalNotificationsPlugin>().zonedSchedule(
+                result.taskId.hashCode,
+                result.name,
+                result.note,
+                tz.TZDateTime.parse(tz.local, result.reminder),
+                di.sl.get(instanceName: taskNotificationInjectionName),
+                androidAllowWhileIdle: true,
+                uiLocalNotificationDateInterpretation:
+                    UILocalNotificationDateInterpretation.absoluteTime,
+              );
         }
 
         await taskLocalSource.insertTask(result);

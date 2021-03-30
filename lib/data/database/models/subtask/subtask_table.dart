@@ -1,12 +1,12 @@
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/remote_models/subtask/subtask_result.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 @DataClassName('SubTaskData')
 class SubTaskTable extends Table {
   TextColumn get id => text()();
-  TextColumn get taskId =>
-      text().customConstraint('REFERENCES task_table(id) ON DELETE CASCADE')();
+  TextColumn get taskId => text().customConstraint(
+      'REFERENCES task_table(id) ON DELETE CASCADE ON UPDATE CASCADE')();
   TextColumn get name => text()();
   BoolColumn get done => boolean().withDefault(Constant(false))();
 

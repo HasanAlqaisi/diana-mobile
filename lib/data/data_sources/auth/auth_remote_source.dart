@@ -7,7 +7,6 @@ import 'package:diana/core/errors/exception.dart';
 import 'package:diana/data/remote_models/auth/login_info.dart';
 import 'package:diana/data/remote_models/auth/refresh_info.dart';
 import 'package:diana/data/remote_models/auth/user.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 

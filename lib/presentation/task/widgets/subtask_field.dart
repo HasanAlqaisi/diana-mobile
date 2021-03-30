@@ -6,9 +6,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class SubtaskField extends StatelessWidget {
   final int index;
   final Function(SubtaskField) removeField;
+  final String text;
 
   SubtaskField({
     Key key,
+    this.text,
     @required this.index,
     @required this.removeField,
   }) : super(key: key);
@@ -23,6 +25,7 @@ class SubtaskField extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
+            controller: TextEditingController(text: text),
             style: TextStyle(color: Color(0xFFA687FF)),
             decoration: InputDecoration(
               hintText: 'New sub task',

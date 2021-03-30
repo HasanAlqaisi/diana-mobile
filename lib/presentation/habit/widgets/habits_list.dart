@@ -1,15 +1,11 @@
 import 'package:diana/core/constants/enums.dart';
-import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/relations/habit_with_habitlogs/habit_with_habitlogs.dart';
-import 'package:diana/data/database/relations/task_with_subtasks/task_with_subtasks.dart';
-import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
 import 'package:diana/presentation/habit/controllers/habit_controller.dart';
-import 'package:diana/presentation/task/controller/task_controller.dart';
-import 'package:diana/presentation/task/widgets/subtasks_list.dart';
-import 'package:diana/presentation/task/widgets/tags_row.dart';
+import 'package:diana/presentation/habit/pages/add_habit_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/route_manager.dart';
 
 import 'day_text.dart';
 
@@ -226,9 +222,18 @@ class HabitsList extends StatelessWidget {
                 color: isHabitDone ? Colors.white : Colors.red,
               )),
           SizedBox(width: 10),
-          Icon(
-            FontAwesomeIcons.pen,
-            color: isHabitDone ? Colors.white : null,
+          GestureDetector(
+            onTap: () async {
+              await Get.bottomSheet(
+                AddHabitBottomSheet(habit: data),
+                isDismissible: false,
+              );
+              controller.clearHabitInfo();
+            },
+            child: Icon(
+              FontAwesomeIcons.pen,
+              color: isHabitDone ? Colors.white : null,
+            ),
           ),
         ],
       );

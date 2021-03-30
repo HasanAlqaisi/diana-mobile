@@ -19,6 +19,7 @@ class TaskScreen extends StatelessWidget {
           return StreamBuilder<UserData>(
             stream: _.watchUser(),
             builder: (context, userSnapshot) {
+              // print('User stream called: ${userSnapshot.requireData}');
               final user = userSnapshot.data;
               return DefaultTabController(
                 length: 4,

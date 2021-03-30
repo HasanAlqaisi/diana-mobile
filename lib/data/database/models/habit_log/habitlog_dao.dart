@@ -1,9 +1,7 @@
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/models/habit_log/habitlog_table.dart';
 import 'package:diana/data/remote_models/habit/habit_result.dart';
-import 'package:diana/data/remote_models/habitlog/habitlog_response.dart';
-import 'package:diana/data/remote_models/habitlog/habitlog_result.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 part 'habitlog_dao.g.dart';
 
@@ -18,8 +16,8 @@ class HabitlogDao extends DatabaseAccessor<AppDatabase>
       await delete(habitlogTable).go();
       // Insert data for habitlog
       await batch((batch) {
-        batch.insertAll(habitlogTable,
-            HabitlogTable.fromHabitResults(habitResults),
+        batch.insertAll(
+            habitlogTable, HabitlogTable.fromHabitResults(habitResults),
             mode: InsertMode.replace);
       });
     });
@@ -29,8 +27,8 @@ class HabitlogDao extends DatabaseAccessor<AppDatabase>
     return transaction(() async {
       // Insert data for habit
       await batch((batch) {
-        batch.insertAll(habitlogTable,
-            HabitlogTable.fromHabitResults(habitResults),
+        batch.insertAll(
+            habitlogTable, HabitlogTable.fromHabitResults(habitResults),
             mode: InsertMode.replace);
       });
     });

@@ -33,7 +33,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
   @override
   Future<SubtaskResponse> getSubtasks(String taskId, int offset) async {
     final response = await client.get(
-      '$baseUrl/subtask/?limit=10&offset=$offset',
+      '$baseUrl/subtask/?limit=100&offset=$offset',
       headers: {
         'Authorization': 'Bearer $kToken',
       },

@@ -21,7 +21,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
   @override
   Future<TagResponse> getTags(int offset) async {
     final response = await client.get(
-      '$baseUrl/tag/?limit=10&offset=$offset',
+      '$baseUrl/tag/?limit=100&offset=$offset',
       headers: {
         'Authorization': 'Bearer $kToken',
       },

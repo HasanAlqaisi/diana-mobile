@@ -6,7 +6,7 @@ import 'package:diana/data/database/models/tag/tag_table.dart';
 import 'package:diana/data/database/models/task/task_table.dart';
 import 'package:diana/data/database/models/tasktag/tasktag_table.dart';
 import 'package:diana/data/database/models/user/user_table.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 part 'app_database.g.dart';
 

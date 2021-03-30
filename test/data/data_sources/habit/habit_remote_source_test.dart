@@ -30,7 +30,7 @@ void main() {
   group('getHabits', () {
     test('should return [HabitResponse] if response code is 200', () async {
       when(client.get(
-        '$baseUrl/habit/?limit=10&offset=$offset',
+        '$baseUrl/habit/?limit=100&offset=$offset',
         headers: {
           'Authorization': 'Bearer $kToken',
         },
@@ -43,7 +43,7 @@ void main() {
 
     test('should throw UnAuthException if response code is 401', () {
       when(client.get(
-        '$baseUrl/habit/?limit=10&offset=$offset',
+        '$baseUrl/habit/?limit=100&offset=$offset',
         headers: {
           'Authorization': 'Bearer $kToken',
         },
@@ -57,7 +57,7 @@ void main() {
     test('should throw UnknownException if response code is not listed above',
         () {
       when(client.get(
-        '$baseUrl/habit/?limit=10&offset=$offset',
+        '$baseUrl/habit/?limit=100&offset=$offset',
         headers: {
           'Authorization': 'Bearer $kToken',
         },

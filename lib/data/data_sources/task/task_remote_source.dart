@@ -46,7 +46,6 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
 
   @override
   Future<TaskResponse> getTasks(int offset) async {
-    //TODO: Edit limit
     final response = await client.get(
       '$baseUrl/task/?limit=100&offset=$offset',
       headers: {

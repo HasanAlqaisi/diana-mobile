@@ -77,8 +77,25 @@ class ProfileScreen extends StatelessWidget {
                                               ));
                                         },
                                         imageUrl: user?.picture,
+                                        placeholder: (context, s) => ClipRRect(
+                                        borderRadius: BorderRadius.circular(45),
+                                        child: Container(
+                                          width: 100,
+                                          height: 100,
+                                          child: Image.asset(
+                                              'assets/profile_holder.jpg'),
+                                        ),
+                                      ),
                                       )
-                                    : Image.asset('assets/profile_holder.jpg'),
+                                    : ClipRRect(
+                                        borderRadius: BorderRadius.circular(45),
+                                        child: Container(
+                                          width: 100,
+                                          height: 100,
+                                          child: Image.asset(
+                                              'assets/profile_holder.jpg'),
+                                        ),
+                                      ),
                               ),
                               Padding(
                                 padding: EdgeInsets.symmetric(

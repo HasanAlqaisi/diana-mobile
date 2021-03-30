@@ -1,12 +1,12 @@
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/remote_models/habit/habit_result.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 @DataClassName('HabitData')
 class HabitTable extends Table {
   TextColumn get id => text()();
-  TextColumn get userId =>
-      text().customConstraint('REFERENCES user_table(id) ON DELETE CASCADE')();
+  TextColumn get userId => text().customConstraint(
+      'REFERENCES user_table(id) ON DELETE CASCADE ON UPDATE CASCADE')();
   TextColumn get name => text()();
   // TextColumn get days => text().map(DaysConverter())();
   TextColumn get time => text().nullable()();

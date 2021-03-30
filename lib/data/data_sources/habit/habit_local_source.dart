@@ -1,12 +1,10 @@
-import 'package:diana/data/remote_models/habitlog/habitlog_result.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 import 'package:diana/data/database/models/habit/habit_dao.dart';
 import 'package:diana/data/database/models/habit_log/habitlog_dao.dart';
 import 'package:diana/data/database/relations/habit_with_habitlogs/habit_with_habitlogs.dart';
 import 'package:diana/data/remote_models/habit/habit_response.dart';
 import 'package:diana/data/remote_models/habit/habit_result.dart';
-import 'package:diana/data/remote_models/habitlog/habitlog_response.dart';
 
 abstract class HabitLocalSource {
   Future<void> deleteAndinsertHabits(HabitResponse habits);

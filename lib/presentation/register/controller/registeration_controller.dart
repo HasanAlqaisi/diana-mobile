@@ -1,5 +1,4 @@
 import 'package:diana/core/errors/failure.dart';
-import 'package:diana/core/mappers/date_to_ymd_string.dart';
 import 'package:diana/core/mappers/failure_to_string.dart';
 import 'package:diana/domain/usecases/auth/register_user_usecase.dart';
 import 'package:diana/presentation/login/pages/login_screen.dart';
@@ -36,11 +35,11 @@ class RegistrationController extends GetxController {
       result.fold((failure) {
         this.failure = failure;
         Fluttertoast.showToast(msg: failureToString(failure));
-      }, (_) => Get.offAndToNamed(Nav.route));
+      }, (_) => Get.offAllNamed(Nav.route));
     }
   }
 
-  void onLoginPressed(){
+  void onLoginPressed() {
     Get.toNamed(LoginScreen.route);
   }
 }

@@ -75,9 +75,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path/path.dart' as p;
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
-import 'package:moor/ffi.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/ffi.dart' as ffi;
+import 'package:moor/moor.dart';
 import 'package:path_provider/path_provider.dart';
+import 'core/constants/constants.dart';
 import 'data/data_sources/habitlog/habitlog_remote_source.dart';
 import 'data/database/models/habit/habit_dao.dart';
 import 'data/repos/habit_repo_impl.dart';
@@ -112,15 +113,34 @@ void externalLibsInjection() {
 
   sl.registerLazySingleton(() => FlutterSecureStorage());
 
-  sl.registerLazySingleton<NotificationDetails>(() {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails('reminderId', 'Task Reminder',
-            'Here you can see how Diana helps you remember your tasks',
-            importance: Importance.max,
-            priority: Priority.high,
-            showWhen: true);
-    return NotificationDetails(android: androidPlatformChannelSpecifics);
-  });
+  sl.registerLazySingleton<FlutterLocalNotificationsPlugin>(
+      () => FlutterLocalNotificationsPlugin());
+
+  sl.registerLazySingleton<NotificationDetails>(
+    () {
+      const AndroidNotificationDetails androidPlatformChannelSpecifics =
+          AndroidNotificationDetails('taskReminder', 'Task Reminder',
+              'Here you can manage how Diana helps you remember your tasks',
+              importance: Importance.max,
+              priority: Priority.high,
+              showWhen: true);
+      return NotificationDetails(android: androidPlatformChannelSpecifics);
+    },
+    instanceName: taskNotificationInjectionName,
+  );
+
+  sl.registerLazySingleton<NotificationDetails>(
+    () {
+      const AndroidNotificationDetails androidPlatformChannelSpecifics =
+          AndroidNotificationDetails('habitReminder', 'Habit Reminder',
+              'Here you can manage how Diana helps you remember your habits',
+              importance: Importance.max,
+              priority: Priority.high,
+              showWhen: true);
+      return NotificationDetails(android: androidPlatformChannelSpecifics);
+    },
+    instanceName: habitNotificationInjectionName,
+  );
 }
 
 void controllersInjection() {
@@ -135,7 +155,7 @@ void controllersInjection() {
   sl.registerFactory(() => RegistrationController(sl()));
   sl.registerFactory(() => TaskController(sl(), sl(), sl(), sl(), sl(), sl(),
       sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
-  sl.registerFactory(() => AddTaskController(sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => AddTaskController(sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory(() => HabitController(
       sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
 }
@@ -261,10 +281,9 @@ Future<void> databaseInjection() async {
     return LazyDatabase(() async {
       // put the database file, called db.sqlite here, into the documents folder
       // for your app.
-      // final dbFolder = await getApplicationDocumentsDirectory();
-      // final file = File(p.join(dbFolder.path, 'db.sqlite'));
-      return FlutterQueryExecutor.inDatabaseFolder(
-          path: 'db.sqlite', logStatements: true);
+      final dbFolder = await getApplicationDocumentsDirectory();
+      final file = File(p.join(dbFolder.path, 'db.sqlite'));
+      return ffi.VmDatabase(file);
     });
   });
 

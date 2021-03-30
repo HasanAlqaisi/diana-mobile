@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diana/core/global_widgets/user_progress_image.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/presentation/habit/controllers/habit_controller.dart';
@@ -7,7 +6,6 @@ import 'package:diana/presentation/habit/pages/tabs/today_habits_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:diana/injection_container.dart' as di;
 
 class HabitScreen extends StatelessWidget {

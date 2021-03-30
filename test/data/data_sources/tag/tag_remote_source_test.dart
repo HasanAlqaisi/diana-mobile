@@ -28,7 +28,7 @@ void main() {
   group('getTags', () {
     test('should return [TagResponse] if response code is 200', () async {
       when(client.get(
-        '$baseUrl/tag/?limit=10&offset=$offset',
+        '$baseUrl/tag/?limit=100&offset=$offset',
         headers: {
           'Authorization': 'Bearer $kToken',
         },
@@ -41,7 +41,7 @@ void main() {
 
     test('should throw UnAuthException if response code is 401', () {
       when(client.get(
-        '$baseUrl/tag/?limit=10&offset=$offset',
+        '$baseUrl/tag/?limit=100&offset=$offset',
         headers: {
           'Authorization': 'Bearer $kToken',
         },
@@ -55,7 +55,7 @@ void main() {
     test('should throw UnknownException if response code is not listed above',
         () {
       when(client.get(
-        '$baseUrl/tag/?limit=10&offset=$offset',
+        '$baseUrl/tag/?limit=100&offset=$offset',
         headers: {
           'Authorization': 'Bearer $kToken',
         },

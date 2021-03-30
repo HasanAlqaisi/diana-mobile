@@ -1,4 +1,5 @@
 import 'package:diana/core/constants/enums.dart';
+import 'package:diana/presentation/task/pages/add_task_screen.dart';
 import 'package:flutter/widgets.dart';
 import 'package:diana/core/utils/progress_loader.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/route_manager.dart';
 
 class TasksList extends StatelessWidget {
   final TaskType type;
@@ -22,6 +24,8 @@ class TasksList extends StatelessWidget {
     return StreamBuilder<List<TaskWithSubtasks>>(
         stream: _watch(),
         builder: (context, snapshot) {
+              // print('TaskWithSubtasks stream called: ${snapshot.requireData}');
+          // print('hasData??: ' + snapshot.data.toString());
           final data = snapshot?.data;
           if (data != null && data.isNotEmpty) {
             return Padding(
@@ -176,7 +180,8 @@ class TasksList extends StatelessWidget {
     TaskWithTags tagsData,
     BuildContext context,
   }) {
-    final selectedTask = TaskController.to.selectedTask.value;
+    final controller = TaskController.to;
+    final selectedTask = controller.selectedTask.value;
     if (selectedTask == taskData.task.id) {
       return Row(
         mainAxisSize: MainAxisSize.min,
@@ -184,12 +189,19 @@ class TasksList extends StatelessWidget {
           GestureDetector(
               onTap: () async {
                 showLoaderDialog();
-                await TaskController.to.onDeleteTaskClicked(taskData.task.id);
+                await controller.onDeleteTaskClicked(taskData.task.id);
                 Navigator.pop(context);
               },
               child: Icon(FontAwesomeIcons.trash, color: Colors.red)),
           SizedBox(width: 10),
-          Icon(FontAwesomeIcons.pencilAlt),
+          GestureDetector(
+              onTap: () async {
+                await Get.toNamed(
+                  AddTaskScreen.route,
+                  arguments: [taskData, tagsData],
+                );
+              },
+              child: Icon(FontAwesomeIcons.pen)),
         ],
       );
     } else {
@@ -225,7 +237,7 @@ class TasksList extends StatelessWidget {
           GestureDetector(
               onTap: () async {
                 showLoaderDialog();
-                await TaskController.to.makeTaskDone(taskData.task.id);
+                await controller.makeTaskDone(taskData.task.id);
                 Navigator.pop(context);
               },
               child: Padding(

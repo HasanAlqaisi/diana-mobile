@@ -30,7 +30,7 @@ void main() {
   group('getSubtasks', () {
     test('should return [SubtaskResponse] if response code is 200', () async {
       when(client.get(
-        '$baseUrl/subtask//?limit=10&offset=$offset',
+        '$baseUrl/subtask/?limit=100&offset=$offset',
         headers: {
           'Authorization': 'Bearer $kToken',
         },
@@ -43,7 +43,7 @@ void main() {
 
     test('should throw UnAuthException if response code is 401', () {
       when(client.get(
-        '$baseUrl/subtask//?limit=10&offset=$offset',
+        '$baseUrl/subtask/?limit=100&offset=$offset',
         headers: {
           'Authorization': 'Bearer $kToken',
         },
@@ -56,7 +56,7 @@ void main() {
 
     test('should throw NotFoundException if response code is 404', () {
       when(client.get(
-        '$baseUrl/subtask//?limit=10&offset=$offset',
+        '$baseUrl/subtask/?limit=100&offset=$offset',
         headers: {
           'Authorization': 'Bearer $kToken',
         },
@@ -70,7 +70,7 @@ void main() {
     test('should throw UnknownException if response code is not listed above',
         () {
       when(client.get(
-        '$baseUrl/subtask//?limit=10&offset=$offset',
+        '$baseUrl/subtask/?limit=100&offset=$offset',
         headers: {
           'Authorization': 'Bearer $kToken',
         },

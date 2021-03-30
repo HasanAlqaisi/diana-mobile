@@ -7,7 +7,7 @@ import 'package:diana/data/database/relations/task_with_subtasks/task_with_subta
 import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
 import 'package:diana/data/remote_models/task/task_response.dart';
 import 'package:diana/data/remote_models/task/task_result.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'task_dao.g.dart';
@@ -80,13 +80,19 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
   /// How do we know it's for today? compare time with date field
   Stream<List<TaskWithSubtasks>> watchTodayTasks(
       String userId, List<String> tags) {
+    // We can't use the currentDate generated from room
+    // Because currentDate will take the current date value and
+    // Convert it to UTC, but in our date column we are only saving
+    // the date field (without time), so we won't care about timezone
+    // That's why we make our currentDate version
+    final currentDate = DateTime.now();
     return (((select(taskTable)
           ..where((tbl) {
             return tbl.userId.equals(userId) &
                 isNull(tbl.doneAt) &
-                tbl.date.day.equalsExp(currentDate.day) &
+                tbl.date.day.equals(currentDate.day) &
                 (tbl.deadline.isBiggerThan(currentDateAndTime) &
-                    tbl.deadline.isBiggerThan(tbl.date) |
+                        tbl.deadline.isBiggerThan(tbl.date) |
                     isNull(tbl.deadline));
           })
           ..orderBy([
@@ -122,7 +128,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
               tbl.userId.equals(userId) &
               isNull(tbl.doneAt) &
               (tbl.deadline.isBiggerThan(currentDateAndTime) &
-                  tbl.deadline.isBiggerThan(tbl.date) |
+                      tbl.deadline.isBiggerThan(tbl.date) |
                   isNull(tbl.deadline)))
           ..orderBy([
             (u) =>

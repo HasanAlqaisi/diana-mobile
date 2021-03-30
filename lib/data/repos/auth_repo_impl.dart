@@ -135,7 +135,6 @@ class AuthRepoImpl extends AuthRepo {
 
         log('API result is $result', name: 'logoutUser');
 
-        //TODO: DELETE TOKEN AND REFRESHTOKEN
         return Right(result);
       } on UnknownException catch (error) {
         return Left(UnknownFailure(message: error.message));

@@ -1,5 +1,3 @@
-import 'package:diana/core/constants/_constants.dart';
-import 'package:diana/data/data_sources/auth/auth_local_source.dart';
 import 'package:diana/presentation/home/home_controller.dart';
 import 'package:diana/presentation/login/pages/login_screen.dart';
 import 'package:diana/presentation/nav/nav.dart';

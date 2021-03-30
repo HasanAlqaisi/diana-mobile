@@ -11,31 +11,30 @@ class UserProgressImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircularStepProgressIndicator(
-      totalSteps: 100,
-      currentStep: user?.dailyTaskProgress?.round() ?? 0,
-      selectedColor: Color(0xFF00FFEF),
-      unselectedColor: Colors.white,
-      padding: 0,
-      width: 40,
-      stepSize: 3,
-      child: user?.picture != null
-          ? CachedNetworkImage(
-              imageBuilder: (context, imgProvider) {
-                return Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: imgProvider,
-                        fit: BoxFit.cover,
-                      ),
-                    ));
-              },
-              imageUrl: user.picture,
-              placeholder: (context, str) =>
-                  Image.asset('assets/profile_holder.jpg'))
-          : Image.asset(
-              'assets/profile_holder.jpg',
-            ),
-    );
+        totalSteps: 100,
+        currentStep: user?.dailyTaskProgress?.round() ?? 0,
+        selectedColor: Color(0xFF00FFEF),
+        unselectedColor: Colors.white,
+        padding: 0,
+        width: 40,
+        stepSize: 3,
+        child: user?.picture != null
+            ? CachedNetworkImage(
+                imageBuilder: (context, imgProvider) {
+                  return Container(
+                      decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: imgProvider,
+                      fit: BoxFit.cover,
+                    ),
+                  ));
+                },
+                imageUrl: user.picture,
+                placeholder: (context, str) =>
+                    Image.asset('assets/profile_holder.jpg'))
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(45),
+                child: Image.asset('assets/profile_holder.jpg')));
   }
 }

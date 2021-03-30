@@ -1,12 +1,8 @@
 import 'dart:developer';
 
-import 'package:dartz/dartz.dart';
-import 'package:diana/core/constants/_constants.dart';
 import 'package:diana/core/errors/failure.dart';
-import 'package:diana/data/remote_models/auth/user.dart';
 import 'package:diana/domain/usecases/auth/request_token_usecase.dart';
 import 'package:diana/presentation/login/pages/login_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/route_manager.dart';
 import 'package:diana/injection_container.dart' as di;
@@ -29,7 +25,7 @@ class API {
     Function successBody,
   }) async {
     // execute the actuall body request
-    return (await body.call()).fold((fail) async {
+    return (await body.call())?.fold((fail) async {
       log(
         "${body.toString()} ",
         name: 'doRequest',

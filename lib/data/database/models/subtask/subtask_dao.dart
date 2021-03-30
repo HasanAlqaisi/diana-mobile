@@ -2,7 +2,7 @@ import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/models/subtask/subtask_table.dart';
 import 'package:diana/data/remote_models/subtask/subtask_response.dart';
 import 'package:diana/data/remote_models/subtask/subtask_result.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 part 'subtask_dao.g.dart';
 

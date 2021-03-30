@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dartz/dartz.dart';
 import 'package:diana/core/api_helpers/api.dart';
 import 'package:diana/core/mappers/failure_to_string.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
@@ -14,13 +13,11 @@ import 'package:diana/domain/usecases/task/get_subtasks_usecase.dart';
 import 'package:diana/domain/usecases/task/insert_task_usecase.dart';
 import 'package:diana/domain/usecases/task/make_task_done_usecase.dart';
 import 'package:diana/domain/usecases/task/watch_tags_for_task.dart';
-import 'package:diana/presentation/login/pages/login_screen.dart';
 import 'package:diana/presentation/profile/pages/profile_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
-import 'package:diana/core/constants/_constants.dart';
 import 'package:diana/core/errors/failure.dart';
 import 'package:diana/data/database/relations/task_with_subtasks/task_with_subtasks.dart';
 import 'package:diana/domain/usecases/auth/request_token_usecase.dart';
@@ -31,7 +28,6 @@ import 'package:diana/domain/usecases/task/watch_all_tasks_usecase.dart';
 import 'package:diana/domain/usecases/task/watch_completed_tasks_usecase.dart';
 import 'package:diana/domain/usecases/task/watch_missed_tasks_usecase.dart';
 import 'package:diana/domain/usecases/task/watch_today_tasks_usecase.dart';
-import 'package:rxdart/rxdart.dart';
 
 class TaskController extends GetxController {
   static TaskController get to => Get.find();
@@ -54,11 +50,10 @@ class TaskController extends GetxController {
   final GetUserUsecase getUserUsecase;
   final WatchUserUsecase watchUserUsecase;
 
-  StreamController<TaskWithTags> _taskWithTagsController;
   Failure failure;
   RxBool isLongPressed = false.obs;
   RxString selectedTask = ''.obs;
-  var tags = List<String>().obs;
+  var tags = <String>[].obs;
   var selectedTags = <int>[];
 
   TaskController(
@@ -84,7 +79,6 @@ class TaskController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    _taskWithTagsController = StreamController();
 
     print('[onInit] getting tasks');
 
@@ -125,7 +119,6 @@ class TaskController extends GetxController {
   @override
   void onClose() async {
     super.onClose();
-    _taskWithTagsController.close();
   }
 
   void updateSelectedTags({bool isSelected, int index, int length}) {

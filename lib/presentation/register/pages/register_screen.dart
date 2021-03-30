@@ -1,10 +1,7 @@
 import 'package:diana/core/errors/failure.dart';
 import 'package:diana/core/mappers/date_to_ymd_string.dart';
-import 'package:diana/core/validators/local_validators.dart';
-import 'package:diana/presentation/login/controller/login_controller.dart';
 import 'package:diana/core/global_widgets/rounded_button.dart';
 import 'package:diana/core/global_widgets/rounded_textfield.dart';
-import 'package:diana/presentation/login/pages/login_screen.dart';
 import 'package:diana/presentation/register/controller/registeration_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

@@ -1,12 +1,12 @@
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/remote_models/task/task_result.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 @DataClassName('TaskData')
 class TaskTable extends Table {
   TextColumn get id => text()();
-  TextColumn get userId =>
-      text().customConstraint('REFERENCES user_table(id) ON DELETE CASCADE')();
+  TextColumn get userId => text().customConstraint(
+      'REFERENCES user_table(id) ON DELETE CASCADE ON UPDATE CASCADE')();
   TextColumn get name => text()();
   TextColumn get note => text().nullable()();
   DateTimeColumn get date => dateTime().nullable()();

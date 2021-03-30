@@ -1,4 +1,3 @@
-import 'package:diana/core/date/date_helper.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/models/habit/days_table.dart';
 import 'package:diana/data/database/models/habit/habit_table.dart';
@@ -6,7 +5,7 @@ import 'package:diana/data/database/models/habit_log/habitlog_table.dart';
 import 'package:diana/data/database/relations/habit_with_habitlogs/habit_with_habitlogs.dart';
 import 'package:diana/data/remote_models/habit/habit_response.dart';
 import 'package:diana/data/remote_models/habit/habit_result.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 part 'habit_dao.g.dart';
 
@@ -49,8 +48,10 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
     return transaction(() async {
       // Insert data for habit, days
       await batch((batch) {
-        batch.insert(habitTable, HabitTable.fromHabitResult(habit));
-        batch.insert(daysTable, DaysTable.fromHabitResult(habit));
+        batch.insert(habitTable, HabitTable.fromHabitResult(habit),
+            mode: InsertMode.replace);
+        batch.insert(daysTable, DaysTable.fromHabitResult(habit),
+            mode: InsertMode.replace);
       });
     });
   }
@@ -61,8 +62,6 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
 
   Stream<Future<List<HabitWitLogsWithDays>>> watchTodayHabits(
       String userId, int todayInt) {
-    final firstDayOfWeek = DateHelper.getFirstDayOfWeek(DateTime.now());
-    final lastDayOfWeek = DateHelper.getLastDayOfWeek(DateTime.now());
 
     return ((select(habitTable)..where((tbl) => tbl.userId.equals(userId)))
             .join([
@@ -103,8 +102,6 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
   }
 
   Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits(String userId) {
-    final firstDayOfWeek = DateHelper.getFirstDayOfWeek(DateTime.now());
-    final lastDayOfWeek = DateHelper.getLastDayOfWeek(DateTime.now());
 
     return ((select(habitTable)..where((tbl) => tbl.userId.equals(userId)))
         .join([

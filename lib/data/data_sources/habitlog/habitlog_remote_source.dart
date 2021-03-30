@@ -25,7 +25,7 @@ class HabitlogRemoteSourceImpl extends HabitlogRemoteSource {
   @override
   Future<HabitlogResponse> getHabitlogs(int offset, String habitId) async {
     final response = await client.get(
-      '$baseUrl/habitlog/?limit=10&offset=$offset&habit=$habitId/',
+      '$baseUrl/habitlog/?limit=100&offset=$offset&habit=$habitId/',
       headers: {
         'Authorization': 'Bearer $kToken',
       },

@@ -33,7 +33,7 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
   @override
   Future<HabitResponse> getHabits(int offset) async {
     final response = await client.get(
-      '$baseUrl/habit/?limit=10&offset=$offset',
+      '$baseUrl/habit/?limit=100&offset=$offset',
       headers: {
         'Authorization': 'Bearer $kToken',
       },
@@ -83,12 +83,14 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
       '$baseUrl/habit/$habitId/',
       headers: {
         'Authorization': 'Bearer $kToken',
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
       },
-      body: {
+      body: jsonEncode({
         "title": name,
         "days": days,
         "time": time,
-      },
+      }),
     );
 
     if (response.statusCode == 200) {

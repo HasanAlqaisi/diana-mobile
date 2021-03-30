@@ -35,9 +35,18 @@ class HabitController extends GetxController {
   final InsertHabitLogUseCase insertHabitLogUseCase;
   final DeleteHabitUseCase deleteHabitUseCase;
 
+  final formKey = GlobalKey<FormState>();
+  final habitTitleController = TextEditingController();
+
   Failure failure;
+  bool habitEditMode = false;
+  String habitId;
+
   RxBool isLongPressed = false.obs;
   RxString selectedHabit = ''.obs;
+  RxBool shouldRemind = false.obs;
+  RxString reminderTime = ''.obs;
+  var days = <int>[].obs;
 
   HabitController(
     this.requestTokenUsecase,
@@ -63,12 +72,22 @@ class HabitController extends GetxController {
         Fluttertoast.showToast(msg: failureToString(failure));
       },
     );
+
+    ever(shouldRemind, (remindMe) {
+      if (!remindMe) {
+        reminderTime.value = '';
+      }
+    });
   }
 
   HabitDoneDays getLogsInCurrentWeekRange(HabitWitLogsWithDays habit) {
-    final firstDayOfWeek = DateHelper.getFirstDayOfWeek(DateTime.now());
-    final lastDayOfWeek = DateHelper.getLastDayOfWeek(DateTime.now());
+    final now = DateTime.now();
+    final firstDayOfWeek =
+        DateHelper.getFirstDayOfWeek(DateTime(now.year, now.month, now.day));
+    final lastDayOfWeek =
+        DateHelper.getLastDayOfWeek(DateTime(now.year, now.month, now.day));
     HabitDoneDays doneDays = HabitDoneDays();
+
     habit.habitLogs.forEach((habitLog) {
       // Should be same (0) or After (positive)
       int compareToFirstDayOfWeek = habitLog.doneAt.compareTo(firstDayOfWeek);
@@ -85,6 +104,7 @@ class HabitController extends GetxController {
   }
 
   Color dayColor(int djangoWeekDay, HabitWitLogsWithDays habit) {
+    print(habit.habit.name + habit.days.toString());
     if (habit.days?.dayZero == djangoWeekDay ||
         habit.days?.dayOne == djangoWeekDay ||
         habit.days?.dayTwo == djangoWeekDay ||
@@ -148,11 +168,17 @@ class HabitController extends GetxController {
   }
 
   Future<void> insertHabit(
-      String habitName, List<int> days, String time) async {
+      {String habitName, List<int> days, String time}) async {
     await API.doRequest(
       body: () async {
         showLoaderDialog();
-        return await insertHabitUseCase(habitName, days, time);
+        if (!habitEditMode) {
+          return await insertHabitUseCase(
+              habitName, days, time != null && time.isNotEmpty ? time : null);
+        } else {
+          return await editHabitUseCase(
+              habitId, habitName, days, time.isNotEmpty ? time : null);
+        }
       },
       successBody: () {
         Get.back();
@@ -178,6 +204,32 @@ class HabitController extends GetxController {
         Fluttertoast.showToast(msg: failureToString(fail));
       },
     );
+  }
+
+  void setHabitFields(HabitWitLogsWithDays habit) {
+    if (habit != null) {
+      habitEditMode = true;
+      habitId = habit.habit.id;
+      habitTitleController.text = habit.habit.name;
+      if (habit.days.dayZero != null) days.add(habit.days.dayZero);
+      if (habit.days.dayOne != null) days.add(habit.days.dayOne);
+      if (habit.days.dayTwo != null) days.add(habit.days.dayTwo);
+      if (habit.days.dayThree != null) days.add(habit.days.dayThree);
+      if (habit.days.dayFour != null) days.add(habit.days.dayFour);
+      if (habit.days.dayFive != null) days.add(habit.days.dayFive);
+      if (habit.days.daySix != null) days.add(habit.days.daySix);
+      reminderTime.value = habit.habit.time != null ? habit.habit.time : '';
+      if (reminderTime.value.isNotEmpty) shouldRemind.value = true;
+    } else {
+      habitEditMode = false;
+      habitId = null;
+    }
+  }
+
+  void clearHabitInfo() {
+    habitTitleController.text = '';
+    days.clear();
+    shouldRemind.value = false;
   }
 
   Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits() {

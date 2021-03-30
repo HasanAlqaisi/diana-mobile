@@ -1,4 +1,4 @@
-import 'package:diana/presentation/habit/pages/add_habit_screen.dart';
+import 'package:diana/presentation/habit/pages/add_habit_bottom_sheet.dart';
 import 'package:diana/presentation/habit/pages/habit_screen.dart';
 import 'package:diana/presentation/home/home.dart';
 import 'package:diana/presentation/login/pages/login_screen.dart';
@@ -9,9 +9,9 @@ import 'package:diana/presentation/task/pages/add_task_screen.dart';
 import 'package:diana/presentation/task/pages/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'core/notifications/local_notifications.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
@@ -19,7 +19,7 @@ void main() async {
 
   await di.init();
 
-  await _initNotifications();
+  await LocalNotifications.initNotifications();
 
   tz.initializeTimeZones();
 
@@ -66,30 +66,9 @@ class Diana extends StatelessWidget {
         TaskScreen.route: (context) => TaskScreen(),
         AddTaskScreen.route: (context) => AddTaskScreen(),
         HabitScreen.route: (context) => HabitScreen(),
-        AddHabitScreen.route: (context) => AddHabitScreen(),
+        AddHabitBottomSheet.route: (context) => AddHabitBottomSheet(),
         ProfileScreen.route: (context) => ProfileScreen(),
       },
     );
   }
-}
-
-Future<void> _initNotifications() async {
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-// initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('ic_launcher');
-  final IOSInitializationSettings initializationSettingsIOS =
-      IOSInitializationSettings(
-    requestSoundPermission: true,
-    requestBadgePermission: true,
-    requestAlertPermission: true,
-  );
-
-  final InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-    iOS: initializationSettingsIOS,
-  );
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onSelectNotification: (payload) async {});
 }

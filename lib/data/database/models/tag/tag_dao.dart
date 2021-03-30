@@ -2,7 +2,7 @@ import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/models/tag/tag_table.dart';
 import 'package:diana/data/remote_models/tag/tag_result.dart';
 import 'package:diana/data/remote_models/tag/tag_response.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 part 'tag_dao.g.dart';
 

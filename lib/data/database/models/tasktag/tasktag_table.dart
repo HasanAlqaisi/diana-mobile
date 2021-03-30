@@ -1,13 +1,13 @@
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/remote_models/task/task_result.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 @DataClassName('TaskTagData')
 class TaskTagTable extends Table {
-  TextColumn get taskId =>
-      text().customConstraint('REFERENCES task_table(id) ON DELETE CASCADE')();
-  TextColumn get tagId =>
-      text().customConstraint('REFERENCES tag_table(id) ON DELETE CASCADE')();
+  TextColumn get taskId => text().customConstraint(
+      'REFERENCES task_table(id) ON DELETE CASCADE ON UPDATE CASCADE')();
+  TextColumn get tagId => text().customConstraint(
+      'REFERENCES tag_table(id) ON DELETE CASCADE ON UPDATE CASCADE')();
 
   @override
   String get tableName => 'tasktag_table';

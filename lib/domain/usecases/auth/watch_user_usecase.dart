@@ -1,5 +1,3 @@
-import 'package:dartz/dartz.dart';
-import 'package:diana/core/errors/failure.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/domain/repos/auth_repo.dart';
 
