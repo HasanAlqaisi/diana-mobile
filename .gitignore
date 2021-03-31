@@ -43,3 +43,5 @@ app.*.map.json
 
 *.g.dart
 lib/core/constants/_constants.dart
+android/key.properties
+android/app/diana.jks
