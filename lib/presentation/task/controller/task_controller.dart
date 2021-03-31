@@ -14,6 +14,7 @@ import 'package:diana/domain/usecases/task/insert_task_usecase.dart';
 import 'package:diana/domain/usecases/task/make_task_done_usecase.dart';
 import 'package:diana/domain/usecases/task/watch_tags_for_task.dart';
 import 'package:diana/presentation/profile/pages/profile_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -49,6 +50,8 @@ class TaskController extends GetxController {
   final EditSubTaskUseCase editSubTaskUseCase;
   final GetUserUsecase getUserUsecase;
   final WatchUserUsecase watchUserUsecase;
+
+  final textController = TextEditingController();
 
   Failure failure;
   RxBool isLongPressed = false.obs;

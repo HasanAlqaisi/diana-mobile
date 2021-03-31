@@ -37,6 +37,7 @@ class HabitController extends GetxController {
 
   final formKey = GlobalKey<FormState>();
   final habitTitleController = TextEditingController();
+  final quickHabitController = TextEditingController();
 
   Failure failure;
   bool habitEditMode = false;

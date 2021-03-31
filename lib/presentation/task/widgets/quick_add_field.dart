@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class QuickAddField extends StatelessWidget {
   final String hint;
   final Function(String value) onSubmitted;
+  final TextEditingController textController;
 
   const QuickAddField({
-    this.hint,
-    this.onSubmitted,
+    @required this.hint,
+    @required this.onSubmitted,
+    @required this.textController,
     Key key,
   }) : super(key: key);
 
@@ -17,6 +19,7 @@ class QuickAddField extends StatelessWidget {
         color: Colors.white,
       ),
       child: TextField(
+        controller: textController,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),

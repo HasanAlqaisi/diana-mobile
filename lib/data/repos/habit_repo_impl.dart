@@ -95,7 +95,8 @@ class HabitRepoImpl extends HabitRepo {
                 androidAllowWhileIdle: true,
                 uiLocalNotificationDateInterpretation:
                     UILocalNotificationDateInterpretation.absoluteTime,
-                matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
+                matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+                );
           });
         }
 

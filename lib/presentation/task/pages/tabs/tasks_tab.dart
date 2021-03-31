@@ -12,10 +12,11 @@ class TasksTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = TaskController.to;
     return ListView(
       children: [
         StreamBuilder<List<TagData>>(
-          stream: TaskController.to.watchAllTags(),
+          stream: controller.watchAllTags(),
           initialData: [],
           builder: (context, snapshot) {
             final data = snapshot?.data;
@@ -32,12 +33,14 @@ class TasksTab extends StatelessWidget {
           },
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 6.0),
           child: QuickAddField(
             hint: 'Quick Task',
-            onSubmitted: (taskName) {
-              TaskController.to
-                  .addTask(taskName, null, null, [], [], null, null, 0, false);
+            textController: controller.textController,
+            onSubmitted: (taskName) async {
+              await controller.addTask(
+                  taskName, null, null, [], [], null, null, 0, false);
+              controller.textController.text = '';
             },
           ),
         ),
@@ -65,7 +68,7 @@ class TasksTab extends StatelessWidget {
         },
       );
       chips.add(Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10), child: choiceChip));
+          padding: EdgeInsets.only(left: 16, right: 16, top: 6.0), child: choiceChip));
     }
     return chips;
   }

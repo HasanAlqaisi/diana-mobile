@@ -70,6 +70,7 @@ import 'package:diana/presentation/profile/controller/profile_controller.dart';
 import 'package:diana/presentation/register/controller/registeration_controller.dart';
 import 'package:diana/presentation/task/controller/add_task_controller.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path/path.dart' as p;
@@ -119,11 +120,18 @@ void externalLibsInjection() {
   sl.registerLazySingleton<NotificationDetails>(
     () {
       const AndroidNotificationDetails androidPlatformChannelSpecifics =
-          AndroidNotificationDetails('taskReminder', 'Task Reminder',
-              'Here you can manage how Diana helps you remember your tasks',
-              importance: Importance.max,
-              priority: Priority.high,
-              showWhen: true);
+          AndroidNotificationDetails(
+        'taskReminder',
+        'Task Reminder',
+        'Here you can manage how Diana helps you remember your tasks',
+        importance: Importance.max,
+        priority: Priority.high,
+        showWhen: true,
+        enableLights: true,
+        ledColor: Colors.purple,
+        ledOnMs: 1,
+        ledOffMs: 1,
+      );
       return NotificationDetails(android: androidPlatformChannelSpecifics);
     },
     instanceName: taskNotificationInjectionName,
@@ -132,11 +140,18 @@ void externalLibsInjection() {
   sl.registerLazySingleton<NotificationDetails>(
     () {
       const AndroidNotificationDetails androidPlatformChannelSpecifics =
-          AndroidNotificationDetails('habitReminder', 'Habit Reminder',
-              'Here you can manage how Diana helps you remember your habits',
-              importance: Importance.max,
-              priority: Priority.high,
-              showWhen: true);
+          AndroidNotificationDetails(
+        'habitReminder',
+        'Habit Reminder',
+        'Here you can manage how Diana helps you remember your habits',
+        importance: Importance.max,
+        priority: Priority.high,
+        showWhen: true,
+        enableLights: true,
+        ledColor: Colors.purple,
+        ledOnMs: 1,
+        ledOffMs: 1,
+      );
       return NotificationDetails(android: androidPlatformChannelSpecifics);
     },
     instanceName: habitNotificationInjectionName,
