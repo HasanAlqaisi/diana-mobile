@@ -5,6 +5,7 @@ import 'package:diana/presentation/task/widgets/quick_add_field.dart';
 import 'package:flutter/widgets.dart';
 
 class TodayHabitsTab extends StatelessWidget {
+  final controller = HabitController.to;
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -12,9 +13,10 @@ class TodayHabitsTab extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: QuickAddField(
+            textController: controller.quickHabitController,
             hint: 'Quick habit',
             onSubmitted: (habitName) {
-              HabitController.to.insertHabit(habitName: habitName, days: []);
+              controller.insertHabit(habitName: habitName, days: []);
             },
           ),
         ),
