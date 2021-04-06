@@ -1,3 +1,4 @@
+import 'package:diana/core/global_widgets/diana_appbar.dart';
 import 'package:diana/core/global_widgets/user_progress_image.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/presentation/habit/controllers/habit_controller.dart';
@@ -24,32 +25,9 @@ class HabitScreen extends StatelessWidget {
                   length: 2,
                   child: Scaffold(
                       resizeToAvoidBottomInset: false,
-                      appBar: AppBar(
-                        title: Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.0), //Not working
-                          child: Text.rich(
-                            TextSpan(
-                              children: [
-                                TextSpan(
-                                    text: 'Hey, ',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w300)),
-                                TextSpan(text: '${user?.firstName ?? ''}'),
-                              ],
-                            ),
-                          ),
-                        ),
-                        actions: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: _.onProfileImageTapped,
-                              child: UserProgressImage(user: user),
-                            ),
-                          )
-                        ],
-                        bottom: TabBar(
+                      appBar: buildDianaAppBar(
+                        user: user,
+                        tabBar: TabBar(
                           tabs: [
                             SizedBox(height: 30, child: Text('Today')),
                             SizedBox(height: 30, child: Text('All')),
