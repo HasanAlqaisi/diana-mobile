@@ -31,7 +31,6 @@ class ExpandableTaskItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => ExpansionTile(
-        // key: ValueKey(taskWithSubtasks.task.id),
         title: Text(
           taskWithSubtasks?.task?.name,
           style: TextStyle(
@@ -41,7 +40,8 @@ class ExpandableTaskItem extends StatelessWidget {
                   : TextDecoration.lineThrough),
         ),
         // ignore: null_aware_in_condition
-        subtitle: taskWithSubtasks?.task?.note != null
+        subtitle: taskWithSubtasks?.task?.note != null &&
+                taskWithSubtasks.task.note.isNotEmpty
             ? Text(taskWithSubtasks.task.note,
                 style: TextStyle(
                     color: _colorNameAndNote(),
@@ -55,7 +55,6 @@ class ExpandableTaskItem extends StatelessWidget {
             : EdgeInsets.zero,
         tilePadding: EdgeInsets.symmetric(horizontal: 16),
         onExpansionChanged: (isExpanded) {
-          print('isExpanded = $isExpanded');
           if (isExpanded) {
             controller.selectedTask.value = taskWithSubtasks.task.id;
           } else {
