@@ -12,6 +12,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 
 class AddHabitBottomSheet extends StatelessWidget {
   static const route = '/add_habit';
+
   final HabitWitLogsWithDays habit;
 
   const AddHabitBottomSheet({Key key, this.habit}) : super(key: key);
@@ -51,8 +52,6 @@ class AddHabitBottomSheet extends StatelessWidget {
                   decoration: InputDecoration(
                     labelText: 'Habit title',
                     labelStyle: TextStyle(color: Colors.white),
-                    // hintText: 'eg. meeting appointment',
-                    // hintStyle: TextStyle(color: Color(0xFFA687FF)),
                     errorText: null,
                   ),
                   validator: (title) {
@@ -200,7 +199,7 @@ class AddHabitBottomSheet extends StatelessWidget {
                               },
                               child: _.reminderTime.value.isNotEmpty
                                   ? Text(
-                                      _.reminderTime.value,
+                                      _.reminderTime.value.substring(0, 5),
                                       style: TextStyle(color: Colors.white),
                                     )
                                   : Text(
@@ -258,5 +257,4 @@ void _addWeekDay(int weekDay, HabitController _) {
     _.days().remove(weekDay);
   }
   _.days.refresh();
-  print(_.days);
 }
