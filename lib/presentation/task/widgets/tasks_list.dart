@@ -14,6 +14,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/route_manager.dart';
 
+import 'expandable_task_item..dart';
+
 class TasksList extends StatelessWidget {
   final TaskType type;
 
@@ -21,112 +23,54 @@ class TasksList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = TaskController.to;
     return StreamBuilder<List<TaskWithSubtasks>>(
         stream: _watch(),
         builder: (context, snapshot) {
-              // print('TaskWithSubtasks stream called: ${snapshot.requireData}');
-          // print('hasData??: ' + snapshot.data.toString());
           final data = snapshot?.data;
+
           if (data != null && data.isNotEmpty) {
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: data?.length ?? 0,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: GestureDetector(
-                        onLongPress: () {
-                          print('long tapped!');
-                          TaskController.to.isLongPressed.value = true;
-                        },
-                        child: PhysicalModel(
-                          elevation: 0.8,
-                          color: type == TaskType.done
-                              ? Color(0xFF1ADACE)
-                              : Colors.white,
-                          borderRadius: BorderRadius.circular(15.0),
-                          child: Container(
-                            decoration: type == TaskType.missed
-                                ? BoxDecoration(
-                                    color: Colors.white,
-                                    border:
-                                        Border.all(color: Color(0xFFEAAE13)),
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    // border: Border.all(color: Colors.grey, width: 0.5)
-                                  )
-                                : null,
-                            child: StreamBuilder<TaskWithTags>(
-                              stream: TaskController.to
-                                  .watchTagsForTask(data[index].task.id),
-                              builder: (context, taskWithTagsSnapshot) {
-                                return Obx(
-                                  () => ExpansionTile(
-                                    title: Text(
-                                      data[index].task.name,
-                                      style: TextStyle(
-                                          color: _colorNameAndNote(),
-                                          decoration: type != TaskType.done
-                                              ? TextDecoration.none
-                                              : TextDecoration.lineThrough),
-                                    ),
-                                    subtitle: Visibility(
-                                        child: Text(data[index].task.note ?? '',
-                                            style: TextStyle(
-                                                color: _colorNameAndNote(),
-                                                decoration:
-                                                    type != TaskType.done
-                                                        ? TextDecoration.none
-                                                        : TextDecoration
-                                                            .lineThrough)),
-                                        visible: data[index]?.task?.note != null
-                                            ? true
-                                            : false),
-                                    trailing: _buildTrailing(
-                                      taskData: data[index],
-                                      tagsData: taskWithTagsSnapshot?.data,
-                                      context: context,
-                                    ),
-                                    childrenPadding: type != TaskType.done
-                                        ? EdgeInsets.symmetric(horizontal: 16)
-                                        : EdgeInsets.zero,
-                                    tilePadding:
-                                        EdgeInsets.symmetric(horizontal: 16),
-                                    onExpansionChanged: (isExpanded) {
-                                      TaskController.to.isLongPressed.value =
-                                          false;
-
-                                      if (isExpanded) {
-                                        print('tapped to Expanded');
-                                        TaskController.to.selectedTask.value =
-                                            data[index].task.id;
-                                      } else {
-                                        print('tapped to close');
-                                        TaskController.to.selectedTask.value =
-                                            '';
-                                      }
-                                    },
-                                    children: [
-                                      SubtasksList(
-                                        type: type,
-                                        taskWithSubtasks: data[index],
-                                      ),
-                                      TagsRow(
-                                          taskType: type,
-                                          taskWithTags:
-                                              taskWithTagsSnapshot?.data),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: data?.length ?? 0,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: GestureDetector(
+                      child: PhysicalModel(
+                        elevation: 0.8,
+                        color: type == TaskType.done
+                            ? Color(0xFF1ADACE)
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(15.0),
+                        child: Container(
+                          decoration: type == TaskType.missed
+                              ? BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Color(0xFFEAAE13)),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  // border: Border.all(color: Colors.grey, width: 0.5)
+                                )
+                              : null,
+                          child: StreamBuilder<TaskWithTags>(
+                            stream: controller
+                                .watchTagsForTask(data[index].task.id),
+                            builder: (context, taskWithTagsSnapshot) {
+                              return ExpandableTaskItem(
+                                  taskWithSubtasks: data[index],
+                                  taskWithTags: taskWithTagsSnapshot?.data,
+                                  type: type);
+                            },
                           ),
                         ),
                       ),
-                    );
-                  }),
+                    ),
+                  );
+                },
+              ),
             );
           } else {
             return Container(
@@ -162,111 +106,6 @@ class TasksList extends StatelessWidget {
       return TaskController.to.watchMissedTasks(TaskController.to.tags());
     } else {
       return null;
-    }
-  }
-
-  Color _colorNameAndNote() {
-    if (type == TaskType.missed) {
-      return Color(0xFFEAAE13);
-    } else if (type == TaskType.done) {
-      return Color(0xFFA8FFF9);
-    } else {
-      return Color(0xFF636363);
-    }
-  }
-
-  Widget _buildTrailing({
-    TaskWithSubtasks taskData,
-    TaskWithTags tagsData,
-    BuildContext context,
-  }) {
-    final controller = TaskController.to;
-    final selectedTask = controller.selectedTask.value;
-    if (selectedTask == taskData.task.id) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          GestureDetector(
-              onTap: () async {
-                showLoaderDialog();
-                await controller.onDeleteTaskClicked(taskData.task.id);
-                Navigator.pop(context);
-              },
-              child: Icon(FontAwesomeIcons.trash, color: Colors.red)),
-          SizedBox(width: 10),
-          GestureDetector(
-              onTap: () async {
-                await Get.toNamed(
-                  AddTaskScreen.route,
-                  arguments: [taskData, tagsData],
-                );
-              },
-              child: Icon(FontAwesomeIcons.pen)),
-        ],
-      );
-    } else {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (type != TaskType.done && type != TaskType.missed)
-            Row(
-                children: List.generate(
-              taskData.task.priority,
-              (index) => Row(
-                children: [
-                  Container(
-                    height: 10,
-                    width: 10,
-                    decoration: BoxDecoration(
-                      color: _priorityColor(taskData.task),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  index + 1 != taskData.task.priority
-                      ? SizedBox(
-                          width: 10,
-                          child: Divider(
-                            color: _priorityColor(taskData.task),
-                            thickness: 1,
-                          ))
-                      : Container(),
-                ],
-              ),
-            )),
-          SizedBox(width: 5),
-          GestureDetector(
-              onTap: () async {
-                showLoaderDialog();
-                await controller.makeTaskDone(taskData.task.id);
-                Navigator.pop(context);
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child:
-                    Icon(Icons.check_circle, color: _colorCircle(), size: 30.0),
-              )),
-        ],
-      );
-    }
-  }
-
-  Color _colorCircle() {
-    if (type == TaskType.done) {
-      return Colors.white;
-    } else if (type == TaskType.missed) {
-      return Color(0xFFEAAE13);
-    } else {
-      return Colors.grey;
-    }
-  }
-
-  Color _priorityColor(TaskData taskData) {
-    if (taskData.priority == 1) {
-      return Colors.green;
-    } else if (taskData.priority == 2) {
-      return Colors.yellow;
-    } else {
-      return Colors.red;
     }
   }
 }

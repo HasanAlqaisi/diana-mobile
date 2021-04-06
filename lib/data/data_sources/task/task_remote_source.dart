@@ -77,13 +77,13 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     print("""
             title: $name,
         note: $note,
-        with_tags: $tags,
-        with_subtasks: $checkList,
+        with_tags: ${tags ?? []},
+        with_subtasks: ${checkList ?? []},
         date: $date,
         reminder: $reminder,
         deadline: $deadline,
-        priority: $priority,
-        done: $done,
+        priority: ${priority ?? 0},
+        done: ${done ?? false},
     """);
     final response = await client.post('$baseUrl/task/',
         headers: {
@@ -95,13 +95,13 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
           {
             "title": name,
             "note": note,
-            "with_tag": tags,
-            "with_subtask": checkList,
+            "with_tag": tags ?? [],
+            "with_subtask": checkList ?? [],
             "date": date,
             "reminder": reminder,
             "deadline": deadline,
-            "priority": priority,
-            "done": done,
+            "priority": priority ?? 0,
+            "done": done ?? false,
           },
         ));
 

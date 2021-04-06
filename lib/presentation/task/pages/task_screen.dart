@@ -1,6 +1,5 @@
 import 'package:diana/core/constants/enums.dart';
 import 'package:diana/core/global_widgets/diana_appbar.dart';
-import 'package:diana/core/global_widgets/user_progress_image.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
 import 'package:diana/presentation/task/pages/tabs/tasks_tab.dart';

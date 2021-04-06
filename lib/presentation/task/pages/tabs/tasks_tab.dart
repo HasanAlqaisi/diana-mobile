@@ -1,4 +1,5 @@
 import 'package:diana/core/constants/enums.dart';
+import 'package:diana/core/date/date_helper.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
 import 'package:diana/presentation/task/widgets/quick_add_field.dart';
@@ -32,14 +33,19 @@ class TasksTab extends StatelessWidget {
             }
           },
         ),
+        // if (type == TaskType.inbox || type == TaskType.today)
         Padding(
           padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 6.0),
           child: QuickAddField(
             hint: 'Quick Task',
             textController: controller.textController,
             onSubmitted: (taskName) async {
-              await controller.addTask(
-                  taskName, null, null, [], [], null, null, 0, false);
+              if (type == TaskType.inbox) {
+                await controller.addTask(taskName);
+              } else if (type == TaskType.today) {
+                await controller.addTask(taskName,
+                    date: DateHelper.getCurrentYYYYmmDD(DateTime.now()));
+              }
               controller.textController.text = '';
             },
           ),
@@ -68,7 +74,10 @@ class TasksTab extends StatelessWidget {
         },
       );
       chips.add(Padding(
-          padding: EdgeInsets.only(left: 16, right: 16, top: 6.0), child: choiceChip));
+          padding: i != tags.length - 1
+              ? EdgeInsets.only(left: 16.0, top: 6.0)
+              : EdgeInsets.only(left: 16.0, right: 16.0, top: 6.0),
+          child: choiceChip));
     }
     return chips;
   }

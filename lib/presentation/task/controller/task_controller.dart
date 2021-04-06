@@ -54,8 +54,8 @@ class TaskController extends GetxController {
   final textController = TextEditingController();
 
   Failure failure;
-  RxBool isLongPressed = false.obs;
   RxString selectedTask = ''.obs;
+  RxBool isExpanded = false.obs;
   var tags = <String>[].obs;
   var selectedTags = <int>[];
 
@@ -134,7 +134,7 @@ class TaskController extends GetxController {
   }
 
   Future<void> addTask(
-    String name,
+    String name, {
     String note,
     String date,
     List<String> tags,
@@ -143,7 +143,7 @@ class TaskController extends GetxController {
     String deadline,
     int priority,
     bool done,
-  ) async {
+  }) async {
     await API.doRequest(
       body: () async {
         return await insertTaskUseCase(name, note, date, tags, checklist,

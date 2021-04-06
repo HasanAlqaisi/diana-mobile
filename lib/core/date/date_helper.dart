@@ -5,7 +5,12 @@ class DateHelper {
     return (weekDay > 7 || weekDay < 1) ? null : weekDay - 1;
   }
 
-  static List<DateTime> getDatesFromWeekDays(List<int> djangoWeekDays, [String time]) {
+  static String getCurrentYYYYmmDD(DateTime date) {
+    return "${date.year}-${date.month}-${date.day}";
+  }
+
+  static List<DateTime> getDatesFromWeekDays(List<int> djangoWeekDays,
+      [String time]) {
     List<DateTime> dates = [];
 
     djangoWeekDays.forEach((djangoWeekDay) {

@@ -26,11 +26,11 @@ class QuickAddField extends StatelessWidget {
             borderSide: BorderSide(color: Colors.grey[300], width: 3),
           ),
           hintText: hint,
-          hintStyle: TextStyle(color: Colors.grey),
-          prefixIcon: Icon(Icons.add, color: Colors.grey),
+          hintStyle: TextStyle(color: Colors.grey.withOpacity(0.7)),
+          prefixIcon: Icon(Icons.add, color: Colors.grey.withOpacity(0.7)),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: Colors.grey[300], width: 3),
+            borderSide: BorderSide(color: Colors.grey[200], width: 3),
           ),
         ),
         onSubmitted: (taskName) {
