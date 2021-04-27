@@ -31,10 +31,13 @@ class UserProgressImage extends StatelessWidget {
                   ));
                 },
                 imageUrl: user.picture,
-                placeholder: (context, str) =>
-                    Image.asset('assets/profile_holder.jpg'))
-            : ClipRRect(
-                borderRadius: BorderRadius.circular(45),
-                child: Image.asset('assets/profile_holder.jpg')));
+                placeholder: (context, str) => _buildPlaceholderImage())
+            : _buildPlaceholderImage());
+  }
+
+  Widget _buildPlaceholderImage() {
+    return ClipRRect(
+        borderRadius: BorderRadius.circular(45),
+        child: Image.asset('assets/profile_holder.jpg'));
   }
 }
