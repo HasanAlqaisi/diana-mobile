@@ -43,7 +43,6 @@ class ProfileController extends GetxController {
   final emailControlerField = TextEditingController();
   final birthControlerField = TextEditingController();
 
-  bool shouldReturn = false;
   File image;
   String pass1, pass2;
 
@@ -98,28 +97,26 @@ class ProfileController extends GetxController {
     );
   }
 
-  Future<bool> onWillPopExcute() async {
+  Future<void> onProfileChecked() async {
     Get.dialog(
       AlertDialog(title: Center(child: CircularProgressIndicator())),
     );
 
-    await API.doRequest(body: () async {
-      shouldReturn = false;
-      return await editUserUsecase(
-        firstNameControlerField.text,
-        lastNameControlerField.text,
-        emailControlerField.text,
-        birthControlerField.text,
-      );
-    }, failedBody: (failure) {
-      shouldReturn = false;
-      Fluttertoast.showToast(msg: failureToString(failure));
-    }, successBody: () {
-      shouldReturn = true;
-    });
+    await API.doRequest(
+        body: () async {
+          return await editUserUsecase(
+            firstNameControlerField.text,
+            lastNameControlerField.text,
+            emailControlerField.text,
+            birthControlerField.text,
+          );
+        },
+        failedBody: (failure) {
+          Fluttertoast.showToast(msg: failureToString(failure));
+        },
+        successBody: () {});
 
     Get.back();
-    return shouldReturn;
   }
 
   void setInfo(UserData user) {
