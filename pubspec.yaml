@@ -41,7 +41,6 @@ dependencies:
   flutter_native_timezone: ^1.0.4
   # persistent_bottom_nav_bar: ^3.1.0
   font_awesome_flutter: ^8.11.0
-  chips_choice: ^2.0.1
   step_progress_indicator: ^0.2.5+8
   cached_network_image: ^2.5.0
   image_picker: ^0.6.7+22
