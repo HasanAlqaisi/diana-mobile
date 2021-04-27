@@ -55,15 +55,14 @@ class UserFieldsFailure extends Equatable implements Failure {
   final List<String> password;
   final List<String> image;
 
-  UserFieldsFailure({
-    this.firstName,
-    this.lastName,
-    this.username,
-    this.email,
-    this.birthdate,
-    this.password,
-    this.image
-  });
+  UserFieldsFailure(
+      {this.firstName,
+      this.lastName,
+      this.username,
+      this.email,
+      this.birthdate,
+      this.password,
+      this.image});
 
   factory UserFieldsFailure.fromFieldsException(Map<String, dynamic> body) {
     return UserFieldsFailure(
@@ -283,4 +282,9 @@ class TaskTagFieldsFailure extends Equatable implements Failure {
 
   @override
   List<Object> get props => [id, taskId, tagId];
+}
+
+class NoMoreResultsFailure extends Equatable implements Failure {
+  @override
+  List<Object> get props => [];
 }
