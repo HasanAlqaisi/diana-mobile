@@ -57,6 +57,12 @@ class AddTaskScreen extends StatelessWidget {
                           labelStyle: TextStyle(color: Colors.white),
                           hintText: 'eg. meeting appointment',
                           hintStyle: TextStyle(color: Color(0xFFA687FF)),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFFA687FF), width: 0.5),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFFA687FF), width: 0.5),
+                          ),
                           errorText: null,
                         ),
                         validator: (title) {
@@ -103,6 +109,12 @@ class AddTaskScreen extends StatelessWidget {
                         decoration: InputDecoration(
                           labelText: 'Note',
                           labelStyle: TextStyle(color: Colors.white),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFFA687FF), width: 0.5),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFFA687FF), width: 0.5),
+                          ),
                         ),
                         validator: (note) {
                           _.note = note;
@@ -388,6 +400,14 @@ class AddTaskScreen extends StatelessWidget {
                           // labelText: 'Tags',
                           hintText: 'New Tag...',
                           hintStyle: TextStyle(color: Color(0xFFA687FF)),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(0xFFA687FF), width: 0.5),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(0xFFA687FF), width: 0.5),
+                          ),
                           // labelStyle: TextStyle(color: Colors.white),
                           suffixIcon: GestureDetector(
                             onTap: () async {

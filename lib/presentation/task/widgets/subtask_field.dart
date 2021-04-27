@@ -23,19 +23,25 @@ class SubtaskField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0),
           child: TextFormField(
             controller: TextEditingController(text: text),
             style: TextStyle(color: Color(0xFFA687FF)),
             decoration: InputDecoration(
               hintText: 'New sub task',
               hintStyle: TextStyle(color: Color(0xFFA687FF)),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFFA687FF), width: 0.5),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFFA687FF), width: 0.5),
+              ),
               prefixIcon: GestureDetector(
                 onTap: () {
                   removeField(this);
                   controller.subtasksNames.remove(index);
                 },
-                child: Icon(FontAwesomeIcons.minus, color: Colors.white),
+                child: Icon(FontAwesomeIcons.minus, color: Colors.white, size: 18),
               ),
             ),
             validator: (subtaskName) {
