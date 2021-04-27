@@ -14,40 +14,41 @@ class TaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<TaskController>(
-        init: di.sl<TaskController>(),
-        builder: (_) {
-          return StreamBuilder<UserData>(
-            stream: _.watchUser(),
-            builder: (context, userSnapshot) {
-              // print('User stream called: ${userSnapshot.requireData}');
-              final user = userSnapshot.data;
-              return DefaultTabController(
-                length: 4,
-                child: Scaffold(
-                  resizeToAvoidBottomInset: false,
-                  appBar: buildDianaAppBar(
-                    user: user,
-                    tabBar: TabBar(
-                      tabs: [
-                        SizedBox(height: 30, child: Text('Today')),
-                        SizedBox(height: 30, child: Text('Inbox')),
-                        SizedBox(height: 30, child: Text('Done')),
-                        SizedBox(height: 30, child: Text('Missed')),
-                      ],
-                    ),
-                  ),
-                  body: TabBarView(
-                    children: [
-                      TasksTab(type: TaskType.today),
-                      TasksTab(type: TaskType.inbox),
-                      TasksTab(type: TaskType.done),
-                      TasksTab(type: TaskType.missed),
+      init: di.sl<TaskController>(),
+      builder: (_) {
+        return StreamBuilder<UserData>(
+          stream: _.watchUser(),
+          builder: (context, userSnapshot) {
+            // print('User stream called: ${userSnapshot.requireData}');
+            final user = userSnapshot.data;
+            return DefaultTabController(
+              length: 4,
+              child: Scaffold(
+                resizeToAvoidBottomInset: false,
+                appBar: buildDianaAppBar(
+                  user: user,
+                  tabBar: TabBar(
+                    tabs: [
+                      SizedBox(height: 30, child: Text('Today')),
+                      SizedBox(height: 30, child: Text('Inbox')),
+                      SizedBox(height: 30, child: Text('Done')),
+                      SizedBox(height: 30, child: Text('Missed')),
                     ],
                   ),
                 ),
-              );
-            },
-          );
-        });
+                body: TabBarView(
+                  children: [
+                    TasksTab(type: TaskType.today),
+                    TasksTab(type: TaskType.inbox),
+                    TasksTab(type: TaskType.done),
+                    TasksTab(type: TaskType.missed),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

@@ -24,7 +24,6 @@ import 'package:diana/data/remote_models/tag/tag_response.dart';
 import 'package:diana/data/remote_models/tag/tag_result.dart';
 import 'package:diana/data/remote_models/task/task_response.dart';
 import 'package:diana/data/remote_models/task/task_result.dart';
-import 'package:diana/data/remote_models/tasktag/tasktag.dart';
 import 'package:diana/domain/repos/task_repo.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -119,27 +118,26 @@ class TaskRepoImpl extends TaskRepo {
     }
   }
 
-  //TODO: MODIFY THESE Parameters
-  @override
-  Future<Either<Failure, bool>> deleteTaskTag(String id) async {
-    if (await netWorkInfo.isConnected()) {
-      try {
-        final result = await taskTagRemoteSource.deleteTaskTag(id);
+  // @override
+  // Future<Either<Failure, bool>> deleteTaskTag(String id) async {
+  //   if (await netWorkInfo.isConnected()) {
+  //     try {
+  //       final result = await taskTagRemoteSource.deleteTaskTag(id);
 
-        log('API result is $result', name: 'deleteTaskTag');
+  //       log('API result is $result', name: 'deleteTaskTag');
 
-        return Right(result);
-      } on UnAuthException {
-        return Left(UnAuthFailure());
-      } on NotFoundException {
-        return Left(NotFoundFailure());
-      } on UnknownException catch (error) {
-        return Left(UnknownFailure(message: error.message));
-      }
-    } else {
-      return Left(NoInternetFailure());
-    }
-  }
+  //       return Right(result);
+  //     } on UnAuthException {
+  //       return Left(UnAuthFailure());
+  //     } on NotFoundException {
+  //       return Left(NotFoundFailure());
+  //     } on UnknownException catch (error) {
+  //       return Left(UnknownFailure(message: error.message));
+  //     }
+  //   } else {
+  //     return Left(NoInternetFailure());
+  //   }
+  // }
 
   @override
   Future<Either<Failure, SubtaskResult>> editSubtask(
@@ -250,33 +248,6 @@ class TaskRepoImpl extends TaskRepo {
     }
   }
 
-  /// TODO: DELETE THIS
-  @override
-  Future<Either<Failure, TaskTagResponse>> editTaskTag(
-      String id, String taskId, String tagId) async {
-    if (await netWorkInfo.isConnected()) {
-      try {
-        final result = await taskTagRemoteSource.editTaskTag(id, taskId, tagId);
-
-        log('API result is $result', name: 'editTaskTag');
-
-        return Right(result);
-      } on FieldsException catch (error) {
-        return Left(
-          TaskTagFieldsFailure.fromFieldsException(json.decode(error.body)),
-        );
-      } on UnAuthException {
-        return Left(UnAuthFailure());
-      } on NotFoundException {
-        return Left(NotFoundFailure());
-      } on UnknownException catch (error) {
-        return Left(UnknownFailure(message: error.message));
-      }
-    } else {
-      return Left(NoInternetFailure());
-    }
-  }
-
   @override
   Future<Either<Failure, SubtaskResponse>> getSubtasks(String taskId) async {
     if (await netWorkInfo.isConnected()) {
@@ -297,8 +268,7 @@ class TaskRepoImpl extends TaskRepo {
           subtaskOffset = offset;
           return Right(result);
         } else {
-          return Right(null);
-          //TODO: return Left(NoMoreResultsfailure)
+          return Left(NoMoreResultsFailure());
         }
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -331,8 +301,7 @@ class TaskRepoImpl extends TaskRepo {
 
           return Right(result);
         } else {
-          return Right(null);
-          //TODO: return Left(NoMoreResultsFailure)
+          return Left(NoMoreResultsFailure());
         }
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -364,8 +333,7 @@ class TaskRepoImpl extends TaskRepo {
 
           return Right(result);
         } else {
-          return Right(null);
-          //TODO: return Left(NoMoreResultsFailure)
+          return Left(NoMoreResultsFailure());
         }
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -479,30 +447,7 @@ class TaskRepoImpl extends TaskRepo {
     }
   }
 
-  //TODO: DELETE THIS
-  @override
-  Future<Either<Failure, TaskTagResponse>> insertTaskTag(
-      String taskId, String tagId) async {
-    if (await netWorkInfo.isConnected()) {
-      try {
-        final result = await taskTagRemoteSource.insertTaskTag(taskId, tagId);
-
-        log('API result is $result', name: 'insertTaskTag');
-
-        return Right(result);
-      } on UnAuthException {
-        return Left(UnAuthFailure());
-      } on FieldsException catch (error) {
-        return Left(
-          TaskTagFieldsFailure.fromFieldsException(json.decode(error.body)),
-        );
-      } on UnknownException catch (error) {
-        return Left(UnknownFailure(message: error.message));
-      }
-    } else {
-      return Left(NoInternetFailure());
-    }
-  }
+ 
 
   Stream<List<TaskWithSubtasks>> watchTodayTasks(List<String> tags) {
     return taskLocalSource.watchTodayTasks(kUserId, tags);

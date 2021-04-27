@@ -9,7 +9,6 @@ import 'package:diana/data/remote_models/tag/tag_response.dart';
 import 'package:diana/data/remote_models/tag/tag_result.dart';
 import 'package:diana/data/remote_models/task/task_response.dart';
 import 'package:diana/data/remote_models/task/task_result.dart';
-import 'package:diana/data/remote_models/tasktag/tasktag.dart';
 
 abstract class TaskRepo {
   Future<Either<Failure, TagResponse>> getTags();
@@ -68,16 +67,16 @@ abstract class TaskRepo {
 
   Future<Either<Failure, bool>> deleteTask(String taskId);
 
-  Future<Either<Failure, TaskTagResponse>> insertTaskTag(
-      String taskId, String tagId);
+  // Future<Either<Failure, TaskTagResponse>> insertTaskTag(
+  //     String taskId, String tagId);
 
-  Future<Either<Failure, TaskTagResponse>> editTaskTag(
-    String id,
-    String taskId,
-    String tagId,
-  );
+  // Future<Either<Failure, TaskTagResponse>> editTaskTag(
+  //   String id,
+  //   String taskId,
+  //   String tagId,
+  // );
 
-  Future<Either<Failure, bool>> deleteTaskTag(String id);
+  // Future<Either<Failure, bool>> deleteTaskTag(String id);
 
   Stream<List<TaskWithSubtasks>> watchTodayTasks(List<String> tags);
 

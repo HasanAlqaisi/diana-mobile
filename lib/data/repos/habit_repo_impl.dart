@@ -61,8 +61,7 @@ class HabitRepoImpl extends HabitRepo {
 
           return Right(result);
         } else {
-          return Right(null);
-          //TODO: return Left(NoMoreResultsFailure)
+          return Left(NoMoreResultsFailure());
         }
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -207,7 +206,7 @@ class HabitRepoImpl extends HabitRepo {
 
   //       return Right(result);
   // } else {
-  //TODO: return Left(NoMoreResultsFailure)
+          // return Left(NoMoreResultsFailure());
   // }
   //     } on UnAuthException {
   //       return Left(UnAuthFailure());
