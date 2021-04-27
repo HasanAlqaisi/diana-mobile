@@ -91,9 +91,11 @@ class LoginForm extends StatelessWidget {
                     onPressed: controller.onLoginPressed,
                   ),
                 ),
-                FlatButton(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
+                TextButton(
+                  onPressed: controller.onRegisterPressed,
+                  style: TextButton.styleFrom(
+                    primary: Colors.transparent,
+                  ),
                   child: RichText(
                     text: TextSpan(
                       children: [
@@ -106,8 +108,7 @@ class LoginForm extends StatelessWidget {
                       ],
                     ),
                   ),
-                  onPressed: controller.onRegisterPressed,
-                ),
+                )
               ],
             ));
       },

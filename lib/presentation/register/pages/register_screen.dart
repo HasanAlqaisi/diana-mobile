@@ -183,9 +183,11 @@ class RegisterForm extends StatelessWidget {
                   onPressed: controller.onSignupPressed,
                 ),
               ),
-              FlatButton(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
+              TextButton(
+                onPressed: controller.onLoginPressed,
+                style: TextButton.styleFrom(
+                  primary: Colors.transparent,
+                ),
                 child: RichText(
                   text: TextSpan(
                     children: [
@@ -197,8 +199,7 @@ class RegisterForm extends StatelessWidget {
                     ],
                   ),
                 ),
-                onPressed: controller.onLoginPressed,
-              ),
+              )
             ],
           ),
         );

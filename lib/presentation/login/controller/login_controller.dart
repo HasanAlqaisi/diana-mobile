@@ -14,7 +14,7 @@ class LoginController extends GetxController {
   Failure failure;
   bool isLoading = false;
 
-  final formKey = GlobalKey<FormState>();
+  var formKey = GlobalKey<FormState>();
 
   LoginController(this.loginUserUseCase);
 

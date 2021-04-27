@@ -15,7 +15,7 @@ class RegistrationController extends GetxController {
   Failure failure;
   bool isLoading = false;
 
-  final formKey = GlobalKey<FormState>();
+  var formKey = GlobalKey<FormState>();
 
   RegistrationController(this.registerUserUseCase);
 
@@ -40,6 +40,6 @@ class RegistrationController extends GetxController {
   }
 
   void onLoginPressed() {
-    Get.toNamed(LoginScreen.route);
+    Get.back();
   }
 }
