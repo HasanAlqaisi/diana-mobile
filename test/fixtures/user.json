@@ -1,8 +1,0 @@
-{
-    "first_name": "string",
-    "last_name": "string",
-    "username": "string",
-    "email": "user@example.com",
-    "birthdate": "2021-01-13",
-    "daily_progress": 0
-}
