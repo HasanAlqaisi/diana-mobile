@@ -41,12 +41,14 @@ class SubtaskField extends StatelessWidget {
                   removeField(this);
                   controller.subtasksNames.remove(index);
                 },
-                child: Icon(FontAwesomeIcons.minus, color: Colors.white, size: 18),
+                child:
+                    Icon(FontAwesomeIcons.minus, color: Colors.white, size: 18),
               ),
             ),
             validator: (subtaskName) {
               if (subtaskName.trim().isEmpty) return requireFieldMessage;
-              controller.subtasksNames.add(subtaskName);
+              if (!controller.subtasksNames.contains(subtaskName))
+                controller.subtasksNames.add(subtaskName);
               return null;
             },
           ),
