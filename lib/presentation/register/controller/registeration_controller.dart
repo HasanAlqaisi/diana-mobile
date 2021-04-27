@@ -1,7 +1,6 @@
 import 'package:diana/core/errors/failure.dart';
 import 'package:diana/core/mappers/failure_to_string.dart';
 import 'package:diana/domain/usecases/auth/register_user_usecase.dart';
-import 'package:diana/presentation/login/pages/login_screen.dart';
 import 'package:diana/presentation/nav/nav.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
