@@ -182,16 +182,15 @@ class AddTaskController extends GetxController {
     
       ChoiceChip choiceChip = ChoiceChip(
         selected: this.selectedTags.contains(tags[i].name),
-        label: Text(tags[i].name, style: TextStyle(color: Color(0xFF8E8E8E))),
+        label: Text(tags[i].name, style: TextStyle(color: Colors.white)),
         avatar: this.selectedTags.contains(tags[i].name)
-            ? Icon(Icons.check, color: Color(0xFF8E8E8E))
+            ? Icon(Icons.check, color: Colors.white)
             : null,
         pressElevation: 5,
         labelPadding: EdgeInsets.symmetric(horizontal: 12),
-        backgroundColor: Color(0xFFEDEDED),
-        selectedColor: Colors.grey[300],
+        backgroundColor: Color(0xFFA687FF),
+        selectedColor: Color(0xFFA687FF),
         onSelected: (bool isSelected) {
-          print('onSelected called');
           updateSelectedTags(index: i, tagName: tags[i].name);
         },
       );
