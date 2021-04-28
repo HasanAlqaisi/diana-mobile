@@ -86,15 +86,15 @@ class HabitRepoImpl extends HabitRepo {
           final dates = DateHelper.getDatesFromWeekDays(days, time);
           dates.forEach((date) async {
             await di.sl<FlutterLocalNotificationsPlugin>().zonedSchedule(
-                result.habitId.hashCode,
-                null,
-                'Time to ${result.name}!',
-                tz.TZDateTime.parse(tz.local, date.toString()),
-                di.sl.get(instanceName: habitNotificationInjectionName),
-                androidAllowWhileIdle: true,
-                uiLocalNotificationDateInterpretation:
-                    UILocalNotificationDateInterpretation.absoluteTime,
-                matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+                  result.habitId.hashCode + date.hashCode,
+                  null,
+                  'Time to ${result.name}!',
+                  tz.TZDateTime.parse(tz.local, date.toString()),
+                  di.sl.get(instanceName: habitNotificationInjectionName),
+                  androidAllowWhileIdle: true,
+                  uiLocalNotificationDateInterpretation:
+                      UILocalNotificationDateInterpretation.absoluteTime,
+                  matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
                 );
           });
         }
@@ -128,16 +128,20 @@ class HabitRepoImpl extends HabitRepo {
         log('API result is $result', name: 'editHabit');
 
         if (result.time != null) {
-          await di.sl<FlutterLocalNotificationsPlugin>().zonedSchedule(
-                result.habitId.hashCode,
-                null,
-                'Time to ${result.name}!',
-                tz.TZDateTime.parse(tz.local, result.time),
-                di.sl.get(instanceName: habitNotificationInjectionName),
-                androidAllowWhileIdle: true,
-                uiLocalNotificationDateInterpretation:
-                    UILocalNotificationDateInterpretation.absoluteTime,
-              );
+          final dates = DateHelper.getDatesFromWeekDays(days, time);
+          dates.forEach((date) async {
+            await di.sl<FlutterLocalNotificationsPlugin>().zonedSchedule(
+                  result.habitId.hashCode + date.hashCode,
+                  null,
+                  'Time to ${result.name}!',
+                  tz.TZDateTime.parse(tz.local, date.toString()),
+                  di.sl.get(instanceName: habitNotificationInjectionName),
+                  androidAllowWhileIdle: true,
+                  uiLocalNotificationDateInterpretation:
+                      UILocalNotificationDateInterpretation.absoluteTime,
+                  matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+                );
+          });
         }
 
         await habitLocalSource.insertHabit(result);
@@ -206,7 +210,7 @@ class HabitRepoImpl extends HabitRepo {
 
   //       return Right(result);
   // } else {
-          // return Left(NoMoreResultsFailure());
+  // return Left(NoMoreResultsFailure());
   // }
   //     } on UnAuthException {
   //       return Left(UnAuthFailure());
