@@ -58,10 +58,12 @@ class AddTaskScreen extends StatelessWidget {
                           hintText: 'eg. meeting appointment',
                           hintStyle: TextStyle(color: Color(0xFFA687FF)),
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFA687FF), width: 0.5),
+                            borderSide: BorderSide(
+                                color: Color(0xFFA687FF), width: 0.5),
                           ),
                           focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFA687FF), width: 0.5),
+                            borderSide: BorderSide(
+                                color: Color(0xFFA687FF), width: 0.5),
                           ),
                           errorText: null,
                         ),
@@ -110,10 +112,12 @@ class AddTaskScreen extends StatelessWidget {
                           labelText: 'Note',
                           labelStyle: TextStyle(color: Colors.white),
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFA687FF), width: 0.5),
+                            borderSide: BorderSide(
+                                color: Color(0xFFA687FF), width: 0.5),
                           ),
                           focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFA687FF), width: 0.5),
+                            borderSide: BorderSide(
+                                color: Color(0xFFA687FF), width: 0.5),
                           ),
                         ),
                         validator: (note) {
@@ -409,13 +413,13 @@ class AddTaskScreen extends StatelessWidget {
                                 color: Color(0xFFA687FF), width: 0.5),
                           ),
                           // labelStyle: TextStyle(color: Colors.white),
-                          suffixIcon: GestureDetector(
-                            onTap: () async {
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.add, color: Color(0xFFA687FF)),
+                            onPressed: () async {
                               showLoaderDialog();
                               await _.onTagPlusClicked();
                               Navigator.pop(context);
                             },
-                            child: Icon(Icons.add, color: Color(0xFFA687FF)),
                           ),
                         ),
                       ),
@@ -443,19 +447,20 @@ class AddTaskScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Center(
-                        child: GestureDetector(
-                          onTap: () async {
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.check_circle_sharp,
+                            color: Colors.white,
+                          ),
+                          iconSize: 60.0,
+                          highlightColor: Colors.transparent,
+                          onPressed: () async {
                             if (_.formKey.currentState.validate()) {
                               showLoaderDialog();
                               await _.onTaskPlusClicked();
                               Navigator.pop(context);
                             }
                           },
-                          child: Icon(
-                            Icons.check_circle_sharp,
-                            color: Colors.white,
-                            size: 60.0,
-                          ),
                         ),
                       ),
                     ),

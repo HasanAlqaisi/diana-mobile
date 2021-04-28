@@ -213,27 +213,31 @@ class HabitsList extends StatelessWidget {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          GestureDetector(
-              onTap: () async {
-                await controller.deleteHabit(data.habit.id);
-              },
-              child: Icon(
-                FontAwesomeIcons.trash,
-                color: isHabitDone ? Colors.white : Colors.red,
-              )),
-          SizedBox(width: 10),
-          GestureDetector(
-            onTap: () async {
+          IconButton(
+            icon: Icon(
+              FontAwesomeIcons.trash,
+              color: isHabitDone ? Colors.white : Colors.red,
+            ),
+            highlightColor: Colors.transparent,
+            constraints: BoxConstraints(minWidth: 20, minHeight: 20),
+            onPressed: () async {
+              await controller.deleteHabit(data.habit.id);
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              FontAwesomeIcons.pen,
+              color: isHabitDone ? Colors.white : null,
+            ),
+            highlightColor: Colors.transparent,
+            constraints: BoxConstraints(minWidth: 20, minHeight: 20),
+            onPressed: () async {
               await Get.bottomSheet(
                 AddHabitBottomSheet(habit: data),
                 isDismissible: false,
               );
               controller.clearHabitInfo();
             },
-            child: Icon(
-              FontAwesomeIcons.pen,
-              color: isHabitDone ? Colors.white : null,
-            ),
           ),
         ],
       );

@@ -45,26 +45,28 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               Positioned(
-                  right: 30,
-                  top: 75,
-                  child: GestureDetector(
-                    onTap: () => _.onProfileChecked(),
-                    child: Icon(
-                      Icons.check,
-                      size: 30,
-                      color: Colors.white,
-                    ),
-                  )),
+                right: 30,
+                top: 70,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
+                  iconSize: 30,
+                  onPressed: () => _.onProfileChecked(),
+                ),
+              ),
               Positioned(
-                  left: 30,
-                  top: 75,
-                  child: GestureDetector(
-                    onTap: () => Get.back(),
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.white,
-                    ),
-                  )),
+                left: 30,
+                top: 70,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => Get.back(),
+                ),
+              ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: FractionallySizedBox(
@@ -98,8 +100,7 @@ class ProfileScreen extends StatelessWidget {
                                       },
                                       imageUrl: user?.picture,
                                       placeholder: (context, s) => ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(45),
+                                        borderRadius: BorderRadius.circular(45),
                                         child: Container(
                                           width: 100,
                                           height: 100,
@@ -126,12 +127,12 @@ class ProfileScreen extends StatelessWidget {
                                 decoration: InputDecoration(
                                     labelText: 'First name',
                                     enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Color(0xFFDEDEDE)),
+                                      borderSide:
+                                          BorderSide(color: Color(0xFFDEDEDE)),
                                     ),
                                     focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Color(0xFFDEDEDE)),
+                                      borderSide:
+                                          BorderSide(color: Color(0xFFDEDEDE)),
                                     ),
                                     labelStyle:
                                         TextStyle(color: Color(0xFF612EF3))),
@@ -151,12 +152,12 @@ class ProfileScreen extends StatelessWidget {
                                 decoration: InputDecoration(
                                     labelText: 'Last name',
                                     enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Color(0xFFDEDEDE)),
+                                      borderSide:
+                                          BorderSide(color: Color(0xFFDEDEDE)),
                                     ),
                                     focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Color(0xFFDEDEDE)),
+                                      borderSide:
+                                          BorderSide(color: Color(0xFFDEDEDE)),
                                     ),
                                     labelStyle:
                                         TextStyle(color: Color(0xFF612EF3))),
@@ -183,8 +184,8 @@ class ProfileScreen extends StatelessWidget {
                                         borderSide: BorderSide(
                                             color: Color(0xFFDEDEDE)),
                                       ),
-                                      labelStyle: TextStyle(
-                                          color: Color(0xFF612EF3))),
+                                      labelStyle:
+                                          TextStyle(color: Color(0xFF612EF3))),
                                   validator: (value) {
                                     if (value.trim().isEmpty) {
                                       return requireFieldMessage;
@@ -212,12 +213,12 @@ class ProfileScreen extends StatelessWidget {
                                 decoration: InputDecoration(
                                     labelText: 'Date of Birth',
                                     enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Color(0xFFDEDEDE)),
+                                      borderSide:
+                                          BorderSide(color: Color(0xFFDEDEDE)),
                                     ),
                                     focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Color(0xFFDEDEDE)),
+                                      borderSide:
+                                          BorderSide(color: Color(0xFFDEDEDE)),
                                     ),
                                     labelStyle:
                                         TextStyle(color: Color(0xFF612EF3))),

@@ -217,8 +217,13 @@ class AddHabitBottomSheet extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Center(
-                  child: GestureDetector(
-                    onTap: () async {
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.check_circle_sharp,
+                      color: Colors.white,
+                    ),
+                    iconSize: 60.0,
+                    onPressed: () async {
                       if (_.formKey.currentState.validate()) {
                         showLoaderDialog();
                         await _.insertHabit(
@@ -230,11 +235,6 @@ class AddHabitBottomSheet extends StatelessWidget {
                         Get.back();
                       }
                     },
-                    child: Icon(
-                      Icons.check_circle_sharp,
-                      color: Colors.white,
-                      size: 60.0,
-                    ),
                   ),
                 ),
               )

@@ -102,17 +102,18 @@ class ExpandableTaskItem extends StatelessWidget {
             color: _priorityColor(taskWithSubtasks?.task),
           ),
         SizedBox(width: 5),
-        GestureDetector(
-            onTap: () async {
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: IconButton(
+            highlightColor: Colors.transparent,
+            icon: Icon(Icons.check_circle, color: _colorMarkIcon(), size: 30.0),
+            onPressed: () async {
               showLoaderDialog();
               await controller.makeTaskDone(taskWithSubtasks.task.id);
               Get.back();
             },
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child:
-                  Icon(Icons.check_circle, color: _colorMarkIcon(), size: 30.0),
-            )),
+          ),
+        ),
       ],
     );
   }
@@ -121,22 +122,27 @@ class ExpandableTaskItem extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        GestureDetector(
-            onTap: () async {
-              showLoaderDialog();
-              await controller.onDeleteTaskClicked(taskWithSubtasks.task.id);
-              Get.back();
-            },
-            child: Icon(FontAwesomeIcons.trash, color: Colors.red)),
-        SizedBox(width: 10),
-        GestureDetector(
-            onTap: () async {
-              await Get.toNamed(
-                AddTaskScreen.route,
-                arguments: [taskWithSubtasks, taskWithTags],
-              );
-            },
-            child: Icon(FontAwesomeIcons.pen)),
+        IconButton(
+          icon: Icon(FontAwesomeIcons.trash, color: Colors.red),
+          constraints: BoxConstraints(minWidth: 20, minHeight: 20),
+          highlightColor: Colors.transparent,
+          onPressed: () async {
+            showLoaderDialog();
+            await controller.onDeleteTaskClicked(taskWithSubtasks.task.id);
+            Get.back();
+          },
+        ),
+        IconButton(
+          icon: Icon(FontAwesomeIcons.pen),
+          constraints: BoxConstraints(minWidth: 20, minHeight: 20),
+          highlightColor: Colors.transparent,
+          onPressed: () async {
+            await Get.toNamed(
+              AddTaskScreen.route,
+              arguments: [taskWithSubtasks, taskWithTags],
+            );
+          },
+        ),
       ],
     );
   }

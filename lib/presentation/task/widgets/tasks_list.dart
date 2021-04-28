@@ -31,32 +31,30 @@ class TasksList extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
-                    child: GestureDetector(
-                      child: PhysicalModel(
-                        elevation: 0.8,
-                        color: type == TaskType.done
-                            ? Color(0xFF1ADACE)
-                            : Colors.white,
-                        borderRadius: BorderRadius.circular(15.0),
-                        child: Container(
-                          decoration: type == TaskType.missed
-                              ? BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color: Color(0xFFEAAE13)),
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  // border: Border.all(color: Colors.grey, width: 0.5)
-                                )
-                              : null,
-                          child: StreamBuilder<TaskWithTags>(
-                            stream: controller
-                                .watchTagsForTask(data[index].task.id),
-                            builder: (context, taskWithTagsSnapshot) {
-                              return ExpandableTaskItem(
-                                  taskWithSubtasks: data[index],
-                                  taskWithTags: taskWithTagsSnapshot?.data,
-                                  type: type);
-                            },
-                          ),
+                    child: PhysicalModel(
+                      elevation: 0.8,
+                      color: type == TaskType.done
+                          ? Color(0xFF1ADACE)
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(15.0),
+                      child: Container(
+                        decoration: type == TaskType.missed
+                            ? BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color: Color(0xFFEAAE13)),
+                                borderRadius: BorderRadius.circular(15.0),
+                                // border: Border.all(color: Colors.grey, width: 0.5)
+                              )
+                            : null,
+                        child: StreamBuilder<TaskWithTags>(
+                          stream: controller
+                              .watchTagsForTask(data[index].task.id),
+                          builder: (context, taskWithTagsSnapshot) {
+                            return ExpandableTaskItem(
+                                taskWithSubtasks: data[index],
+                                taskWithTags: taskWithTagsSnapshot?.data,
+                                type: type);
+                          },
                         ),
                       ),
                     ),

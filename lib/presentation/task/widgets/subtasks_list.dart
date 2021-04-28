@@ -40,17 +40,17 @@ class SubtasksList extends StatelessWidget {
                 ),
               ),
               if (type != TaskType.done)
-                GestureDetector(
-                    onTap: () async {
-                      showLoaderDialog();
-                      await TaskController.to.changeSubtaskState(subtask);
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.check,
-                      color:
-                          subtask.done ? Color(0xFF1ADACE) : Color(0xFFB0B0B0),
-                    )),
+                IconButton(
+                  icon: Icon(
+                    Icons.check,
+                    color: subtask.done ? Color(0xFF1ADACE) : Color(0xFFB0B0B0),
+                  ),
+                  onPressed: () async {
+                    showLoaderDialog();
+                    await TaskController.to.changeSubtaskState(subtask);
+                    Navigator.pop(context);
+                  },
+                ),
             ],
           ),
           subtitle: Divider(thickness: 0.5),
