@@ -418,16 +418,29 @@ class TaskRepoImpl extends TaskRepo {
 
         if (result.reminder != null) {
           print('reminder scheduled at ${result.reminder}');
-          await di.sl<FlutterLocalNotificationsPlugin>().zonedSchedule(
-                result.taskId.hashCode,
-                result.name,
-                result.note,
-                tz.TZDateTime.parse(tz.local, result.reminder),
-                di.sl.get(instanceName: taskNotificationInjectionName),
-                androidAllowWhileIdle: true,
-                uiLocalNotificationDateInterpretation:
-                    UILocalNotificationDateInterpretation.absoluteTime,
-              );
+          if (result.note != null || result.note.isNotEmpty) {
+            await di.sl<FlutterLocalNotificationsPlugin>().zonedSchedule(
+                  result.taskId.hashCode,
+                  result.name,
+                  result.note,
+                  tz.TZDateTime.parse(tz.local, result.reminder),
+                  di.sl.get(instanceName: taskNotificationInjectionName),
+                  androidAllowWhileIdle: true,
+                  uiLocalNotificationDateInterpretation:
+                      UILocalNotificationDateInterpretation.absoluteTime,
+                );
+          } else {
+            await di.sl<FlutterLocalNotificationsPlugin>().zonedSchedule(
+                  result.taskId.hashCode,
+                  null,
+                  result.name,
+                  tz.TZDateTime.parse(tz.local, result.reminder),
+                  di.sl.get(instanceName: taskNotificationInjectionName),
+                  androidAllowWhileIdle: true,
+                  uiLocalNotificationDateInterpretation:
+                      UILocalNotificationDateInterpretation.absoluteTime,
+                );
+          }
         }
 
         await taskLocalSource.insertTask(result);
@@ -446,8 +459,6 @@ class TaskRepoImpl extends TaskRepo {
       return Left(NoInternetFailure());
     }
   }
-
- 
 
   Stream<List<TaskWithSubtasks>> watchTodayTasks(List<String> tags) {
     return taskLocalSource.watchTodayTasks(kUserId, tags);
