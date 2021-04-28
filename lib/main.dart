@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'core/notifications/local_notifications.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
@@ -31,6 +32,7 @@ class Diana extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       theme: ThemeData(
+        textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
         appBarTheme: AppBarTheme(
           color: Color(0xFF612EF3),
           backwardsCompatibility: true,
