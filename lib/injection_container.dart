@@ -128,7 +128,7 @@ void externalLibsInjection() {
         priority: Priority.high,
         showWhen: true,
         enableLights: true,
-        ledColor: Colors.purple,
+        ledColor: Color(0xFF6504C2),
         ledOnMs: 1,
         ledOffMs: 1,
       );
@@ -148,7 +148,7 @@ void externalLibsInjection() {
         priority: Priority.high,
         showWhen: true,
         enableLights: true,
-        ledColor: Colors.purple,
+        ledColor: Color(0xFF6504C2),
         ledOnMs: 1,
         ledOffMs: 1,
       );
