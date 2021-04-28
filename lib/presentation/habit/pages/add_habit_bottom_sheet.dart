@@ -185,6 +185,7 @@ class AddHabitBottomSheet extends StatelessWidget {
                             ),
                             child: GestureDetector(
                               onTap: () async {
+                                Get.focusScope.unfocus();
                                 await showTimePicker(
                                         context: context,
                                         initialTime: TimeOfDay.now())

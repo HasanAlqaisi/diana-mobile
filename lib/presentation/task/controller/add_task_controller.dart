@@ -27,6 +27,7 @@ class AddTaskController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final taskTitleController = TextEditingController();
   final noteController = TextEditingController();
+  final tagController = TextEditingController();
 
   AddTaskController(
     this.requestTokenUsecase,
@@ -179,7 +180,6 @@ class AddTaskController extends GetxController {
     List<Widget> chips = [];
     print('buildChips called');
     for (int i = 0; i < tags.length; i++) {
-    
       ChoiceChip choiceChip = ChoiceChip(
         selected: this.selectedTags.contains(tags[i].name),
         label: Text(tags[i].name, style: TextStyle(color: Colors.white)),

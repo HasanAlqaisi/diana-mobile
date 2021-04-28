@@ -26,6 +26,7 @@ PreferredSizeWidget buildDianaAppBar({
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(
           onTap: () {
+            Get.focusScope.unfocus();
             Get.toNamed(ProfileScreen.route);
           },
           child: UserProgressImage(user: user),

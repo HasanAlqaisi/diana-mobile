@@ -148,6 +148,7 @@ class AddTaskScreen extends StatelessWidget {
                                     vertical: 16.0, horizontal: 8.0),
                                 child: GestureDetector(
                                   onTap: () async {
+                                    Get.focusScope.unfocus();
                                     await showDatePicker(
                                       context: context,
                                       initialDate: DateTime.now(),
@@ -352,6 +353,7 @@ class AddTaskScreen extends StatelessWidget {
                                 vertical: 16.0, horizontal: 8.0),
                             child: GestureDetector(
                               onTap: () async {
+                                Get.focusScope.unfocus();
                                 showModalBottomSheet(
                                     context: context,
                                     builder: (context) {
@@ -395,6 +397,7 @@ class AddTaskScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           vertical: 16.0, horizontal: 24),
                       child: TextFormField(
+                        controller: _.tagController,
                         onChanged: (tag) {
                           _.tag = tag;
                         },
@@ -416,9 +419,11 @@ class AddTaskScreen extends StatelessWidget {
                           suffixIcon: IconButton(
                             icon: Icon(Icons.add, color: Color(0xFFA687FF)),
                             onPressed: () async {
+                              Get.focusScope.unfocus();
                               showLoaderDialog();
                               await _.onTagPlusClicked();
-                              Navigator.pop(context);
+                              _.tagController.clear();
+                              Get.back();
                             },
                           ),
                         ),
