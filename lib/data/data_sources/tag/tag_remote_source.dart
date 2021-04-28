@@ -28,7 +28,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return TagResponse.fromJson(json.decode(response.body));
+      return TagResponse.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else {
@@ -52,7 +52,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
     );
 
     if (response.statusCode == 201) {
-      return TagResult.fromJson(json.decode(response.body));
+      return TagResult.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 400) {
@@ -76,7 +76,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return TagResult.fromJson(json.decode(response.body));
+      return TagResult.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 400) {

@@ -54,7 +54,8 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return TaskResponse.fromJson(json.decode(response.body));
+      return TaskResponse.fromJson(
+          json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else {
@@ -106,7 +107,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
         ));
 
     if (response.statusCode == 201) {
-      return TaskResult.fromJson(json.decode(response.body));
+      return TaskResult.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 400) {
@@ -163,7 +164,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return TaskResult.fromJson(json.decode(response.body));
+      return TaskResult.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 400) {
@@ -212,7 +213,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return TaskResult.fromJson(json.decode(response.body));
+      return TaskResult.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 400) {

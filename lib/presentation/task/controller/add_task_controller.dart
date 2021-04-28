@@ -178,7 +178,6 @@ class AddTaskController extends GetxController {
 
   List<Widget> buildChips(List<TagData> tags) {
     List<Widget> chips = [];
-    print('buildChips called');
     for (int i = 0; i < tags.length; i++) {
       ChoiceChip choiceChip = ChoiceChip(
         selected: this.selectedTags.contains(tags[i].name),

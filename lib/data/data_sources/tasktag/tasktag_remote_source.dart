@@ -36,7 +36,7 @@ class TaskTagRemoteSourceImpl extends TaskTagRemoteSource {
     );
 
     if (response.statusCode == 201) {
-      return TaskTagResponse.fromJson(json.decode(response.body));
+      return TaskTagResponse.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 400) {
@@ -61,7 +61,7 @@ class TaskTagRemoteSourceImpl extends TaskTagRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return TaskTagResponse.fromJson(json.decode(response.body));
+      return TaskTagResponse.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 400) {

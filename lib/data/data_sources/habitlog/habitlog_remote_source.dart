@@ -32,7 +32,7 @@ class HabitlogRemoteSourceImpl extends HabitlogRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return HabitlogResponse.fromJson(json.decode(response.body));
+      return HabitlogResponse.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else {
@@ -53,7 +53,7 @@ class HabitlogRemoteSourceImpl extends HabitlogRemoteSource {
     );
 
     if (response.statusCode == 201) {
-      return HabitlogResult.fromJson(json.decode(response.body));
+      return HabitlogResult.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 400) {

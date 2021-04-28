@@ -40,7 +40,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return SubtaskResponse.fromJson(json.decode(response.body));
+      return SubtaskResponse.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 404) {
@@ -66,7 +66,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
     );
 
     if (response.statusCode == 201) {
-      return SubtaskResult.fromJson(json.decode(response.body));
+      return SubtaskResult.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 400) {
       throw FieldsException(body: response.body);
     } else if (response.statusCode == 401) {
@@ -94,7 +94,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return SubtaskResult.fromJson(json.decode(response.body));
+      return SubtaskResult.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 400) {
       throw FieldsException(body: response.body);
     } else if (response.statusCode == 401) {

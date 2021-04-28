@@ -75,7 +75,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     );
 
     if (response.statusCode == 201) {
-      return User.fromJson(json.decode(response.body));
+      return User.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 400) {
       throw FieldsException(body: response.body);
     } else {
@@ -94,7 +94,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return LoginInfo.fromJson(json.decode(response.body));
+      return LoginInfo.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 400) {
       throw NonFieldsException(message: response.body);
     } else {
@@ -165,7 +165,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return User.fromJson(json.decode(response.body));
+      return User.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 400) {
       throw FieldsException(body: response.body);
     } else if (response.statusCode == 401) {
@@ -185,7 +185,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return User.fromJson(json.decode(response.body));
+      return User.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else {
@@ -217,7 +217,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return RefreshInfo.fromJson(json.decode(response.body));
+      return RefreshInfo.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else {
@@ -247,7 +247,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     log('DONE!');
 
     if (response.statusCode == 200) {
-      return User.fromJson(json.decode(response.body));
+      return User.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 400) {
       throw FieldsException(body: response.body);
     } else if (response.statusCode == 401) {

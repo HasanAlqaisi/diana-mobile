@@ -40,7 +40,7 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return HabitResponse.fromJson(json.decode(response.body));
+      return HabitResponse.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else {
@@ -66,7 +66,7 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
     );
 
     if (response.statusCode == 201) {
-      return HabitResult.fromJson(json.decode(response.body));
+      return HabitResult.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 400) {
@@ -94,7 +94,7 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return HabitResult.fromJson(json.decode(response.body));
+      return HabitResult.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 400) {
