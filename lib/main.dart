@@ -10,6 +10,8 @@ import 'package:diana/presentation/task/pages/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:responsive_framework/responsive_wrapper.dart';
+import 'package:responsive_framework/utils/scroll_behavior.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'core/notifications/local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,6 +33,18 @@ class Diana extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      builder: (context, widget) => ResponsiveWrapper.builder(
+        BouncingScrollWrapper.builder(context, widget),
+        maxWidth: 1200,
+        minWidth: 480,
+        defaultScale: true,
+        breakpoints: [
+          ResponsiveBreakpoint.resize(480, name: MOBILE),
+          ResponsiveBreakpoint.autoScale(800, name: TABLET),
+          ResponsiveBreakpoint.resize(1000, name: DESKTOP),
+        ],
+        background: Container(color: Colors.green),
+      ),
       theme: ThemeData(
         textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
         appBarTheme: AppBarTheme(
