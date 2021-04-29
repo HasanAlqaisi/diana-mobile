@@ -33,7 +33,6 @@ class AddTaskScreen extends StatelessWidget {
           child: GetBuilder<AddTaskController>(
             init: di.sl<AddTaskController>(),
             builder: (_) {
-              _.setTaskInfo(data);
               return Form(
                 key: _.formKey,
                 child: ListView(
@@ -470,7 +469,7 @@ class AddTaskScreen extends StatelessWidget {
                             if (_.formKey.currentState.validate()) {
                               showLoaderDialog();
                               await _.onTaskPlusClicked();
-                              Navigator.pop(context);
+                              Get.back();
                             }
                           },
                         ),

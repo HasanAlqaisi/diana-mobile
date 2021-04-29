@@ -55,6 +55,8 @@ class AddTaskController extends GetxController {
   void onInit() {
     super.onInit();
 
+    setTaskInfo();
+
     API.doRequest(
       body: () async {
         failure = null;
@@ -69,7 +71,9 @@ class AddTaskController extends GetxController {
     );
   }
 
-  void setTaskInfo(data) {
+  void setTaskInfo() {
+    final data = (Get.arguments as List<dynamic>);
+
     if (data != null && data.isNotEmpty) {
       taskData = data[0] as TaskWithSubtasks;
       tagData = data[1] as TaskWithTags;
