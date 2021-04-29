@@ -30,7 +30,7 @@ class Nav extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
-              Get.focusScope.unfocus();
+              Get.focusScope?.unfocus();
               if (_.index == 0) {
                 Get.toNamed(AddTaskScreen.route);
               } else if (_.index == 1) {
