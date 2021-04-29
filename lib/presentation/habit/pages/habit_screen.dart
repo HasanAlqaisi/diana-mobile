@@ -15,6 +15,7 @@ class HabitScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<HabitController>(
       init: di.sl<HabitController>(),
+      id: 'habit',
       builder: (_) {
         return StreamBuilder<UserData>(
           stream: _.watchUser(),

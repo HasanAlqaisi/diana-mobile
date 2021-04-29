@@ -45,7 +45,7 @@ class API {
             error: {"data": '${fail.runtimeType} happen => ${fail.toString()}'},
           );
           if (requestTokenFail is UnAuthFailure) {
-            Fluttertoast.showToast(msg: 'Session ended');
+            Fluttertoast.showToast(msg: 'Session ended! Please login again.');
             Get.offAllNamed(LoginScreen.route);
           } else {
             failedBody?.call(fail);

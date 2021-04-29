@@ -1,6 +1,7 @@
 import 'package:diana/core/api_helpers/api.dart';
+import 'package:diana/core/errors/failure.dart';
+import 'package:diana/core/errors/handle_error.dart';
 import 'package:diana/core/mappers/date_to_ymd_string.dart';
-import 'package:diana/core/mappers/failure_to_string.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/relations/task_with_subtasks/task_with_subtasks.dart';
 import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
@@ -12,7 +13,6 @@ import 'package:diana/domain/usecases/task/insert_task_usecase.dart';
 import 'package:diana/presentation/task/widgets/subtask_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class AddTaskController extends GetxController {
@@ -40,6 +40,7 @@ class AddTaskController extends GetxController {
   var subtasks = <SubtaskField>[].obs;
   RxBool shouldRemind = false.obs;
   bool taskEditMode = false;
+  Failure failure;
   TaskWithSubtasks taskData;
   TaskWithTags tagData;
   String taskName, note, tag;
@@ -56,10 +57,14 @@ class AddTaskController extends GetxController {
 
     API.doRequest(
       body: () async {
+        failure = null;
+        update();
         return await getTagsUseCase();
       },
       failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
+        this.failure = failure;
+        update();
+        handleTagApiFailure(failure);
       },
     );
   }
@@ -120,10 +125,14 @@ class AddTaskController extends GetxController {
   Future<void> onTagPlusClicked() async {
     return await API.doRequest(
       body: () async {
+        failure = null;
+        update();
         return await insertTagUseCase(tag, priority.value);
       },
       failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
+        this.failure = failure;
+        update();
+        handleTagApiFailure(failure);
       },
     );
   }
@@ -131,6 +140,8 @@ class AddTaskController extends GetxController {
   Future<void> onTaskPlusClicked() async {
     await API.doRequest(
       body: () async {
+        failure = null;
+        update();
         if (!taskEditMode) {
           return await insertTaskUseCase(
             taskName,
@@ -167,7 +178,9 @@ class AddTaskController extends GetxController {
         }
       },
       failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
+        this.failure = failure;
+        update();
+        handleTaskApiFailure(failure);
       },
       successBody: () {
         print('Geting back');

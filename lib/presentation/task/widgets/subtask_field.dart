@@ -1,4 +1,5 @@
 import 'package:diana/core/constants/constants.dart';
+import 'package:diana/core/errors/failure.dart';
 import 'package:diana/presentation/task/controller/add_task_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -36,6 +37,9 @@ class SubtaskField extends StatelessWidget {
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Color(0xFFA687FF), width: 0.5),
               ),
+              errorText: controller.failure is SubtaskFieldsFailure
+                  ? (controller.failure as SubtaskFieldsFailure)?.name?.first
+                  : null,
               prefixIcon: GestureDetector(
                 onTap: () {
                   removeField(this);

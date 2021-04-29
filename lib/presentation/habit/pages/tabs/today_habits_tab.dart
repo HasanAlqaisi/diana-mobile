@@ -1,4 +1,5 @@
 import 'package:diana/core/constants/enums.dart';
+import 'package:diana/core/errors/failure.dart';
 import 'package:diana/presentation/habit/controllers/habit_controller.dart';
 import 'package:diana/presentation/habit/widgets/habits_list.dart';
 import 'package:diana/presentation/task/widgets/quick_add_field.dart';
@@ -18,6 +19,9 @@ class TodayHabitsTab extends StatelessWidget {
             onSubmitted: (habitName) {
               controller.insertHabit(habitName: habitName, days: []);
             },
+            errorText: controller.failure is HabitFieldsFailure
+                ? (controller.failure as HabitFieldsFailure)?.name?.first
+                : null,
           ),
         ),
         HabitsList(type: HabitType.today),

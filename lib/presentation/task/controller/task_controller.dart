@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:diana/core/api_helpers/api.dart';
-import 'package:diana/core/mappers/failure_to_string.dart';
+import 'package:diana/core/errors/handle_error.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
 import 'package:diana/domain/usecases/auth/get_user_usecase.dart';
@@ -15,7 +15,6 @@ import 'package:diana/domain/usecases/task/make_task_done_usecase.dart';
 import 'package:diana/domain/usecases/task/watch_tags_for_task.dart';
 import 'package:diana/presentation/profile/pages/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
@@ -90,7 +89,7 @@ class TaskController extends GetxController {
         return await getUserUsecase();
       },
       failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
+        handleUserApiFailure(failure);
       },
       successBody: () async {
         await API.doRequest(
@@ -98,7 +97,7 @@ class TaskController extends GetxController {
             return await getTagsUseCase();
           },
           failedBody: (failure) {
-            Fluttertoast.showToast(msg: failureToString(failure));
+            handleTagApiFailure(failure);
           },
           successBody: () async {
             await API.doRequest(
@@ -106,7 +105,7 @@ class TaskController extends GetxController {
                 return await getTasksUseCase();
               },
               failedBody: (failure) {
-                Fluttertoast.showToast(msg: failureToString(failure));
+                handleTaskApiFailure(failure);
               },
             );
           },
@@ -146,11 +145,15 @@ class TaskController extends GetxController {
   }) async {
     await API.doRequest(
       body: () async {
+        failure = null;
+        update();
         return await insertTaskUseCase(name, note, date, tags, checklist,
             reminder, deadline, priority, done);
       },
       failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
+        this.failure = failure;
+        update();
+        handleTaskApiFailure(failure);
       },
     );
   }
@@ -169,11 +172,15 @@ class TaskController extends GetxController {
   ) async {
     await API.doRequest(
       body: () async {
+        failure = null;
+        update();
         return await editTaskUseCase(taskId, name, note, date, tags, checklist,
             reminder, deadline, priority, done);
       },
       failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
+        this.failure = failure;
+        update();
+        handleTaskApiFailure(failure);
       },
     );
   }
@@ -184,7 +191,7 @@ class TaskController extends GetxController {
         return await makeTaskDoneUseCase(taskId);
       },
       failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
+        handleTaskApiFailure(failure);
       },
     );
   }
@@ -195,7 +202,7 @@ class TaskController extends GetxController {
         return await deleteTaskUseCase(taskId);
       },
       failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
+        handleTaskApiFailure(failure);
       },
     );
   }
@@ -207,7 +214,7 @@ class TaskController extends GetxController {
             subTask.id, subTask.name, !subTask.done, subTask.taskId);
       },
       failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
+        handleSubtaskApiFailure(failure);
       },
     );
   }

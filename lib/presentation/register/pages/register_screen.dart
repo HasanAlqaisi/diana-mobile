@@ -146,6 +146,11 @@ class RegisterForm extends StatelessWidget {
                       isObsecure: false,
                       keyboardType: TextInputType.text,
                       hintText: controller.birthString.value,
+                      errorText: controller.failure is UserFieldsFailure
+                          ? (controller.failure as UserFieldsFailure)
+                              ?.birthdate
+                              ?.first
+                          : null,
                     )),
               ),
               Padding(

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diana/core/constants/constants.dart';
+import 'package:diana/core/errors/failure.dart';
 import 'package:diana/core/mappers/date_to_ymd_string.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/presentation/profile/controller/profile_controller.dart';
@@ -135,7 +136,12 @@ class ProfileScreen extends StatelessWidget {
                                           BorderSide(color: Color(0xFFDEDEDE)),
                                     ),
                                     labelStyle:
-                                        TextStyle(color: Color(0xFF612EF3))),
+                                        TextStyle(color: Color(0xFF612EF3)),
+                                    errorText: _.failure is UserFieldsFailure
+                                        ? (_.failure as UserFieldsFailure)
+                                            ?.firstName
+                                            ?.first
+                                        : null),
                                 validator: (value) {
                                   if (value.trim().isEmpty) {
                                     return requireFieldMessage;
@@ -160,7 +166,12 @@ class ProfileScreen extends StatelessWidget {
                                           BorderSide(color: Color(0xFFDEDEDE)),
                                     ),
                                     labelStyle:
-                                        TextStyle(color: Color(0xFF612EF3))),
+                                        TextStyle(color: Color(0xFF612EF3)),
+                                    errorText: _.failure is UserFieldsFailure
+                                        ? (_.failure as UserFieldsFailure)
+                                            ?.lastName
+                                            ?.first
+                                        : null),
                                 validator: (value) {
                                   if (value.trim().isEmpty) {
                                     return requireFieldMessage;
@@ -185,7 +196,12 @@ class ProfileScreen extends StatelessWidget {
                                             color: Color(0xFFDEDEDE)),
                                       ),
                                       labelStyle:
-                                          TextStyle(color: Color(0xFF612EF3))),
+                                          TextStyle(color: Color(0xFF612EF3)),
+                                      errorText: _.failure is UserFieldsFailure
+                                          ? (_.failure as UserFieldsFailure)
+                                              ?.email
+                                              ?.first
+                                          : null),
                                   validator: (value) {
                                     if (value.trim().isEmpty) {
                                       return requireFieldMessage;
@@ -221,7 +237,12 @@ class ProfileScreen extends StatelessWidget {
                                           BorderSide(color: Color(0xFFDEDEDE)),
                                     ),
                                     labelStyle:
-                                        TextStyle(color: Color(0xFF612EF3))),
+                                        TextStyle(color: Color(0xFF612EF3)),
+                                    errorText: _.failure is UserFieldsFailure
+                                        ? (_.failure as UserFieldsFailure)
+                                            ?.birthdate
+                                            ?.first
+                                        : null),
                               ),
                             ),
                             Padding(

@@ -1,5 +1,6 @@
 import 'package:diana/core/constants/enums.dart';
 import 'package:diana/core/date/date_helper.dart';
+import 'package:diana/core/errors/failure.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
 import 'package:diana/presentation/task/widgets/quick_add_field.dart';
@@ -48,6 +49,9 @@ class TasksTab extends StatelessWidget {
               }
               controller.textController.text = '';
             },
+            errorText: controller.failure is TaskFieldsFailure
+                ? (controller.failure as TaskFieldsFailure)?.name?.first
+                : null,
           ),
         ),
         _buildTaskList(taskType: type),

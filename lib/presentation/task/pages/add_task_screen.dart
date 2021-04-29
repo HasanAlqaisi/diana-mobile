@@ -1,4 +1,5 @@
 import 'package:diana/core/constants/constants.dart';
+import 'package:diana/core/errors/failure.dart';
 import 'package:diana/core/utils/progress_loader.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/presentation/task/controller/task_controller.dart';
@@ -65,7 +66,9 @@ class AddTaskScreen extends StatelessWidget {
                             borderSide: BorderSide(
                                 color: Color(0xFFA687FF), width: 0.5),
                           ),
-                          errorText: null,
+                          errorText: _.failure is TaskFieldsFailure
+                              ? (_.failure as TaskFieldsFailure)?.name?.first
+                              : null,
                         ),
                         validator: (title) {
                           _.taskName = title;
@@ -119,6 +122,9 @@ class AddTaskScreen extends StatelessWidget {
                             borderSide: BorderSide(
                                 color: Color(0xFFA687FF), width: 0.5),
                           ),
+                          errorText: _.failure is TaskFieldsFailure
+                              ? (_.failure as TaskFieldsFailure)?.note?.first
+                              : null,
                         ),
                         validator: (note) {
                           _.note = note;
@@ -403,8 +409,9 @@ class AddTaskScreen extends StatelessWidget {
                         },
                         style: TextStyle(color: Color(0xFFA687FF)),
                         decoration: InputDecoration(
-                          errorText: null,
-                          // labelText: 'Tags',
+                          errorText: _.failure is TagFieldsFailure
+                              ? (_.failure as TagFieldsFailure)?.name?.first
+                              : null,
                           hintText: 'New Tag...',
                           hintStyle: TextStyle(color: Color(0xFFA687FF)),
                           enabledBorder: UnderlineInputBorder(

@@ -1,9 +1,8 @@
 import 'package:diana/core/errors/failure.dart';
-import 'package:diana/core/mappers/failure_to_string.dart';
+import 'package:diana/core/errors/handle_error.dart';
 import 'package:diana/domain/usecases/auth/register_user_usecase.dart';
 import 'package:diana/presentation/nav/nav.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class RegistrationController extends GetxController {
@@ -33,7 +32,8 @@ class RegistrationController extends GetxController {
 
       result.fold((failure) {
         this.failure = failure;
-        Fluttertoast.showToast(msg: failureToString(failure));
+        update();
+        handleUserApiFailure(failure);
       }, (_) => Get.offAllNamed(Nav.route));
     }
   }

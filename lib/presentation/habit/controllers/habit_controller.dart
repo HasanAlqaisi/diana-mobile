@@ -2,7 +2,7 @@ import 'package:diana/core/api_helpers/api.dart';
 import 'package:diana/core/constants/enums.dart';
 import 'package:diana/core/date/date_helper.dart';
 import 'package:diana/core/errors/failure.dart';
-import 'package:diana/core/mappers/failure_to_string.dart';
+import 'package:diana/core/errors/handle_error.dart';
 import 'package:diana/core/utils/progress_loader.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/relations/habit_with_habitlogs/habit_with_habitlogs.dart';
@@ -18,7 +18,6 @@ import 'package:diana/domain/usecases/habit/watch_all_habits_usecase.dart';
 import 'package:diana/domain/usecases/habit/watch_today_habits_usecase.dart';
 import 'package:diana/presentation/profile/pages/profile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class HabitController extends GetxController {
@@ -70,7 +69,7 @@ class HabitController extends GetxController {
         return await getHabitsUseCase();
       },
       failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
+        handleHabitApiFailure(failure);
       },
     );
 
@@ -161,9 +160,8 @@ class HabitController extends GetxController {
       successBody: () {
         Get.back();
       },
-      failedBody: (fail) {
-        Get.back();
-        Fluttertoast.showToast(msg: failureToString(fail));
+      failedBody: (failure) {
+        handleHabitApiFailure(failure);
       },
     );
   }
@@ -172,6 +170,7 @@ class HabitController extends GetxController {
       {String habitName, List<int> days, String time}) async {
     await API.doRequest(
       body: () async {
+        failure = null;
         showLoaderDialog();
         if (!habitEditMode) {
           return await insertHabitUseCase(
@@ -184,9 +183,16 @@ class HabitController extends GetxController {
       successBody: () {
         Get.back();
       },
-      failedBody: (fail) {
-        Get.back();
-        Fluttertoast.showToast(msg: failureToString(fail));
+      failedBody: (failure) {
+        this.failure = failure;
+        //If time is null then we are adding a quick habit
+        if (time == null) {
+          update(['habit']);
+          Get.back();
+        } else {
+          update(['habit_sheet']);
+        }
+        handleHabitApiFailure(failure);
       },
     );
   }
@@ -202,7 +208,7 @@ class HabitController extends GetxController {
       },
       failedBody: (fail) {
         Get.back();
-        Fluttertoast.showToast(msg: failureToString(fail));
+        handleHabitApiFailure(failure);
       },
     );
   }

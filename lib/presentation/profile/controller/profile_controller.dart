@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:diana/core/api_helpers/api.dart';
 import 'package:diana/core/constants/constants.dart';
+import 'package:diana/core/errors/failure.dart';
+import 'package:diana/core/errors/handle_error.dart';
 import 'package:diana/core/global_widgets/rounded_textfield.dart';
-import 'package:diana/core/mappers/failure_to_string.dart';
 import 'package:diana/core/utils/progress_loader.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/domain/usecases/auth/change_pass_usecase.dart';
@@ -17,7 +18,6 @@ import 'package:diana/domain/usecases/auth/upload_profile_image_usecase.dart';
 import 'package:diana/domain/usecases/auth/watch_user_usecase.dart';
 import 'package:diana/presentation/login/pages/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_rx/src/rx_workers/rx_workers.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -45,6 +45,8 @@ class ProfileController extends GetxController {
 
   File image;
   String pass1, pass2;
+  Failure failure;
+  Rx<Failure> changepassFailure = ChangePassFieldsFailure().obs;
 
   var isImageUploading = false.obs;
 
@@ -65,10 +67,14 @@ class ProfileController extends GetxController {
     super.onInit();
     await API.doRequest(
       body: () async {
+        failure = null;
+        update();
         return await getUserUsecase();
       },
       failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
+        this.failure = failure;
+        update();
+        handleUserApiFailure(failure);
       },
     );
 
@@ -84,15 +90,17 @@ class ProfileController extends GetxController {
   Future<void> uploadProfileImage(File image) async {
     return await API.doRequest(
       body: () async {
+        failure = null;
+        update();
         isImageUploading(true);
         return await uploadProfileImageUsecase(image);
       },
       successBody: () {
         isImageUploading(false);
       },
-      failedBody: (fail) {
+      failedBody: (failure) {
         isImageUploading(false);
-        Fluttertoast.showToast(msg: fail.toString());
+        handleUserApiFailure(failure);
       },
     );
   }
@@ -104,6 +112,8 @@ class ProfileController extends GetxController {
 
     await API.doRequest(
         body: () async {
+          failure = null;
+          update();
           return await editUserUsecase(
             firstNameControlerField.text,
             lastNameControlerField.text,
@@ -112,7 +122,9 @@ class ProfileController extends GetxController {
           );
         },
         failedBody: (failure) {
-          Fluttertoast.showToast(msg: failureToString(failure));
+          this.failure = failure;
+          update();
+          handleUserApiFailure(failure);
         },
         successBody: () {});
 
@@ -139,10 +151,14 @@ class ProfileController extends GetxController {
   Future<void> onLogoutClicked() async {
     return await API.doRequest(
       body: () async {
+        failure = null;
+        update();
         return await logoutUserUsecase();
       },
       failedBody: (failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
+        this.failure = failure;
+        update();
+        handleUserApiFailure(failure);
       },
       successBody: () async {
         await Future.wait([
@@ -158,62 +174,85 @@ class ProfileController extends GetxController {
   Future<void> changePass() async {
     return await API.doRequest(
       body: () async {
+        changepassFailure.value = null;
+        update();
         return await changePassUsecase(pass1, pass2);
+      },
+      failedBody: (failure) {
+        changepassFailure.value = failure;
+        update();
+        handleUserApiFailure(failure);
+      },
+      successBody: () {
+        Get.back();
       },
     );
   }
 
   void onForgotPassPressed() {
     Get.dialog(
-      AlertDialog(
-        title: Text('Enter new password'),
-        content: Form(
-          key: passwordFormKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                child: RoundedTextField(
-                  labelText: 'Password',
+      Obx(
+        () => AlertDialog(
+          title: Text('Enter new password'),
+          content: Form(
+            key: passwordFormKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  child: RoundedTextField(
+                    labelText: 'Password',
+                    isObsecure: true,
+                    validateRules: (value) {
+                      pass1 = value;
+                      if (value.trim().isEmpty) {
+                        return requireFieldMessage;
+                      }
+                      return null;
+                    },
+                    errorText: changepassFailure.value
+                            is ChangePassFieldsFailure
+                        ? (changepassFailure.value as ChangePassFieldsFailure)
+                            ?.pass1
+                            ?.first
+                        : null,
+                  ),
+                ),
+                RoundedTextField(
+                  labelText: 'Confirm password',
                   isObsecure: true,
+                  errorText: changepassFailure.value is ChangePassFieldsFailure
+                      ? (changepassFailure.value as ChangePassFieldsFailure)
+                          ?.pass2
+                          ?.first
+                      : null,
                   validateRules: (value) {
-                    pass1 = value;
+                    pass2 = value;
                     if (value.trim().isEmpty) {
                       return requireFieldMessage;
                     }
                     return null;
                   },
                 ),
-              ),
-              RoundedTextField(
-                labelText: 'Confirm password',
-                isObsecure: true,
-                validateRules: (value) {
-                  pass2 = value;
-                  if (value.trim().isEmpty) {
-                    return requireFieldMessage;
-                  }
-                  return null;
-                },
-              ),
-            ],
+              ],
+            ),
           ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text('close')),
+            TextButton(
+                onPressed: () async {
+                  if (passwordFormKey.currentState.validate()) {
+                    await changePass();
+                  }
+                },
+                child: Text('OK')),
+          ],
         ),
-        actions: [
-          TextButton(
-              onPressed: () {
-                Get.back();
-              },
-              child: Text('close')),
-          TextButton(
-              onPressed: () {
-                if (passwordFormKey.currentState.validate()) {
-                  changePass();
-                }
-              },
-              child: Text('OK')),
-        ],
       ),
     );
   }

@@ -119,7 +119,7 @@ class HabitFieldsFailure extends Equatable implements Failure {
 
   factory HabitFieldsFailure.fromFieldsException(Map<String, dynamic> body) {
     return HabitFieldsFailure(
-      name: body['name']?.cast<String>() as List<String> ?? null,
+      name: body['title']?.cast<String>() as List<String> ?? null,
       days: body['days'] != null ? DaysError.fromJson(body['days']) : null,
       time: body['time']?.cast<String>() as List<String> ?? null,
     );
@@ -213,6 +213,7 @@ class TagFieldsFailure extends Equatable implements Failure {
 class TaskFieldsFailure extends Equatable implements Failure {
   final List<String> name;
   final List<String> note;
+  final List<String> date;
   final List<String> reminder;
   final List<String> deadline;
   final List<String> priority;
@@ -222,6 +223,7 @@ class TaskFieldsFailure extends Equatable implements Failure {
   TaskFieldsFailure({
     this.name,
     this.note,
+    this.date,
     this.reminder,
     this.deadline,
     this.priority,
@@ -231,8 +233,9 @@ class TaskFieldsFailure extends Equatable implements Failure {
 
   factory TaskFieldsFailure.fromFieldsException(Map<String, dynamic> body) {
     return TaskFieldsFailure(
-        name: body['name']?.cast<String>() as List<String> ?? null,
+        name: body['title']?.cast<String>() as List<String> ?? null,
         note: body['note']?.cast<String>() as List<String> ?? null,
+        date: body['date']?.cast<String>() as List<String> ?? null,
         reminder: body['reminder']?.cast<String>() as List<String> ?? null,
         deadline: body['deadline']?.cast<String>() as List<String> ?? null,
         priority: body['priority']?.cast<String>() as List<String> ?? null,
