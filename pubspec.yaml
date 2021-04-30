@@ -49,6 +49,8 @@ dependencies:
   intl: ^0.17.0
   google_fonts: ^2.0.0
   responsive_framework: ^0.1.0
+  flutter_easyloading: ^3.0.0
+  device_preview: ^0.7.1
   
 dev_dependencies:
   flutter_test:
