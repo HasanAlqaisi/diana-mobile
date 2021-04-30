@@ -8,9 +8,9 @@ part 'subtask_response.g.dart';
 @JsonSerializable(explicitToJson: true)
 class SubtaskResponse extends Equatable {
   final int count;
-  @JsonKey(nullable: true)
+
   final String next;
-  @JsonKey(nullable: true)
+
   final String previous;
   final List<SubtaskResult> results;
 

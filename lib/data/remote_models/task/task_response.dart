@@ -7,9 +7,9 @@ part 'task_response.g.dart';
 @JsonSerializable(explicitToJson: true)
 class TaskResponse extends Equatable {
   final int count;
-  @JsonKey(nullable: true)
+
   final String next;
-  @JsonKey(nullable: true)
+
   final String previous;
   final List<TaskResult> results;
 

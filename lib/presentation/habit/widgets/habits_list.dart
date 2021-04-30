@@ -1,4 +1,5 @@
 import 'package:diana/core/constants/enums.dart';
+import 'package:diana/core/date/date_helper.dart';
 import 'package:diana/data/database/relations/habit_with_habitlogs/habit_with_habitlogs.dart';
 import 'package:diana/presentation/habit/controllers/habit_controller.dart';
 import 'package:diana/presentation/habit/pages/add_habit_bottom_sheet.dart';
@@ -221,7 +222,19 @@ class HabitsList extends StatelessWidget {
             highlightColor: Colors.transparent,
             constraints: BoxConstraints(minWidth: 20, minHeight: 20),
             onPressed: () async {
-              await controller.deleteHabit(data.habit.id);
+              List<DateTime> dates;
+              if (data.habit.time != null)
+                dates = DateHelper.getDatesFromWeekDays([
+                  data.days.dayZero ?? -1,
+                  data.days.dayOne ?? -1,
+                  data.days.dayTwo ?? -1,
+                  data.days.dayThree ?? -1,
+                  data.days.dayFour ?? -1,
+                  data.days.dayFive ?? -1,
+                  data.days.daySix ?? -1,
+                ], data.habit.time);
+
+              await controller.deleteHabit(data.habit.id, dates);
             },
           ),
           IconButton(

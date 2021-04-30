@@ -7,9 +7,9 @@ part 'habitlog_response.g.dart';
 @JsonSerializable(explicitToJson: true)
 class HabitlogResponse extends Equatable {
   final int count;
-  @JsonKey(nullable: true)
+
   final String next;
-  @JsonKey(nullable: true)
+
   final String previous;
   final List<HabitlogResult> results;
 

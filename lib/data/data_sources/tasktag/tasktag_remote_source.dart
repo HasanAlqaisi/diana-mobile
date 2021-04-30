@@ -25,7 +25,7 @@ class TaskTagRemoteSourceImpl extends TaskTagRemoteSource {
   @override
   Future<TaskTagResponse> insertTaskTag(String taskId, String tagId) async {
     final response = await client.post(
-      '$baseUrl/tasktag/',
+      Uri.parse('$baseUrl/tasktag/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
@@ -36,7 +36,8 @@ class TaskTagRemoteSourceImpl extends TaskTagRemoteSource {
     );
 
     if (response.statusCode == 201) {
-      return TaskTagResponse.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+      return TaskTagResponse.fromJson(
+          json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 400) {
@@ -50,7 +51,7 @@ class TaskTagRemoteSourceImpl extends TaskTagRemoteSource {
   Future<TaskTagResponse> editTaskTag(
       String id, String taskId, String tagId) async {
     final response = await client.put(
-      '$baseUrl/tasktag/$id/',
+      Uri.parse('$baseUrl/tasktag/$id/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
@@ -61,7 +62,8 @@ class TaskTagRemoteSourceImpl extends TaskTagRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return TaskTagResponse.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+      return TaskTagResponse.fromJson(
+          json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 400) {
@@ -76,7 +78,7 @@ class TaskTagRemoteSourceImpl extends TaskTagRemoteSource {
   @override
   Future<bool> deleteTaskTag(String id) async {
     final response = await client.delete(
-      '$baseUrl/tasktag/$id/',
+      Uri.parse('$baseUrl/tasktag/$id/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },

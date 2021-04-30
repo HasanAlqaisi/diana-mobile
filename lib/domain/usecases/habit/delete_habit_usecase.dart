@@ -7,7 +7,7 @@ class DeleteHabitUseCase {
 
   DeleteHabitUseCase({this.habitRepo});
 
-  Future<Either<Failure, bool>> call(String habitId) {
-    return habitRepo.deleteHabit(habitId);
+  Future<Either<Failure, bool>> call(String habitId, List<DateTime> dates) {
+    return habitRepo.deleteHabit(habitId, dates);
   }
 }

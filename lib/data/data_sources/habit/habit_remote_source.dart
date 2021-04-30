@@ -33,14 +33,15 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
   @override
   Future<HabitResponse> getHabits(int offset) async {
     final response = await client.get(
-      '$baseUrl/habit/?limit=100&offset=$offset',
+      Uri.parse('$baseUrl/habit/?limit=100&offset=$offset'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
     );
 
     if (response.statusCode == 200) {
-      return HabitResponse.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+      return HabitResponse.fromJson(
+          json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else {
@@ -52,7 +53,7 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
   Future<HabitResult> insertHabit(
       String name, List<int> days, String time) async {
     final response = await client.post(
-      '$baseUrl/habit/',
+      Uri.parse('$baseUrl/habit/'),
       headers: {
         'Authorization': 'Bearer $kToken',
         'Content-type': 'application/json',
@@ -80,7 +81,7 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
   Future<HabitResult> editHabit(
       String habitId, String name, List<int> days, String time) async {
     final response = await client.put(
-      '$baseUrl/habit/$habitId/',
+      Uri.parse('$baseUrl/habit/$habitId/'),
       headers: {
         'Authorization': 'Bearer $kToken',
         'Content-type': 'application/json',
@@ -109,7 +110,7 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
   @override
   Future<bool> deleteHabit(String habitId) async {
     final response = await client.delete(
-      '$baseUrl/habit/$habitId/',
+      Uri.parse('$baseUrl/habit/$habitId/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },

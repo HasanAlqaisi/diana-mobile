@@ -14,6 +14,7 @@ class DateHelper {
     List<DateTime> dates = [];
 
     djangoWeekDays.forEach((djangoWeekDay) {
+      if (djangoWeekDay < 0) return;
       final weekDay = djangoWeekDay + 1;
       final hour = int.tryParse(time?.split(':')?.first);
       final minutes = int.tryParse(time?.split(':')[1]);

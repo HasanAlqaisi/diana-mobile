@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:diana/injection_container.dart' as di;
+import 'package:responsive_framework/responsive_wrapper.dart';
 
 class TaskScreen extends StatelessWidget {
   static const route = '/task';
@@ -16,6 +17,14 @@ class TaskScreen extends StatelessWidget {
     return GetBuilder<TaskController>(
       init: di.sl<TaskController>(),
       builder: (_) {
+        print('Screen Width: ' +
+            ResponsiveWrapper.of(context).screenWidth.toString());
+        print('Screen Height: ' +
+            ResponsiveWrapper.of(context).screenHeight.toString());
+        print('scaled width: ' +
+            ResponsiveWrapper.of(context).scaledWidth.toString());
+        print('scaled Height: ' +
+            ResponsiveWrapper.of(context).scaledHeight.toString());
         return StreamBuilder<UserData>(
           stream: _.watchUser(),
           builder: (context, userSnapshot) {

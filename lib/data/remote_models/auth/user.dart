@@ -13,11 +13,10 @@ class User extends Equatable {
   final String lastName;
   final String username;
   final String email;
-  @JsonKey(nullable: true)
   final String birthdate;
-  @JsonKey(name: 'image', nullable: true)
+  @JsonKey(name: 'image')
   final String picture;
-  @JsonKey(name: 'timezone', nullable: true)
+  @JsonKey(name: 'timezone')
   final String timeZone;
   @JsonKey(name: 'daily_progress')
   final double dailyProgress;

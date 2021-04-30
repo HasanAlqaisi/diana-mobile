@@ -21,7 +21,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
   @override
   Future<TagResponse> getTags(int offset) async {
     final response = await client.get(
-      '$baseUrl/tag/?limit=100&offset=$offset',
+      Uri.parse('$baseUrl/tag/?limit=100&offset=$offset'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
@@ -39,7 +39,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
   @override
   Future<TagResult> insertTags(String name, int color) async {
     final response = await client.post(
-      '$baseUrl/tag/',
+      Uri.parse('$baseUrl/tag/'),
       headers: {
         'Authorization': 'Bearer $kToken',
         'Content-type': 'application/json',
@@ -65,7 +65,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
   @override
   Future<TagResult> editTag(String id, String name, int color) async {
     final response = await client.put(
-      '$baseUrl/tag/$id/',
+      Uri.parse('$baseUrl/tag/$id/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
@@ -91,7 +91,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
   @override
   Future<bool> deleteTag(String id) async {
     final response = await client.delete(
-      '$baseUrl/tag/$id/',
+      Uri.parse('$baseUrl/tag/$id/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },

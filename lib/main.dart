@@ -36,14 +36,13 @@ class Diana extends StatelessWidget {
       builder: (context, widget) => ResponsiveWrapper.builder(
         BouncingScrollWrapper.builder(context, widget),
         maxWidth: 1200,
-        minWidth: 480,
+        minWidth: 360,
         defaultScale: true,
         breakpoints: [
-          ResponsiveBreakpoint.resize(480, name: MOBILE),
+          ResponsiveBreakpoint.resize(360, name: MOBILE),
           ResponsiveBreakpoint.autoScale(800, name: TABLET),
           ResponsiveBreakpoint.resize(1000, name: DESKTOP),
         ],
-        background: Container(color: Colors.green),
       ),
       theme: ThemeData(
         textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),

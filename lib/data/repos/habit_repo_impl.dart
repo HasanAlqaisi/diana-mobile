@@ -165,14 +165,19 @@ class HabitRepoImpl extends HabitRepo {
   }
 
   @override
-  Future<Either<Failure, bool>> deleteHabit(String habitId) async {
+  Future<Either<Failure, bool>> deleteHabit(
+      String habitId, List<DateTime> dates) async {
     if (await netWorkInfo.isConnected()) {
       try {
         final result = await habitRemoteSource.deleteHabit(habitId);
 
         log('API result is $result', name: 'deleteHabit');
 
-        await di.sl<FlutterLocalNotificationsPlugin>().cancel(habitId.hashCode);
+        dates?.forEach((date) async {
+          await di
+              .sl<FlutterLocalNotificationsPlugin>()
+              .cancel(habitId.hashCode + date.hashCode);
+        });
 
         await habitLocalSource.deleteHabit(habitId);
 

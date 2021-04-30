@@ -89,11 +89,11 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
     return (((select(taskTable)
           ..where((tbl) {
             return tbl.userId.equals(userId) &
-                isNull(tbl.doneAt) &
+                SqlIsNull(tbl.doneAt).isNull() &
                 tbl.date.day.equals(currentDate.day) &
                 (tbl.deadline.isBiggerThan(currentDateAndTime) &
                         tbl.deadline.isBiggerThan(tbl.date) |
-                    isNull(tbl.deadline));
+                    SqlIsNull(tbl.deadline).isNull());
           })
           ..orderBy([
             (u) =>
@@ -107,8 +107,8 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
         .map((rows) {
           final result = <TaskData, List<SubTaskData>>{};
           for (final row in rows) {
-            final task = row.readTable(taskTable);
-            final subtask = row.readTable(subTaskTable);
+            final task = row.readTableOrNull(taskTable);
+            final subtask = row.readTableOrNull(subTaskTable);
 
             final list = result.putIfAbsent(task, () => []);
             if (subtask != null) list.add(subtask);
@@ -126,10 +126,10 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
     return ((select(taskTable)
           ..where((tbl) =>
               tbl.userId.equals(userId) &
-              isNull(tbl.doneAt) &
+              SqlIsNull(tbl.doneAt).isNull() &
               (tbl.deadline.isBiggerThan(currentDateAndTime) &
                       tbl.deadline.isBiggerThan(tbl.date) |
-                  isNull(tbl.deadline)))
+                  SqlIsNull(tbl.deadline).isNull()))
           ..orderBy([
             (u) =>
                 OrderingTerm(expression: u.priority, mode: OrderingMode.desc),
@@ -142,8 +142,8 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
         .map((rows) {
           final result = <TaskData, List<SubTaskData>>{};
           for (final row in rows) {
-            final task = row.readTable(taskTable);
-            final subtask = row.readTable(subTaskTable);
+            final task = row.readTableOrNull(taskTable);
+            final subtask = row.readTableOrNull(subTaskTable);
 
             final list = result.putIfAbsent(task, () => []);
             if (subtask != null) list.add(subtask);
@@ -158,7 +158,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
   Stream<List<TaskWithSubtasks>> watchCompletedTasks(
       String userId, List<String> tags) {
     return ((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))
-          ..where((tbl) => isNotNull(tbl.doneAt)))
+          ..where((tbl) => SqlIsNull(tbl.doneAt).isNotNull()))
         .join([
           leftOuterJoin(
               subTaskTable, subTaskTable.taskId.equalsExp(taskTable.id))
@@ -167,8 +167,8 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
         .map((rows) {
           final result = <TaskData, List<SubTaskData>>{};
           for (final row in rows) {
-            final task = row.readTable(taskTable);
-            final subtask = row.readTable(subTaskTable);
+            final task = row.readTableOrNull(taskTable);
+            final subtask = row.readTableOrNull(subTaskTable);
 
             final list = result.putIfAbsent(task, () => []);
             if (subtask != null) list.add(subtask);
@@ -187,7 +187,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
             (tbl) =>
                 (tbl.deadline.isSmallerThan(currentDateAndTime) |
                     tbl.deadline.isSmallerThan(tbl.date)) &
-                isNull(tbl.doneAt),
+                SqlIsNull(tbl.doneAt).isNull(),
           ))
         .join([
           leftOuterJoin(
@@ -197,8 +197,8 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
         .map((rows) {
           final result = <TaskData, List<SubTaskData>>{};
           for (final row in rows) {
-            final task = row.readTable(taskTable);
-            final subtask = row.readTable(subTaskTable);
+            final task = row.readTableOrNull(taskTable);
+            final subtask = row.readTableOrNull(subTaskTable);
 
             final list = result.putIfAbsent(task, () => []);
             if (subtask != null) list.add(subtask);
@@ -251,7 +251,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
 
     final taskStream = taskQuery.watchSingle();
     final contentStream = contentQuery.watch().map((rows) {
-      return rows.map((row) => row.readTable(tagTable)).toList();
+      return rows.map((row) => row.readTableOrNull(tagTable)).toList();
     });
 
     return Rx.combineLatest2(

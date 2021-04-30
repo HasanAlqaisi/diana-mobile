@@ -47,7 +47,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
   @override
   Future<TaskResponse> getTasks(int offset) async {
     final response = await client.get(
-      '$baseUrl/task/?limit=100&offset=$offset',
+      Uri.parse('$baseUrl/task/?limit=100&offset=$offset'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
@@ -86,7 +86,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
         priority: ${priority ?? 0},
         done: ${done ?? false},
     """);
-    final response = await client.post('$baseUrl/task/',
+    final response = await client.post(Uri.parse('$baseUrl/task/'),
         headers: {
           'Authorization': 'Bearer $kToken',
           'Content-type': 'application/json',
@@ -142,7 +142,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     done: $done""");
 
     final response = await client.put(
-      '$baseUrl/task/$taskId/',
+      Uri.parse('$baseUrl/task/$taskId/'),
       headers: {
         'Authorization': 'Bearer $kToken',
         'Content-type': 'application/json',
@@ -179,7 +179,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
   @override
   Future<bool> deleteTask(String taskId) async {
     final response = await client.delete(
-      '$baseUrl/task/$taskId/',
+      Uri.parse('$baseUrl/task/$taskId/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
@@ -199,7 +199,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
   @override
   Future<TaskResult> makeTaskDone(String taskId) async {
     final response = await client.patch(
-      '$baseUrl/task/$taskId/',
+      Uri.parse('$baseUrl/task/$taskId/'),
       headers: {
         'Authorization': 'Bearer $kToken',
         'Content-type': 'application/json',

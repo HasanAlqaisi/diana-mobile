@@ -62,7 +62,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     String timezone,
   ) async {
     final response = await client.post(
-      '$baseUrl/accounts/registration/',
+      Uri.parse('$baseUrl/accounts/registration/'),
       body: {
         "first_name": firstName,
         "last_name": lastName,
@@ -86,7 +86,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
   @override
   Future<LoginInfo> loginUser(String username, String password) async {
     final response = await client.post(
-      '$baseUrl/accounts/login/',
+      Uri.parse('$baseUrl/accounts/login/'),
       body: {
         "username": username,
         "password": password,
@@ -105,7 +105,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
   @override
   Future<bool> logoutUser() async {
     final response = await client.post(
-      '$baseUrl/accounts/logout/',
+      Uri.parse('$baseUrl/accounts/logout/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
@@ -121,7 +121,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
   @override
   Future<bool> changePass(String newPass1, String newPass2) async {
     final response = await client.post(
-      '$baseUrl/accounts/password/change/',
+      Uri.parse('$baseUrl/accounts/password/change/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
@@ -151,7 +151,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
     String birthdate,
   ) async {
     final response = await http.patch(
-      '$baseUrl/accounts/user/',
+      Uri.parse('$baseUrl/accounts/user/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
@@ -178,7 +178,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
   @override
   Future<User> getUser() async {
     final response = await client.get(
-      '$baseUrl/accounts/user/',
+      Uri.parse('$baseUrl/accounts/user/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
@@ -196,7 +196,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
   @override
   Future<bool> resetPass(String email) async {
     final response = await client.post(
-      '$baseUrl/accounts/password/reset/',
+      Uri.parse('$baseUrl/accounts/password/reset/'),
       body: {'email': email},
     );
 
@@ -210,7 +210,7 @@ class AuthRemoteSourceImpl extends AuthRemoteSource {
   @override
   Future<RefreshInfo> requestToken(String refreshToken) async {
     final response = await client.post(
-      '$baseUrl/accounts/token/refresh/',
+      Uri.parse('$baseUrl/accounts/token/refresh/'),
       body: {
         "refresh": refreshToken,
       },

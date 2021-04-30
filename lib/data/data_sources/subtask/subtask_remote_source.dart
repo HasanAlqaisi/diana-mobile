@@ -33,14 +33,15 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
   @override
   Future<SubtaskResponse> getSubtasks(String taskId, int offset) async {
     final response = await client.get(
-      '$baseUrl/subtask/?limit=100&offset=$offset',
+      Uri.parse('$baseUrl/subtask/?limit=100&offset=$offset'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
     );
 
     if (response.statusCode == 200) {
-      return SubtaskResponse.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+      return SubtaskResponse.fromJson(
+          json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 404) {
@@ -54,7 +55,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
   Future<SubtaskResult> insertSubtask(
       String name, bool isDone, String taskId) async {
     final response = await client.post(
-      '$baseUrl/subtask/',
+      Uri.parse('$baseUrl/subtask/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
@@ -66,7 +67,8 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
     );
 
     if (response.statusCode == 201) {
-      return SubtaskResult.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+      return SubtaskResult.fromJson(
+          json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 400) {
       throw FieldsException(body: response.body);
     } else if (response.statusCode == 401) {
@@ -80,7 +82,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
   Future<SubtaskResult> editSubtask(
       String subtaskId, String name, bool isDone, String taskId) async {
     final response = await client.put(
-      '$baseUrl/subtask/$subtaskId/',
+      Uri.parse('$baseUrl/subtask/$subtaskId/'),
       headers: {
         'Authorization': 'Bearer $kToken',
         'Content-type': 'application/json',
@@ -94,7 +96,8 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
     );
 
     if (response.statusCode == 200) {
-      return SubtaskResult.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+      return SubtaskResult.fromJson(
+          json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 400) {
       throw FieldsException(body: response.body);
     } else if (response.statusCode == 401) {
@@ -109,7 +112,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
   @override
   Future<bool> deleteSubtask(String subtaskId) async {
     final response = await client.delete(
-      '$baseUrl/subtask/$subtaskId/',
+      Uri.parse('$baseUrl/subtask/$subtaskId/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },

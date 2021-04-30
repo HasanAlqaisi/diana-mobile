@@ -13,18 +13,20 @@ class TaskResult extends Equatable {
   final String userId;
   @JsonKey(name: 'title')
   final String name;
-  @JsonKey(nullable: true)
+
   final String note;
   final List<TagResult> tags;
   @JsonKey(name: 'checklist')
   final List<SubtaskResult> checkList;
-  @JsonKey(nullable: true)
+
   final String date;
-  @JsonKey(nullable: true)
+
   final String reminder;
-  @JsonKey(nullable: true)
+
   final String deadline;
-  @JsonKey(name: 'done_at', nullable: true)
+  @JsonKey(
+    name: 'done_at',
+  )
   final String doneAt;
   final int priority;
 

@@ -25,14 +25,15 @@ class HabitlogRemoteSourceImpl extends HabitlogRemoteSource {
   @override
   Future<HabitlogResponse> getHabitlogs(int offset, String habitId) async {
     final response = await client.get(
-      '$baseUrl/habitlog/?limit=100&offset=$offset&habit=$habitId/',
+      Uri.parse('$baseUrl/habitlog/?limit=100&offset=$offset&habit=$habitId/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
     );
 
     if (response.statusCode == 200) {
-      return HabitlogResponse.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+      return HabitlogResponse.fromJson(
+          json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else {
@@ -43,7 +44,7 @@ class HabitlogRemoteSourceImpl extends HabitlogRemoteSource {
   @override
   Future<HabitlogResult> insertHabitlog(String habitId) async {
     final response = await client.post(
-      '$baseUrl/habitlog/',
+      Uri.parse('$baseUrl/habitlog/'),
       headers: {
         'Authorization': 'Bearer $kToken',
       },
@@ -53,7 +54,8 @@ class HabitlogRemoteSourceImpl extends HabitlogRemoteSource {
     );
 
     if (response.statusCode == 201) {
-      return HabitlogResult.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+      return HabitlogResult.fromJson(
+          json.decode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 401) {
       throw UnAuthException();
     } else if (response.statusCode == 400) {

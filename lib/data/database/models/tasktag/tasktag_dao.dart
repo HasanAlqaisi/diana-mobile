@@ -29,7 +29,7 @@ class TaskTagDao extends DatabaseAccessor<AppDatabase> with _$TaskTagDaoMixin {
               taskTable.deadline.isBiggerThanValue(DateTime.now())))
         .watch()
         .map((rows) {
-      return rows.map((row) => row.readTable(taskTable)).toList();
+      return rows.map((row) => row.readTableOrNull(taskTable)).toList();
     });
 
     return Rx.combineLatest2(
@@ -48,7 +48,7 @@ class TaskTagDao extends DatabaseAccessor<AppDatabase> with _$TaskTagDaoMixin {
 
     final tagStream = tagQuery.watchSingle();
     final contentStream = contentQuery.watch().map((rows) {
-      return rows.map((row) => row.readTable(taskTable)).toList();
+      return rows.map((row) => row.readTableOrNull(taskTable)).toList();
     });
 
     return Rx.combineLatest2(
@@ -69,7 +69,7 @@ class TaskTagDao extends DatabaseAccessor<AppDatabase> with _$TaskTagDaoMixin {
     final contentStream = (contentQuery..where(taskTable.doneAt.isNotIn(null)))
         .watch()
         .map((rows) {
-      return rows.map((row) => row.readTable(taskTable)).toList();
+      return rows.map((row) => row.readTableOrNull(taskTable)).toList();
     });
 
     return Rx.combineLatest2(
@@ -91,7 +91,7 @@ class TaskTagDao extends DatabaseAccessor<AppDatabase> with _$TaskTagDaoMixin {
           ..where(taskTable.deadline.isSmallerThanValue(DateTime.now())))
         .watch()
         .map((rows) {
-      return rows.map((row) => row.readTable(taskTable)).toList();
+      return rows.map((row) => row.readTableOrNull(taskTable)).toList();
     });
 
     return Rx.combineLatest2(

@@ -62,7 +62,6 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
 
   Stream<Future<List<HabitWitLogsWithDays>>> watchTodayHabits(
       String userId, int todayInt) {
-
     return ((select(habitTable)..where((tbl) => tbl.userId.equals(userId)))
             .join([
       leftOuterJoin(
@@ -82,8 +81,8 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
         .map((rows) async {
       final result = <HabitData, List<HabitlogData>>{};
       for (final row in rows) {
-        final habit = row.readTable(habitTable);
-        final habitLog = row.readTable(habitlogTable);
+        final habit = row.readTableOrNull(habitTable);
+        final habitLog = row.readTableOrNull(habitlogTable);
 
         final list = result.putIfAbsent(habit, () => []);
         if (habitLog != null) list.add(habitLog);
@@ -102,7 +101,6 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
   }
 
   Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits(String userId) {
-
     return ((select(habitTable)..where((tbl) => tbl.userId.equals(userId)))
         .join([
           leftOuterJoin(
@@ -113,8 +111,8 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
         .map((rows) async {
           final result = <HabitData, List<HabitlogData>>{};
           for (final row in rows) {
-            final habit = row.readTable(habitTable);
-            final habitLog = row.readTable(habitlogTable);
+            final habit = row.readTableOrNull(habitTable);
+            final habitLog = row.readTableOrNull(habitlogTable);
 
             final list = result.putIfAbsent(habit, () => []);
             if (habitLog != null) list.add(habitLog);

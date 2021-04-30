@@ -197,11 +197,11 @@ class HabitController extends GetxController {
     );
   }
 
-  Future<void> deleteHabit(String habitId) async {
+  Future<void> deleteHabit(String habitId, List<DateTime> dates) async {
     await API.doRequest(
       body: () async {
         showLoaderDialog();
-        return await deleteHabitUseCase(habitId);
+        return await deleteHabitUseCase(habitId, dates);
       },
       successBody: () {
         Get.back();

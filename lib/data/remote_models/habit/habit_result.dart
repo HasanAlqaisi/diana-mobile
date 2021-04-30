@@ -4,15 +4,15 @@ import 'package:json_annotation/json_annotation.dart';
 part 'habit_result.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class HabitResult extends Equatable{
+class HabitResult extends Equatable {
   @JsonKey(name: 'id')
   final String habitId;
   final List<History> history;
   @JsonKey(name: 'title')
   final String name;
-  @JsonKey(nullable: true)
+
   final List<int> days;
-  @JsonKey(nullable: true)
+
   final String time;
   @JsonKey(name: 'user')
   final String userId;
@@ -45,7 +45,7 @@ class HabitResult extends Equatable{
 }
 
 @JsonSerializable()
-class History extends Equatable{
+class History extends Equatable {
   @JsonKey(name: 'id')
   final String habitlogId;
   @JsonKey(name: 'done_at')
@@ -62,5 +62,4 @@ class History extends Equatable{
 
   @override
   List<Object> get props => [habitlogId, doneAt, habitId];
-
 }
