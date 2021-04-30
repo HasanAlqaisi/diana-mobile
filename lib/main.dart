@@ -9,13 +9,14 @@ import 'package:diana/presentation/task/pages/add_task_screen.dart';
 import 'package:diana/presentation/task/pages/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
-import 'package:responsive_framework/utils/scroll_behavior.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'core/notifications/local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'injection_container.dart' as di;
+import 'package:device_preview/device_preview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,23 +27,29 @@ void main() async {
 
   tz.initializeTimeZones();
 
-  runApp(Diana());
+  runApp(DevicePreview(builder: (context) => Diana(), enabled: false));
 }
 
 class Diana extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      builder: (context, widget) => ResponsiveWrapper.builder(
-        BouncingScrollWrapper.builder(context, widget),
-        maxWidth: 1200,
-        minWidth: 400,
-        defaultScale: true,
-        breakpoints: [
-          ResponsiveBreakpoint.resize(400, name: MOBILE),
-          ResponsiveBreakpoint.autoScale(800, name: TABLET),
-          ResponsiveBreakpoint.resize(1000, name: DESKTOP),
-        ],
+      builder: EasyLoading.init(
+        builder: (context, child) {
+          child = ResponsiveWrapper.builder(
+            child,
+            maxWidth: 1200,
+            minWidth: 440,
+            defaultScale: true,
+            breakpoints: [
+              ResponsiveBreakpoint.resize(440, name: MOBILE),
+              ResponsiveBreakpoint.autoScale(750,
+                  name: TABLET, scaleFactor: 1.3),
+            ],
+          );
+          child = DevicePreview.appBuilder(context, child);
+          return child;
+        },
       ),
       theme: ThemeData(
         textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),

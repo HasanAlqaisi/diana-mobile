@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:diana/injection_container.dart' as di;
-import 'package:responsive_framework/responsive_wrapper.dart';
 
 class TaskScreen extends StatelessWidget {
   static const route = '/task';
