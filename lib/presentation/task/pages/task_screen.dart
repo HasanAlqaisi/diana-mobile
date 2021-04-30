@@ -17,14 +17,6 @@ class TaskScreen extends StatelessWidget {
     return GetBuilder<TaskController>(
       init: di.sl<TaskController>(),
       builder: (_) {
-        print('Screen Width: ' +
-            ResponsiveWrapper.of(context).screenWidth.toString());
-        print('Screen Height: ' +
-            ResponsiveWrapper.of(context).screenHeight.toString());
-        print('scaled width: ' +
-            ResponsiveWrapper.of(context).scaledWidth.toString());
-        print('scaled Height: ' +
-            ResponsiveWrapper.of(context).scaledHeight.toString());
         return StreamBuilder<UserData>(
           stream: _.watchUser(),
           builder: (context, userSnapshot) {

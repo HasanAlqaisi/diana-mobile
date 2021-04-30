@@ -36,10 +36,10 @@ class Diana extends StatelessWidget {
       builder: (context, widget) => ResponsiveWrapper.builder(
         BouncingScrollWrapper.builder(context, widget),
         maxWidth: 1200,
-        minWidth: 360,
+        minWidth: 400,
         defaultScale: true,
         breakpoints: [
-          ResponsiveBreakpoint.resize(360, name: MOBILE),
+          ResponsiveBreakpoint.resize(400, name: MOBILE),
           ResponsiveBreakpoint.autoScale(800, name: TABLET),
           ResponsiveBreakpoint.resize(1000, name: DESKTOP),
         ],
