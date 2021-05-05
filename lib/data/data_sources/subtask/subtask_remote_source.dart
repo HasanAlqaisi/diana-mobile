@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:diana/core/constants/_constants.dart';
+import 'package:diana/core/constants/constants.dart';
 import 'package:diana/core/errors/exception.dart';
 import 'package:diana/data/remote_models/subtask/subtask_response.dart';
 import 'package:diana/data/remote_models/subtask/subtask_result.dart';

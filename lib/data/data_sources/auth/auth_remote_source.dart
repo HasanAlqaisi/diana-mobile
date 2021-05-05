@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:diana/core/constants/_constants.dart';
+import 'package:diana/core/constants/constants.dart';
 import 'package:diana/core/errors/exception.dart';
 import 'package:diana/data/remote_models/auth/login_info.dart';
 import 'package:diana/data/remote_models/auth/refresh_info.dart';

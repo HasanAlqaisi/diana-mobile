@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:diana/core/constants/_constants.dart';
+import 'package:diana/core/constants/constants.dart';
 
 import 'package:diana/core/errors/exception.dart';
 import 'package:diana/core/errors/failure.dart';

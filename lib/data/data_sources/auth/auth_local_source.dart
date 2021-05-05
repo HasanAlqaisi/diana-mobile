@@ -1,4 +1,4 @@
-import 'package:diana/core/constants/_constants.dart';
+import 'package:diana/core/constants/constants.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moor/moor.dart';
