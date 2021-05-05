@@ -83,24 +83,36 @@ class ProfileScreen extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            GestureDetector(
-                              onTap: _.onProfileTapped,
-                              child: user?.picture != null
-                                  ? CachedNetworkImage(
-                                      imageBuilder: (context, imgProvider) {
-                                        return Container(
-                                            width: 100.0,
-                                            height: 100.0,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                image: imgProvider,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ));
-                                      },
-                                      imageUrl: user?.picture,
-                                      placeholder: (context, s) => ClipRRect(
+                            Hero(
+                              tag: profileHeroTag,
+                              child: GestureDetector(
+                                onTap: _.onProfileTapped,
+                                child: user?.picture != null
+                                    ? CachedNetworkImage(
+                                        imageBuilder: (context, imgProvider) {
+                                          return Container(
+                                              width: 100.0,
+                                              height: 100.0,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                  image: imgProvider,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ));
+                                        },
+                                        imageUrl: user?.picture,
+                                        placeholder: (context, s) => ClipRRect(
+                                          borderRadius: BorderRadius.circular(45),
+                                          child: Container(
+                                            width: 100,
+                                            height: 100,
+                                            child: Image.asset(
+                                                'assets/profile_holder.jpg'),
+                                          ),
+                                        ),
+                                      )
+                                    : ClipRRect(
                                         borderRadius: BorderRadius.circular(45),
                                         child: Container(
                                           width: 100,
@@ -109,16 +121,7 @@ class ProfileScreen extends StatelessWidget {
                                               'assets/profile_holder.jpg'),
                                         ),
                                       ),
-                                    )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(45),
-                                      child: Container(
-                                        width: 100,
-                                        height: 100,
-                                        child: Image.asset(
-                                            'assets/profile_holder.jpg'),
-                                      ),
-                                    ),
+                              ),
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(
