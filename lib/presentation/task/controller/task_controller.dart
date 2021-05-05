@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:diana/core/api_helpers/api.dart';
+import 'package:diana/core/constants/enums.dart';
 import 'package:diana/core/errors/handle_error.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
@@ -15,9 +16,6 @@ import 'package:diana/domain/usecases/task/make_task_done_usecase.dart';
 import 'package:diana/domain/usecases/task/watch_tags_for_task.dart';
 import 'package:diana/presentation/profile/pages/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-
 import 'package:diana/core/errors/failure.dart';
 import 'package:diana/data/database/relations/task_with_subtasks/task_with_subtasks.dart';
 import 'package:diana/domain/usecases/auth/request_token_usecase.dart';
@@ -28,6 +26,8 @@ import 'package:diana/domain/usecases/task/watch_all_tasks_usecase.dart';
 import 'package:diana/domain/usecases/task/watch_completed_tasks_usecase.dart';
 import 'package:diana/domain/usecases/task/watch_missed_tasks_usecase.dart';
 import 'package:diana/domain/usecases/task/watch_today_tasks_usecase.dart';
+import 'package:get/get.dart';
+import 'package:get/instance_manager.dart';
 
 class TaskController extends GetxController {
   static TaskController get to => Get.find();
@@ -58,6 +58,13 @@ class TaskController extends GetxController {
   var tags = <String>[].obs;
   var selectedTags = <int>[];
 
+  final user = UserData(email: '', id: '', username: '').obs;
+  final todayTasks = <TaskWithSubtasks>[].obs;
+  final inboxTasks = <TaskWithSubtasks>[].obs;
+  final doneTasks = <TaskWithSubtasks>[].obs;
+  final missedTasks = <TaskWithSubtasks>[].obs;
+  final tagsData = <TagData>[].obs;
+
   TaskController(
     this.requestTokenUsecase,
     this.getTagsUseCase,
@@ -82,7 +89,7 @@ class TaskController extends GetxController {
   void onInit() async {
     super.onInit();
 
-    print('[onInit] getting tasks');
+    _bindStreams();
 
     await API.doRequest(
       body: () async {
@@ -219,7 +226,7 @@ class TaskController extends GetxController {
     );
   }
 
-  Stream<UserData> watchUser() {
+  Stream<UserData> _watchUser() {
     return watchUserUsecase();
   }
 
@@ -245,5 +252,28 @@ class TaskController extends GetxController {
 
   Stream<TaskWithTags> watchTagsForTask(String taskId) {
     return watchTagsForTaskUseCase(taskId).asBroadcastStream();
+  }
+
+  void _bindStreams() {
+    user.bindStream(_watchUser());
+    todayTasks.bindStream(watchTodayTasks(tags));
+    inboxTasks.bindStream(watchAllTasks(tags));
+    doneTasks.bindStream(watchCompletedTasks(tags));
+    missedTasks.bindStream(watchMissedTasks(tags));
+    tagsData.bindStream(watchAllTags());
+  }
+
+  RxList<TaskWithSubtasks> classifyTask(TaskType type) {
+    if (type == TaskType.today) {
+      return todayTasks;
+    } else if (type == TaskType.inbox) {
+      return inboxTasks;
+    } else if (type == TaskType.done) {
+      return doneTasks;
+    } else if (type == TaskType.missed) {
+      return missedTasks;
+    } else {
+      return null;
+    }
   }
 }

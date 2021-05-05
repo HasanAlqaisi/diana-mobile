@@ -48,6 +48,8 @@ class HabitController extends GetxController {
   RxString reminderTime = ''.obs;
   var days = <int>[].obs;
 
+  final user = UserData(email: '', id: '', username: '').obs;
+
   HabitController(
     this.requestTokenUsecase,
     this.insertHabitUseCase,
@@ -64,6 +66,9 @@ class HabitController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+
+    _bindStreams();
+
     await API.doRequest(
       body: () async {
         return await getHabitsUseCase();
@@ -259,6 +264,10 @@ class HabitController extends GetxController {
     } else {
       return watchAllHabits();
     }
+  }
+
+  void _bindStreams() {
+    user.bindStream(watchUser());
   }
 
   void onProfileImageTapped() {

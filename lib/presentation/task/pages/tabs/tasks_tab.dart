@@ -6,6 +6,7 @@ import 'package:diana/presentation/task/controller/task_controller.dart';
 import 'package:diana/presentation/task/widgets/quick_add_field.dart';
 import 'package:diana/presentation/task/widgets/tasks_list.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class TasksTab extends StatelessWidget {
   final TaskType type;
@@ -17,24 +18,14 @@ class TasksTab extends StatelessWidget {
     final controller = TaskController.to;
     return ListView(
       children: [
-        StreamBuilder<List<TagData>>(
-          stream: controller.watchAllTags(),
-          initialData: [],
-          builder: (context, snapshot) {
-            final data = snapshot?.data;
-            if (data != null && data.isNotEmpty) {
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: _buildChips(data),
-                ),
-              );
-            } else {
-              return Container();
-            }
-          },
+        Obx(
+          () => SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: _buildChips(controller.tagsData),
+            ),
+          ),
         ),
-        // if (type == TaskType.inbox || type == TaskType.today)
         Padding(
           padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 6.0),
           child: QuickAddField(
