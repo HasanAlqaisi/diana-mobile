@@ -11,18 +11,19 @@ class TagsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tagsList = taskWithTags?.tags?.map((tag) => tag?.name)?.toList();
-    print('tags' + tagsList.toString());
     return Container(
       color: taskType == TaskType.done ? Color(0xFF1ADACE) : Colors.white,
       child: Wrap(
         spacing: 6.0,
         children: tagsList
-            ?.map((tag) => Chip(
-                  label: Text(tag, style: TextStyle(color: Color(0xFF8E8E8E))),
-                  labelPadding: EdgeInsets.symmetric(horizontal: 12),
-                  backgroundColor: Color(0xFFEDEDED),
-                ))
-            ?.toList(),
+                ?.map((tag) => Chip(
+                      label:
+                          Text(tag, style: TextStyle(color: Color(0xFF8E8E8E))),
+                      labelPadding: EdgeInsets.symmetric(horizontal: 12),
+                      backgroundColor: Color(0xFFEDEDED),
+                    ))
+                ?.toList() ??
+            [],
       ),
     );
   }
