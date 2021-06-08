@@ -286,7 +286,7 @@ class ProfileScreen extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(
                                         left: 8.0, right: 8.0, top: 16.0),
-                                    child: Text('Version 1.0',
+                                    child: Text('Version 1.2.0',
                                         style: TextStyle(
                                             color: Color(0xFFB0B0B0))),
                                   ),
