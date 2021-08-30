@@ -4,7 +4,7 @@ import 'package:diana/data/remote_models/habit/habit_result.dart';
 import 'package:diana/domain/repos/habit_repo.dart';
 
 class EditHabitUseCase {
-  final HabitRepo habitRepo;
+  final HabitRepo? habitRepo;
 
   EditHabitUseCase({this.habitRepo});
 
@@ -12,8 +12,8 @@ class EditHabitUseCase {
     String habitId,
     String name,
     List<int> days,
-    String time,
+    String? time,
   ) {
-    return habitRepo.editHabit(habitId, name, days, time);
+    return habitRepo!.editHabit(habitId, name, days, time);
   }
 }

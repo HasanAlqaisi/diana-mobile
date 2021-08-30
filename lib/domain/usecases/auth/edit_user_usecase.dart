@@ -5,7 +5,7 @@ import 'package:diana/data/remote_models/auth/user.dart';
 import 'package:diana/domain/repos/auth_repo.dart';
 
 class EditUserUsecase {
-  final AuthRepo authRepo;
+  final AuthRepo? authRepo;
 
   EditUserUsecase(this.authRepo);
 
@@ -17,6 +17,6 @@ class EditUserUsecase {
     String birthdate,
     // File image,
   ) {
-    return authRepo.editUser(firstName, lastName, email, birthdate);
+    return authRepo!.editUser(firstName, lastName, email, birthdate);
   }
 }

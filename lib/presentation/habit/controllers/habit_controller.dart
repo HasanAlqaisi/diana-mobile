@@ -23,30 +23,30 @@ import 'package:get/get.dart';
 class HabitController extends GetxController {
   static HabitController get to => Get.find();
 
-  final RequestTokenUsecase requestTokenUsecase;
-  final GetHabitsUseCase getHabitsUseCase;
-  final GetHabitLogsUseCase getHabitLogsUseCase;
-  final WatchTodayHabitUseCase watchTodayHabitsUseCase;
-  final WatchAllHabitUseCase watchAllHabitsUseCase;
-  final InsertHabitUseCase insertHabitUseCase;
-  final EditHabitUseCase editHabitUseCase;
-  final WatchUserUsecase watchUserUsecase;
-  final InsertHabitLogUseCase insertHabitLogUseCase;
-  final DeleteHabitUseCase deleteHabitUseCase;
+  final RequestTokenUsecase? requestTokenUsecase;
+  final GetHabitsUseCase? getHabitsUseCase;
+  final GetHabitLogsUseCase? getHabitLogsUseCase;
+  final WatchTodayHabitUseCase? watchTodayHabitsUseCase;
+  final WatchAllHabitUseCase? watchAllHabitsUseCase;
+  final InsertHabitUseCase? insertHabitUseCase;
+  final EditHabitUseCase? editHabitUseCase;
+  final WatchUserUsecase? watchUserUsecase;
+  final InsertHabitLogUseCase? insertHabitLogUseCase;
+  final DeleteHabitUseCase? deleteHabitUseCase;
 
   final formKey = GlobalKey<FormState>();
   final habitTitleController = TextEditingController();
   final quickHabitController = TextEditingController();
 
-  Failure failure;
+  Failure? failure;
   bool habitEditMode = false;
-  String habitId;
+  String? habitId;
 
   RxBool isLongPressed = false.obs;
   RxString selectedHabit = ''.obs;
   RxBool shouldRemind = false.obs;
   RxString reminderTime = ''.obs;
-  var days = <int>[].obs;
+  RxList<int?> days = <int>[].obs;
 
   final user = UserData(email: '', id: '', username: '').obs;
 
@@ -71,14 +71,14 @@ class HabitController extends GetxController {
 
     await API.doRequest(
       body: () async {
-        return await getHabitsUseCase();
+        return await getHabitsUseCase!();
       },
       failedBody: (failure) {
         handleHabitApiFailure(failure);
       },
     );
 
-    ever(shouldRemind, (remindMe) {
+    ever(shouldRemind, (bool remindMe) {
       if (!remindMe) {
         reminderTime.value = '';
       }
@@ -93,7 +93,7 @@ class HabitController extends GetxController {
         DateHelper.getLastDayOfWeek(DateTime(now.year, now.month, now.day));
     HabitDoneDays doneDays = HabitDoneDays();
 
-    habit.habitLogs.forEach((habitLog) {
+    habit.habitLogs!.forEach((habitLog) {
       // Should be same (0) or After (positive)
       int compareToFirstDayOfWeek = habitLog.doneAt.compareTo(firstDayOfWeek);
       // Should be same (0) or Before (negative)
@@ -109,7 +109,7 @@ class HabitController extends GetxController {
   }
 
   Color dayColor(int djangoWeekDay, HabitWitLogsWithDays habit) {
-    print(habit.habit.name + habit.days.toString());
+    print(habit.habit!.name+ habit.days.toString());
     if (habit.days?.dayZero == djangoWeekDay ||
         habit.days?.dayOne == djangoWeekDay ||
         habit.days?.dayTwo == djangoWeekDay ||
@@ -132,7 +132,7 @@ class HabitController extends GetxController {
     }
   }
 
-  bool isHabitForThisDay(DaysData days) {
+  bool isHabitForThisDay(DaysData? days) {
     final djangoCurrentWeekDay = DateTime.now().weekday - 1;
     if (days?.dayZero == djangoCurrentWeekDay ||
         days?.dayOne == djangoCurrentWeekDay ||
@@ -156,11 +156,11 @@ class HabitController extends GetxController {
     }
   }
 
-  Future<void> onHabitMarked(String habitId) async {
+  Future<void> onHabitMarked(String? habitId) async {
     await API.doRequest(
       body: () async {
         showLoaderDialog();
-        return await insertHabitLogUseCase(habitId);
+        return await insertHabitLogUseCase!(habitId!);
       },
       successBody: () {
         Get.back();
@@ -172,17 +172,17 @@ class HabitController extends GetxController {
   }
 
   Future<void> insertHabit(
-      {String habitName, List<int> days, String time}) async {
+      {String? habitName, List<int>? days, String? time}) async {
     await API.doRequest(
       body: () async {
         failure = null;
         showLoaderDialog();
         if (!habitEditMode) {
-          return await insertHabitUseCase(
-              habitName, days, time != null && time.isNotEmpty ? time : null);
+          return await insertHabitUseCase!(
+              habitName!, days, time != null && time.isNotEmpty ? time : null);
         } else {
-          return await editHabitUseCase(
-              habitId, habitName, days, time.isNotEmpty ? time : null);
+          return await editHabitUseCase!(
+              habitId!, habitName!, days as List<int>, time!.isNotEmpty ? time : null);
         }
       },
       successBody: () {
@@ -202,11 +202,11 @@ class HabitController extends GetxController {
     );
   }
 
-  Future<void> deleteHabit(String habitId, List<DateTime> dates) async {
+  Future<void> deleteHabit(String habitId, List<DateTime>? dates) async {
     await API.doRequest(
       body: () async {
         showLoaderDialog();
-        return await deleteHabitUseCase(habitId, dates);
+        return await deleteHabitUseCase!(habitId, dates);
       },
       successBody: () {
         Get.back();
@@ -218,19 +218,19 @@ class HabitController extends GetxController {
     );
   }
 
-  void setHabitFields(HabitWitLogsWithDays habit) {
+  void setHabitFields(HabitWitLogsWithDays? habit) {
     if (habit != null) {
       habitEditMode = true;
-      habitId = habit.habit.id;
-      habitTitleController.text = habit.habit.name;
-      if (habit.days.dayZero != null) days.add(habit.days.dayZero);
-      if (habit.days.dayOne != null) days.add(habit.days.dayOne);
-      if (habit.days.dayTwo != null) days.add(habit.days.dayTwo);
-      if (habit.days.dayThree != null) days.add(habit.days.dayThree);
-      if (habit.days.dayFour != null) days.add(habit.days.dayFour);
-      if (habit.days.dayFive != null) days.add(habit.days.dayFive);
-      if (habit.days.daySix != null) days.add(habit.days.daySix);
-      reminderTime.value = habit.habit.time != null ? habit.habit.time : '';
+      habitId = habit.habit!.id;
+      habitTitleController.text = habit.habit!.name;
+      if (habit.days!.dayZero != null) days.add(habit.days!.dayZero);
+      if (habit.days!.dayOne != null) days.add(habit.days!.dayOne);
+      if (habit.days!.dayTwo != null) days.add(habit.days!.dayTwo);
+      if (habit.days!.dayThree != null) days.add(habit.days!.dayThree);
+      if (habit.days!.dayFour != null) days.add(habit.days!.dayFour);
+      if (habit.days!.dayFive != null) days.add(habit.days!.dayFive);
+      if (habit.days!.daySix != null) days.add(habit.days!.daySix);
+      reminderTime.value = habit.habit!.time != null ? habit.habit!.time! : '';
       if (reminderTime.value.isNotEmpty) shouldRemind.value = true;
     } else {
       habitEditMode = false;
@@ -244,19 +244,19 @@ class HabitController extends GetxController {
     shouldRemind.value = false;
   }
 
-  Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits() {
-    return watchAllHabitsUseCase();
+  Stream<Future<List<HabitWitLogsWithDays>>>? watchAllHabits() {
+    return watchAllHabitsUseCase!();
   }
 
-  Stream<Future<List<HabitWitLogsWithDays>>> watchTodayHabits(int day) {
-    return watchTodayHabitsUseCase(day);
+  Stream<Future<List<HabitWitLogsWithDays>>>? watchTodayHabits(int? day) {
+    return watchTodayHabitsUseCase!(day!);
   }
 
-  Stream<UserData> watchUser() {
-    return watchUserUsecase();
+  Stream<UserData>? watchUser() {
+    return watchUserUsecase!();
   }
 
-  Stream<Future<List<HabitWitLogsWithDays>>> watch({HabitType habitType}) {
+  Stream<Future<List<HabitWitLogsWithDays>>>? watch({HabitType? habitType}) {
     if (habitType == HabitType.today) {
       final weekday = DateTime.now().weekday;
       final djangoWeekDay = DateHelper.mapWeekDayToDjangoWay(weekday);
@@ -267,7 +267,7 @@ class HabitController extends GetxController {
   }
 
   void _bindStreams() {
-    user.bindStream(watchUser());
+    user.bindStream(watchUser()!);
   }
 
   void onProfileImageTapped() {

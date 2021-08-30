@@ -10,7 +10,7 @@ class HabitlogDao extends DatabaseAccessor<AppDatabase>
     with _$HabitlogDaoMixin {
   HabitlogDao(AppDatabase db) : super(db);
 
-  Future<void> deleteAndinsertHabitlogs(List<HabitResult> habitResults) async {
+  Future<void> deleteAndinsertHabitlogs(List<HabitResult>? habitResults) async {
     return transaction(() async {
       // Clear the tables associated with habitlog
       await delete(habitlogTable).go();
@@ -23,7 +23,7 @@ class HabitlogDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
-  Future<void> insertHabitlogs(List<HabitResult> habitResults) async {
+  Future<void> insertHabitlogs(List<HabitResult>? habitResults) async {
     return transaction(() async {
       // Insert data for habit
       await batch((batch) {

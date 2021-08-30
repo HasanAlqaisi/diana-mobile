@@ -14,9 +14,9 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 class AddHabitBottomSheet extends StatelessWidget {
   static const route = '/add_habit';
 
-  final HabitWitLogsWithDays habit;
+  final HabitWitLogsWithDays? habit;
 
-  const AddHabitBottomSheet({Key key, this.habit}) : super(key: key);
+  const AddHabitBottomSheet({Key? key, this.habit}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +64,11 @@ class AddHabitBottomSheet extends StatelessWidget {
                               BorderSide(color: Color(0xFFFFFFFF), width: 0.5),
                         ),
                         errorText: _.failure is HabitFieldsFailure
-                            ? (_.failure as HabitFieldsFailure)?.name?.first
+                            ? (_.failure as HabitFieldsFailure?)?.name?.first
                             : null,
                       ),
                       validator: (title) {
-                        if (title.trim().isEmpty) return requireFieldMessage;
+                        if (title!.trim().isEmpty) return requireFieldMessage;
                         return null;
                       },
                     ),
@@ -178,7 +178,7 @@ class AddHabitBottomSheet extends StatelessWidget {
                           Checkbox(
                             value: _.shouldRemind.value,
                             onChanged: (newValue) {
-                              _.shouldRemind.value = newValue;
+                              _.shouldRemind.value = newValue!;
                             },
                             checkColor: Colors.black,
                             activeColor: Colors.white,
@@ -246,11 +246,11 @@ class AddHabitBottomSheet extends StatelessWidget {
                         ),
                         iconSize: 60.0,
                         onPressed: () async {
-                          if (_.formKey.currentState.validate()) {
+                          if (_.formKey.currentState!.validate()) {
                             showLoaderDialog();
                             await _.insertHabit(
                               habitName: _.habitTitleController.text,
-                              days: _.days,
+                              days: _.days as List<int>?,
                               time: _.reminderTime.value,
                             );
                             Get.back();
@@ -270,7 +270,7 @@ class AddHabitBottomSheet extends StatelessWidget {
   }
 }
 
-Color _colorDayText({int weekDay, HabitController controller}) {
+Color _colorDayText({int? weekDay, required HabitController controller}) {
   return !controller.days.contains(weekDay) ? Colors.white : Color(0xFF00FFEF);
 }
 

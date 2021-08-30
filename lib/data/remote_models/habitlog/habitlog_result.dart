@@ -6,11 +6,11 @@ part 'habitlog_result.g.dart';
 @JsonSerializable()
 class HabitlogResult extends Equatable {
   @JsonKey(name: 'id')
-  final String habitlogId;
+  final String? habitlogId;
   @JsonKey(name: 'done_at')
-  final String doneAt;
+  final String? doneAt;
   @JsonKey(name: 'habit')
-  final String habitId;
+  final String? habitId;
 
   HabitlogResult({
     this.habitlogId,
@@ -24,7 +24,7 @@ class HabitlogResult extends Equatable {
   Map<String, dynamic> toJson() => _$HabitlogResultToJson(this);
 
   @override
-  List<Object> get props => [habitlogId, doneAt, habitId];
+  List<Object?> get props => [habitlogId, doneAt, habitId];
 
   @override
   bool get stringify => true;

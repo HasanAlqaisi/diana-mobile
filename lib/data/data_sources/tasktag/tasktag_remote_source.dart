@@ -18,13 +18,13 @@ abstract class TaskTagRemoteSource {
 }
 
 class TaskTagRemoteSourceImpl extends TaskTagRemoteSource {
-  final http.Client client;
+  final http.Client? client;
 
   TaskTagRemoteSourceImpl({this.client});
 
   @override
   Future<TaskTagResponse> insertTaskTag(String taskId, String tagId) async {
-    final response = await client.post(
+    final response = await client!.post(
       Uri.parse('$baseUrl/tasktag/'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -50,7 +50,7 @@ class TaskTagRemoteSourceImpl extends TaskTagRemoteSource {
   @override
   Future<TaskTagResponse> editTaskTag(
       String id, String taskId, String tagId) async {
-    final response = await client.put(
+    final response = await client!.put(
       Uri.parse('$baseUrl/tasktag/$id/'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -77,7 +77,7 @@ class TaskTagRemoteSourceImpl extends TaskTagRemoteSource {
 
   @override
   Future<bool> deleteTaskTag(String id) async {
-    final response = await client.delete(
+    final response = await client!.delete(
       Uri.parse('$baseUrl/tasktag/$id/'),
       headers: {
         'Authorization': 'Bearer $kToken',

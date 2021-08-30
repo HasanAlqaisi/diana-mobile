@@ -5,11 +5,11 @@ import 'package:diana/presentation/task/controller/task_controller.dart';
 import 'package:flutter/material.dart';
 
 class SubtasksList extends StatelessWidget {
-  final TaskType type;
+  final TaskType? type;
   SubtasksList({
-    Key key,
-    @required this.taskWithSubtasks,
-    @required this.type,
+    Key? key,
+    required this.taskWithSubtasks,
+    required this.type,
   }) : super(key: key);
 
   final TaskWithSubtasks taskWithSubtasks;
@@ -19,9 +19,9 @@ class SubtasksList extends StatelessWidget {
     return ListView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: taskWithSubtasks?.subtasks?.length ?? 0,
+      itemCount: taskWithSubtasks.subtasks?.length ?? 0,
       itemBuilder: (context, index) {
-        final subtask = taskWithSubtasks?.subtasks[index];
+        final subtask = taskWithSubtasks.subtasks![index];
 
         return ListTile(
           title: Row(
@@ -31,7 +31,7 @@ class SubtasksList extends StatelessWidget {
                 child: Text(
                   subtask.name,
                   style: TextStyle(
-                    decoration: subtask.done || type == TaskType.done
+                    decoration: subtask.done|| type == TaskType.done
                         ? TextDecoration.lineThrough
                         : null,
                     color: _colorSubtaskName(
@@ -43,7 +43,8 @@ class SubtasksList extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     Icons.check,
-                    color: subtask.done ? Color(0xFF1ADACE) : Color(0xFFB0B0B0),
+                    color:
+                        subtask.done? Color(0xFF1ADACE) : Color(0xFFB0B0B0),
                   ),
                   onPressed: () async {
                     showLoaderDialog();
@@ -60,11 +61,11 @@ class SubtasksList extends StatelessWidget {
     );
   }
 
-  Color _colorSubtaskName({TaskType taskType, bool isSubtaskDone}) {
+  Color _colorSubtaskName({TaskType? taskType, bool? isSubtaskDone}) {
     if (taskType == TaskType.done) {
       return Color(0xFFA8FFF9);
     } else {
-      if (isSubtaskDone) {
+      if (isSubtaskDone!) {
         return Color(0xFF1ADACE);
       } else {
         return Color(0xFF636363);

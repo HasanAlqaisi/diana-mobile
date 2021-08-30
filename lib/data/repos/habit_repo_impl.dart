@@ -24,11 +24,11 @@ import 'package:timezone/timezone.dart' as tz;
 import '../../injection_container.dart' as di;
 
 class HabitRepoImpl extends HabitRepo {
-  final NetWorkInfo netWorkInfo;
-  final HabitRemoteSource habitRemoteSource;
-  final HabitlogRemoteSource habitlogRemoteSource;
-  final HabitLocalSource habitLocalSource;
-  int habitOffset = 0, habitlogOffset = 0;
+  final NetWorkInfo? netWorkInfo;
+  final HabitRemoteSource? habitRemoteSource;
+  final HabitlogRemoteSource? habitlogRemoteSource;
+  final HabitLocalSource? habitLocalSource;
+  int? habitOffset = 0, habitlogOffset = 0;
 
   HabitRepoImpl({
     this.netWorkInfo,
@@ -39,19 +39,19 @@ class HabitRepoImpl extends HabitRepo {
 
   @override
   Future<Either<Failure, HabitResponse>> getHabits() async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
         if (habitOffset != null) {
-          final result = await habitRemoteSource.getHabits(habitOffset);
+          final result = await habitRemoteSource!.getHabits(habitOffset);
 
           log('API result is ${result.results}', name: 'getHabits');
 
           if (habitOffset == 0) {
-            await habitLocalSource.deleteAndinsertHabits(result);
-            await habitLocalSource.deleteAndinsertHabitlogs(result.results);
+            await habitLocalSource!.deleteAndinsertHabits(result);
+            await habitLocalSource!.deleteAndinsertHabitlogs(result.results);
           } else {
-            await habitLocalSource.insertHabits(result);
-            await habitLocalSource.insertHabitlogs(result.results);
+            await habitLocalSource!.insertHabits(result);
+            await habitLocalSource!.insertHabitlogs(result.results);
           }
 
           final offset = API.offsetExtractor(result.next);
@@ -74,10 +74,10 @@ class HabitRepoImpl extends HabitRepo {
 
   @override
   Future<Either<Failure, HabitResult>> insertHabit(
-      String name, List<int> days, String time) async {
-    if (await netWorkInfo.isConnected()) {
+      String name, List<int>? days, String? time) async {
+    if (await netWorkInfo!.isConnected()) {
       try {
-        final result = await habitRemoteSource.insertHabit(name, days, time);
+        final result = await habitRemoteSource!.insertHabit(name, days, time);
 
         log('API result is $result', name: 'insertHabit');
 
@@ -98,13 +98,13 @@ class HabitRepoImpl extends HabitRepo {
           });
         }
 
-        await habitLocalSource.insertHabit(result);
-        await habitLocalSource.insertHabitlog(result);
+        await habitLocalSource!.insertHabit(result);
+        await habitLocalSource!.insertHabitlog(result);
 
         return Right(result);
       } on FieldsException catch (error) {
         return Left(
-          HabitFieldsFailure.fromFieldsException(json.decode(error.body)),
+          HabitFieldsFailure.fromFieldsException(json.decode(error.body!)),
         );
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -118,11 +118,11 @@ class HabitRepoImpl extends HabitRepo {
 
   @override
   Future<Either<Failure, HabitResult>> editHabit(
-      String habitId, String name, List<int> days, String time) async {
-    if (await netWorkInfo.isConnected()) {
+      String habitId, String name, List<int> days, String? time) async {
+    if (await netWorkInfo!.isConnected()) {
       try {
         final result =
-            await habitRemoteSource.editHabit(habitId, name, days, time);
+            await habitRemoteSource!.editHabit(habitId, name, days, time);
 
         log('API result is $result', name: 'editHabit');
 
@@ -143,13 +143,13 @@ class HabitRepoImpl extends HabitRepo {
           });
         }
 
-        await habitLocalSource.insertHabit(result);
-        await habitLocalSource.insertHabitlog(result);
+        await habitLocalSource!.insertHabit(result);
+        await habitLocalSource!.insertHabitlog(result);
 
         return Right(result);
       } on FieldsException catch (error) {
         return Left(
-          HabitFieldsFailure.fromFieldsException(json.decode(error.body)),
+          HabitFieldsFailure.fromFieldsException(json.decode(error.body!)),
         );
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -165,10 +165,10 @@ class HabitRepoImpl extends HabitRepo {
 
   @override
   Future<Either<Failure, bool>> deleteHabit(
-      String habitId, List<DateTime> dates) async {
-    if (await netWorkInfo.isConnected()) {
+      String habitId, List<DateTime>? dates) async {
+    if (await netWorkInfo!.isConnected()) {
       try {
-        final result = await habitRemoteSource.deleteHabit(habitId);
+        final result = await habitRemoteSource!.deleteHabit(habitId);
 
         log('API result is $result', name: 'deleteHabit');
 
@@ -178,7 +178,7 @@ class HabitRepoImpl extends HabitRepo {
               .cancel(habitId.hashCode + date.hashCode);
         });
 
-        await habitLocalSource.deleteHabit(habitId);
+        await habitLocalSource!.deleteHabit(habitId);
 
         return Right(result);
       } on UnAuthException {
@@ -228,13 +228,13 @@ class HabitRepoImpl extends HabitRepo {
 
   @override
   Future<Either<Failure, HabitlogResult>> insertHabitlog(String habitId) async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
-        final result = await habitlogRemoteSource.insertHabitlog(habitId);
+        final result = await habitlogRemoteSource!.insertHabitlog(habitId);
 
         log('API result is $result', name: 'insertHabitLog');
 
-        await habitLocalSource.insertHabitlog(
+        await habitLocalSource!.insertHabitlog(
           HabitResult(history: [
             History(
                 habitId: result.habitId,
@@ -248,7 +248,7 @@ class HabitRepoImpl extends HabitRepo {
         return Left(UnAuthFailure());
       } on FieldsException catch (error) {
         return Left(
-          HabitlogFieldsFailure.fromFieldsException(json.decode(error.body)),
+          HabitlogFieldsFailure.fromFieldsException(json.decode(error.body!)),
         );
       } on UnknownException catch (error) {
         return Left(UnknownFailure(message: error.message));
@@ -260,12 +260,12 @@ class HabitRepoImpl extends HabitRepo {
 
   @override
   Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits() {
-    return habitLocalSource.watchAllHabits(kUserId);
+    return habitLocalSource!.watchAllHabits(kUserId);
   }
 
   @override
   Stream<Future<List<HabitWitLogsWithDays>>> watchTodayHabits(int day) {
-    return habitLocalSource.watchTodayHabits(kUserId, day);
+    return habitLocalSource!.watchTodayHabits(kUserId, day);
   }
 
   @override

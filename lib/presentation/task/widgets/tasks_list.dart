@@ -9,10 +9,10 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'expandable_task_item..dart';
 
 class TasksList extends StatelessWidget {
-  final TaskType type;
+  final TaskType? type;
   final controller = TaskController.to;
 
-  TasksList({Key key, this.type}) : super(key: key);
+  TasksList({Key? key, this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class TasksList extends StatelessWidget {
             return ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: tasks()?.length ?? 0,
+              itemCount: tasks().length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
@@ -46,11 +46,11 @@ class TasksList extends StatelessWidget {
                           : null,
                       child: StreamBuilder<TaskWithTags>(
                         stream:
-                            controller.watchTagsForTask(tasks()[index].task.id),
+                            controller.watchTagsForTask(tasks()[index].task!.id),
                         builder: (context, taskWithTagsSnapshot) {
                           return ExpandableTaskItem(
                               taskWithSubtasks: tasks()[index],
-                              taskWithTags: taskWithTagsSnapshot?.data,
+                              taskWithTags: taskWithTagsSnapshot.data,
                               type: type);
                         },
                       ),

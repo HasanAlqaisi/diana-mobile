@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:diana/core/network/network_info.dart';
 import 'package:diana/data/data_sources/auth/auth_local_source.dart';
 import 'package:diana/data/data_sources/auth/auth_remote_source.dart';
@@ -73,6 +72,7 @@ import 'package:diana/presentation/task/controller/task_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:path/path.dart' as p;
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
@@ -80,6 +80,7 @@ import 'package:moor/ffi.dart' as ffi;
 import 'package:moor/moor.dart';
 import 'package:path_provider/path_provider.dart';
 import 'core/constants/constants.dart';
+import 'core/network/network_info.dart';
 import 'data/data_sources/habitlog/habitlog_remote_source.dart';
 import 'data/database/models/habit/habit_dao.dart';
 import 'data/repos/habit_repo_impl.dart';
@@ -108,7 +109,7 @@ void externalLibsInjection() {
   sl.registerLazySingleton<NetWorkInfo>(
       () => NetWorkInfoImpl(connectionChecker: sl()));
 
-  sl.registerLazySingleton(() => DataConnectionChecker());
+  sl.registerLazySingleton(() => InternetConnectionChecker());
 
   sl.registerLazySingleton(() => http.Client());
 

@@ -7,32 +7,32 @@ import 'package:diana/data/remote_models/habit/habit_result.dart';
 import 'package:http/http.dart' as http;
 
 abstract class HabitRemoteSource {
-  Future<HabitResponse> getHabits(int offset);
+  Future<HabitResponse> getHabits(int? offset);
 
   Future<HabitResult> insertHabit(
     String name,
-    List<int> days,
-    String time,
+    List<int?>? days,
+    String? time,
   );
 
   Future<HabitResult> editHabit(
     String habitId,
     String name,
     List<int> days,
-    String time,
+    String? time,
   );
 
   Future<bool> deleteHabit(String habitId);
 }
 
 class HabitRemoteSourceImpl extends HabitRemoteSource {
-  final http.Client client;
+  final http.Client? client;
 
   HabitRemoteSourceImpl({this.client});
 
   @override
-  Future<HabitResponse> getHabits(int offset) async {
-    final response = await client.get(
+  Future<HabitResponse> getHabits(int? offset) async {
+    final response = await client!.get(
       Uri.parse('$baseUrl/habit/?limit=100&offset=$offset'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -51,8 +51,8 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
 
   @override
   Future<HabitResult> insertHabit(
-      String name, List<int> days, String time) async {
-    final response = await client.post(
+      String name, List<int?>? days, String? time) async {
+    final response = await client!.post(
       Uri.parse('$baseUrl/habit/'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -79,8 +79,8 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
 
   @override
   Future<HabitResult> editHabit(
-      String habitId, String name, List<int> days, String time) async {
-    final response = await client.put(
+      String habitId, String name, List<int> days, String? time) async {
+    final response = await client!.put(
       Uri.parse('$baseUrl/habit/$habitId/'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -109,7 +109,7 @@ class HabitRemoteSourceImpl extends HabitRemoteSource {
 
   @override
   Future<bool> deleteHabit(String habitId) async {
-    final response = await client.delete(
+    final response = await client!.delete(
       Uri.parse('$baseUrl/habit/$habitId/'),
       headers: {
         'Authorization': 'Bearer $kToken',

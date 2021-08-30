@@ -29,14 +29,14 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:diana/injection_container.dart' as di;
 
 class TaskRepoImpl extends TaskRepo {
-  final NetWorkInfo netWorkInfo;
-  final TaskRemoteSource taskRemoteSource;
-  final TaskLocalSource taskLocalSource;
-  final SubtaskRemoteSource subtaskRemoteSource;
-  final TagRemoteSource tagRemoteSource;
-  final TaskTagRemoteSource taskTagRemoteSource;
-  final TaskTagLocalSoucre taskTagLocalSoucre;
-  int taskOffset = 0, subtaskOffset = 0, tagOffset = 0;
+  final NetWorkInfo? netWorkInfo;
+  final TaskRemoteSource? taskRemoteSource;
+  final TaskLocalSource? taskLocalSource;
+  final SubtaskRemoteSource? subtaskRemoteSource;
+  final TagRemoteSource? tagRemoteSource;
+  final TaskTagRemoteSource? taskTagRemoteSource;
+  final TaskTagLocalSoucre? taskTagLocalSoucre;
+  int? taskOffset = 0, subtaskOffset = 0, tagOffset = 0;
 
   TaskRepoImpl({
     this.netWorkInfo,
@@ -50,13 +50,13 @@ class TaskRepoImpl extends TaskRepo {
 
   @override
   Future<Either<Failure, bool>> deleteSubtask(String subtaskId) async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
-        final result = await subtaskRemoteSource.deleteSubtask(subtaskId);
+        final result = await subtaskRemoteSource!.deleteSubtask(subtaskId);
 
         log('API result is $result', name: 'deleteSubtask');
 
-        await taskLocalSource.deleteSubTask(subtaskId);
+        await taskLocalSource!.deleteSubTask(subtaskId);
 
         return Right(result);
       } on UnAuthException {
@@ -73,15 +73,15 @@ class TaskRepoImpl extends TaskRepo {
 
   @override
   Future<Either<Failure, bool>> deleteTask(String taskId) async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
-        final result = await taskRemoteSource.deleteTask(taskId);
+        final result = await taskRemoteSource!.deleteTask(taskId);
 
         log('API result is $result', name: 'deleteTask');
 
         await FlutterLocalNotificationsPlugin().cancel(taskId.hashCode);
 
-        await taskLocalSource.deleteTask(taskId);
+        await taskLocalSource!.deleteTask(taskId);
 
         return Right(result);
       } on UnAuthException {
@@ -98,9 +98,9 @@ class TaskRepoImpl extends TaskRepo {
 
   @override
   Future<Either<Failure, bool>> deleteTag(String id) async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
-        final result = await tagRemoteSource.deleteTag(id);
+        final result = await tagRemoteSource!.deleteTag(id);
 
         log('API result is $result', name: 'deleteTag');
 
@@ -141,19 +141,19 @@ class TaskRepoImpl extends TaskRepo {
   @override
   Future<Either<Failure, SubtaskResult>> editSubtask(
       String subtaskId, String name, bool isDone, String taskId) async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
-        final result = await subtaskRemoteSource.editSubtask(
+        final result = await subtaskRemoteSource!.editSubtask(
             subtaskId, name, isDone, taskId);
 
         log('API result is $result', name: 'editSubtask');
 
-        await taskLocalSource.insertSubTask(result);
+        await taskLocalSource!.insertSubTask(result);
 
         return Right(result);
       } on FieldsException catch (error) {
         return Left(
-          SubtaskFieldsFailure.fromFieldsException(json.decode(error.body)),
+          SubtaskFieldsFailure.fromFieldsException(json.decode(error.body!)),
         );
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -170,18 +170,18 @@ class TaskRepoImpl extends TaskRepo {
   @override
   Future<Either<Failure, TagResult>> editTag(
       String id, String name, int color) async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
-        final result = await tagRemoteSource.editTag(id, name, color);
+        final result = await tagRemoteSource!.editTag(id, name, color);
 
         log('API result is $result', name: 'editTag');
 
-        await taskLocalSource.insertTag(result);
+        await taskLocalSource!.insertTag(result);
 
         return Right(result);
       } on FieldsException catch (error) {
         return Left(
-          TagFieldsFailure.fromFieldsException(json.decode(error.body)),
+          TagFieldsFailure.fromFieldsException(json.decode(error.body!)),
         );
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -200,17 +200,17 @@ class TaskRepoImpl extends TaskRepo {
     String taskId,
     String name,
     String note,
-    String date,
+    String? date,
     List<String> tags,
-    List<String> checklist,
-    String reminder,
-    String deadline,
+    List<String?> checklist,
+    String? reminder,
+    String? deadline,
     int priority,
     bool done,
   ) async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
-        final result = await taskRemoteSource.editTask(taskId, name, note, tags,
+        final result = await taskRemoteSource!.editTask(taskId, name, note, tags,
             checklist, date, reminder, deadline, priority, done);
 
         log('API result is $result', name: 'editTask');
@@ -220,7 +220,7 @@ class TaskRepoImpl extends TaskRepo {
                 result.taskId.hashCode,
                 result.name,
                 result.note,
-                tz.TZDateTime.parse(tz.local, result.reminder),
+                tz.TZDateTime.parse(tz.local, result.reminder!),
                 di.sl.get(instanceName: taskNotificationInjectionName),
                 androidAllowWhileIdle: true,
                 uiLocalNotificationDateInterpretation:
@@ -228,12 +228,12 @@ class TaskRepoImpl extends TaskRepo {
               );
         }
 
-        await taskLocalSource.insertTask(result);
+        await taskLocalSource!.insertTask(result);
 
         return Right(result);
       } on FieldsException catch (error) {
         return Left(
-          TaskFieldsFailure.fromFieldsException(json.decode(error.body)),
+          TaskFieldsFailure.fromFieldsException(json.decode(error.body!)),
         );
       } on UnAuthException {
         return Left(UnAuthFailure());
@@ -249,17 +249,17 @@ class TaskRepoImpl extends TaskRepo {
 
   @override
   Future<Either<Failure, SubtaskResponse>> getSubtasks(String taskId) async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
         if (subtaskOffset != null) {
           final result =
-              await subtaskRemoteSource.getSubtasks(taskId, subtaskOffset);
+              await subtaskRemoteSource!.getSubtasks(taskId, subtaskOffset);
 
           log('API result is ${result.results}', name: 'getSubtasks');
           if (subtaskOffset == 0) {
-            await taskLocalSource.deleteAndInsertSubTasks(result);
+            await taskLocalSource!.deleteAndInsertSubTasks(result);
           } else {
-            await taskLocalSource.insertSubTasks(result);
+            await taskLocalSource!.insertSubTasks(result);
           }
 
           final offset = API.offsetExtractor(result.next);
@@ -281,17 +281,17 @@ class TaskRepoImpl extends TaskRepo {
 
   @override
   Future<Either<Failure, TagResponse>> getTags() async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
         if (tagOffset != null) {
-          final result = await tagRemoteSource.getTags(tagOffset);
+          final result = await tagRemoteSource!.getTags(tagOffset);
 
           log('API result is ${result.results}', name: 'getTags');
 
           if (tagOffset == 0) {
-            await taskLocalSource.deleteAndInsertTags(result);
+            await taskLocalSource!.deleteAndInsertTags(result);
           } else {
-            await taskLocalSource.insertTags(result);
+            await taskLocalSource!.insertTags(result);
           }
 
           final offset = API.offsetExtractor(result.next);
@@ -314,17 +314,17 @@ class TaskRepoImpl extends TaskRepo {
 
   @override
   Future<Either<Failure, TaskResponse>> getTasks() async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
         if (taskOffset != null) {
-          final result = await taskRemoteSource.getTasks(taskOffset);
+          final result = await taskRemoteSource!.getTasks(taskOffset);
 
           log('API result is ${result.results}', name: 'getTasks');
 
           if (taskOffset == 0) {
-            await taskLocalSource.deleteAndinsertTasks(result);
+            await taskLocalSource!.deleteAndinsertTasks(result);
           } else {
-            await taskLocalSource.insertTasks(result);
+            await taskLocalSource!.insertTasks(result);
           }
           final offset = API.offsetExtractor(result.next);
 
@@ -347,21 +347,21 @@ class TaskRepoImpl extends TaskRepo {
   @override
   Future<Either<Failure, SubtaskResult>> insertSubtask(
       String name, bool isDone, String taskId) async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
         final result =
-            await subtaskRemoteSource.insertSubtask(name, isDone, taskId);
+            await subtaskRemoteSource!.insertSubtask(name, isDone, taskId);
 
         log('API result is $result', name: 'insertSubtask');
 
-        await taskLocalSource.insertSubTask(result);
+        await taskLocalSource!.insertSubTask(result);
 
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
       } on FieldsException catch (error) {
         return Left(
-          SubtaskFieldsFailure.fromFieldsException(json.decode(error.body)),
+          SubtaskFieldsFailure.fromFieldsException(json.decode(error.body!)),
         );
       } on UnknownException catch (error) {
         return Left(UnknownFailure(message: error.message));
@@ -373,20 +373,20 @@ class TaskRepoImpl extends TaskRepo {
 
   @override
   Future<Either<Failure, TagResult>> insertTag(String name, int color) async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
-        final result = await tagRemoteSource.insertTags(name, color);
+        final result = await tagRemoteSource!.insertTags(name, color);
 
         log('API result is $result', name: 'insertTag');
 
-        await taskLocalSource.insertTag(result);
+        await taskLocalSource!.insertTag(result);
 
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
       } on FieldsException catch (error) {
         return Left(
-          TagFieldsFailure.fromFieldsException(json.decode(error.body)),
+          TagFieldsFailure.fromFieldsException(json.decode(error.body!)),
         );
       } on UnknownException catch (error) {
         return Left(UnknownFailure(message: error.message));
@@ -399,30 +399,30 @@ class TaskRepoImpl extends TaskRepo {
   @override
   Future<Either<Failure, TaskResult>> insertTask(
     String name,
-    String note,
-    String date,
-    List<String> tags,
-    List<String> checklist,
-    String reminder,
-    String deadline,
-    int priority,
-    bool done,
+    String? note,
+    String? date,
+    List<String>? tags,
+    List<String?>? checklist,
+    String? reminder,
+    String? deadline,
+    int? priority,
+    bool? done,
   ) async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
-        final result = await taskRemoteSource.insertTask(name, note, tags,
+        final result = await taskRemoteSource!.insertTask(name, note, tags,
             checklist, date, reminder, deadline, priority, done);
 
         log('API result is $result', name: 'insertTask');
 
         if (result.reminder != null) {
           print('reminder scheduled at ${result.reminder}');
-          if (result.note != null || result.note.isNotEmpty) {
+          if (result.note != null || result.note!.isNotEmpty) {
             await di.sl<FlutterLocalNotificationsPlugin>().zonedSchedule(
                   result.taskId.hashCode,
                   result.name,
                   result.note,
-                  tz.TZDateTime.parse(tz.local, result.reminder),
+                  tz.TZDateTime.parse(tz.local, result.reminder!),
                   di.sl.get(instanceName: taskNotificationInjectionName),
                   androidAllowWhileIdle: true,
                   uiLocalNotificationDateInterpretation:
@@ -433,7 +433,7 @@ class TaskRepoImpl extends TaskRepo {
                   result.taskId.hashCode,
                   null,
                   result.name,
-                  tz.TZDateTime.parse(tz.local, result.reminder),
+                  tz.TZDateTime.parse(tz.local, result.reminder!),
                   di.sl.get(instanceName: taskNotificationInjectionName),
                   androidAllowWhileIdle: true,
                   uiLocalNotificationDateInterpretation:
@@ -442,14 +442,14 @@ class TaskRepoImpl extends TaskRepo {
           }
         }
 
-        await taskLocalSource.insertTask(result);
+        await taskLocalSource!.insertTask(result);
 
         return Right(result);
       } on UnAuthException {
         return Left(UnAuthFailure());
       } on FieldsException catch (error) {
         return Left(
-          TaskFieldsFailure.fromFieldsException(json.decode(error.body)),
+          TaskFieldsFailure.fromFieldsException(json.decode(error.body!)),
         );
       } on UnknownException catch (error) {
         return Left(UnknownFailure(message: error.message));
@@ -460,45 +460,45 @@ class TaskRepoImpl extends TaskRepo {
   }
 
   Stream<List<TaskWithSubtasks>> watchTodayTasks(List<String> tags) {
-    return taskLocalSource.watchTodayTasks(kUserId, tags);
+    return taskLocalSource!.watchTodayTasks(kUserId, tags);
   }
 
   Stream<List<TaskWithSubtasks>> watchAllTasks(List<String> tags) {
-    return taskLocalSource.watchAllTasks(kUserId, tags);
+    return taskLocalSource!.watchAllTasks(kUserId, tags);
   }
 
   Stream<List<TaskWithSubtasks>> watchCompletedTasks(List<String> tags) {
-    return taskLocalSource.watchCompletedTasks(kUserId, tags);
+    return taskLocalSource!.watchCompletedTasks(kUserId, tags);
   }
 
   Stream<List<TaskWithSubtasks>> watchMissedTasks(List<String> tags) {
-    return taskLocalSource.watchMissedTasks(kUserId, tags);
+    return taskLocalSource!.watchMissedTasks(kUserId, tags);
   }
 
   @override
   Stream<List<TagData>> watchAllTags() {
-    return taskLocalSource.watchAllTags(kUserId);
+    return taskLocalSource!.watchAllTags(kUserId);
   }
 
   @override
   Stream<TaskWithTags> watchTagsForTask(String taskId) {
-    return taskLocalSource.watchTagsForTask(kUserId, taskId);
+    return taskLocalSource!.watchTagsForTask(kUserId, taskId);
   }
 
   @override
   Future<Either<Failure, TaskResult>> makeTaskDone(String taskId) async {
-    if (await netWorkInfo.isConnected()) {
+    if (await netWorkInfo!.isConnected()) {
       try {
-        final result = await taskRemoteSource.makeTaskDone(taskId);
+        final result = await taskRemoteSource!.makeTaskDone(taskId);
 
         log('API result is $result', name: 'makeTaskDone');
 
-        await taskLocalSource.insertTask(result);
+        await taskLocalSource!.insertTask(result);
 
         return Right(result);
       } on FieldsException catch (error) {
         return Left(
-          TaskFieldsFailure.fromFieldsException(json.decode(error.body)),
+          TaskFieldsFailure.fromFieldsException(json.decode(error.body!)),
         );
       } on UnAuthException {
         return Left(UnAuthFailure());

@@ -24,24 +24,24 @@ class TaskTable extends Table {
   static List<TaskTableCompanion> fromTaskResponse(List<TaskResult> tasks) {
     return tasks
         .map((task) => TaskTableCompanion(
-              id: Value(task.taskId),
-              userId: Value(task.userId),
-              name: Value(task.name),
+              id: Value(task.taskId!),
+              userId: Value(task.userId!),
+              name: Value(task.name!),
               note: Value(task.note),
               date: Value(
                 task.date != null
-                    ? DateTime.tryParse(task.date + ' 00:00:00.000Z')
+                    ? DateTime.tryParse(task.date! + ' 00:00:00.000Z')
                     : null,
               ),
               reminder: Value(task.reminder != null
-                  ? DateTime.tryParse(task.reminder)
+                  ? DateTime.tryParse(task.reminder!)
                   : null),
               deadline: Value(task.deadline != null
-                  ? DateTime.tryParse(task.deadline)
+                  ? DateTime.tryParse(task.deadline!)
                   : null),
               priority: Value(task.priority),
               doneAt: Value(
-                  task.doneAt != null ? DateTime.tryParse(task.doneAt) : null),
+                  task.doneAt != null ? DateTime.tryParse(task.doneAt!) : null),
             ))
         .toList();
   }
@@ -49,22 +49,22 @@ class TaskTable extends Table {
   static TaskTableCompanion fromTaskResult(TaskResult task) {
     print('Task ${task.name} has a done date ${task.doneAt}');
     return TaskTableCompanion(
-      id: Value(task.taskId),
-      userId: Value(task.userId),
-      name: Value(task.name),
+      id: Value(task.taskId!),
+      userId: Value(task.userId!),
+      name: Value(task.name!),
       note: Value(task.note),
       date: Value(
         task.date != null
-            ? DateTime.tryParse(task.date)?.add(Duration(hours: 12))
+            ? DateTime.tryParse(task.date!)?.add(Duration(hours: 12))
             : null,
       ),
       reminder: Value(
-          task.reminder != null ? DateTime.tryParse(task.reminder) : null),
+          task.reminder != null ? DateTime.tryParse(task.reminder!) : null),
       deadline: Value(
-          task.deadline != null ? DateTime.tryParse(task.deadline) : null),
+          task.deadline != null ? DateTime.tryParse(task.deadline!) : null),
       priority: Value(task.priority),
       doneAt:
-          Value(task.doneAt != null ? DateTime.tryParse(task.doneAt) : null),
+          Value(task.doneAt != null ? DateTime.tryParse(task.doneAt!) : null),
     );
   }
 }

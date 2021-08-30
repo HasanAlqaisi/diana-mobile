@@ -8,27 +8,27 @@ part 'task_result.g.dart';
 @JsonSerializable()
 class TaskResult extends Equatable {
   @JsonKey(name: 'pk')
-  final String taskId;
+  final String? taskId;
   @JsonKey(name: 'user')
-  final String userId;
+  final String? userId;
   @JsonKey(name: 'title')
-  final String name;
+  final String? name;
 
-  final String note;
-  final List<TagResult> tags;
+  final String? note;
+  final List<TagResult>? tags;
   @JsonKey(name: 'checklist')
-  final List<SubtaskResult> checkList;
+  final List<SubtaskResult>? checkList;
 
-  final String date;
+  final String? date;
 
-  final String reminder;
+  final String? reminder;
 
-  final String deadline;
+  final String? deadline;
   @JsonKey(
     name: 'done_at',
   )
-  final String doneAt;
-  final int priority;
+  final String? doneAt;
+  final int? priority;
 
   TaskResult({
     this.taskId,
@@ -50,7 +50,7 @@ class TaskResult extends Equatable {
   Map<String, dynamic> toJson() => _$TaskResultToJson(this);
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [
       taskId,
       userId,

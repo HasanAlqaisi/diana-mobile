@@ -19,20 +19,20 @@ class TagTable extends Table {
   static List<TagTableCompanion> fromTagResponse(List<TagResult> tags) {
     return tags
         .map((tag) => TagTableCompanion(
-              id: Value(tag.id),
-              userId: Value(tag.userId),
-              name: Value(tag.name),
-              color: Value(tag.color),
+              id: Value(tag.id!),
+              userId: Value(tag.userId!),
+              name: Value(tag.name!),
+              color: Value(tag.color!),
             ))
         .toList();
   }
 
   static TagTableCompanion fromTagResult(TagResult tag) {
     return TagTableCompanion(
-      id: Value(tag.id),
-      userId: Value(tag.userId),
-      name: Value(tag.name),
-      color: Value(tag.color),
+      id: Value(tag.id!),
+      userId: Value(tag.userId!),
+      name: Value(tag.name!),
+      color: Value(tag.color!),
     );
   }
 }

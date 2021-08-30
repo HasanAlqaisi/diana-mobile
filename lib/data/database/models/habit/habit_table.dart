@@ -21,9 +21,9 @@ class HabitTable extends Table {
     return habits.map((habit) {
       // final days = Day(days: habit.days);
       return HabitTableCompanion(
-        id: Value(habit.habitId),
-        userId: Value(habit.userId),
-        name: Value(habit.name),
+        id: Value(habit.habitId!),
+        userId: Value(habit.userId!),
+        name: Value(habit.name!),
         // days: Value(days),
         time: Value(habit.time),
       );
@@ -32,9 +32,9 @@ class HabitTable extends Table {
 
   static HabitTableCompanion fromHabitResult(HabitResult habit) {
     return HabitTableCompanion(
-      id: Value(habit.habitId),
-      userId: Value(habit.userId),
-      name: Value(habit.name),
+      id: Value(habit.habitId!),
+      userId: Value(habit.userId!),
+      name: Value(habit.name!),
       // days: Value(days),
       time: Value(habit.time),
     );

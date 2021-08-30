@@ -2,13 +2,13 @@ import 'package:equatable/equatable.dart';
 
 // ignore: must_be_immutable
 class DaysError extends Equatable {
-  List<String> l0;
-  List<String> l1;
-  List<String> l2;
-  List<String> l3;
-  List<String> l4;
-  List<String> l5;
-  List<String> l6;
+  List<String>? l0;
+  List<String>? l1;
+  List<String>? l2;
+  List<String>? l3;
+  List<String>? l4;
+  List<String>? l5;
+  List<String>? l6;
 
   DaysError({this.l0, this.l1, this.l2, this.l3, this.l4, this.l5, this.l6});
 
@@ -36,7 +36,7 @@ class DaysError extends Equatable {
   }
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [
       l0,
       l1,

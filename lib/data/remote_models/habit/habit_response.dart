@@ -6,10 +6,10 @@ part 'habit_response.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class HabitResponse extends Equatable {
-  final int count;
-  final String next;
-  final String previous;
-  final List<HabitResult> results;
+  final int? count;
+  final String? next;
+  final String? previous;
+  final List<HabitResult>? results;
 
   HabitResponse({this.count, this.next, this.previous, this.results});
 
@@ -19,7 +19,7 @@ class HabitResponse extends Equatable {
   Map<String, dynamic> toJson() => _$HabitResponseToJson(this);
 
   @override
-  List<Object> get props => [count, next, previous, results];
+  List<Object?> get props => [count, next, previous, results];
 
   @override
   bool get stringify => true;

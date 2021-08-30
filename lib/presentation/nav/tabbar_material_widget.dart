@@ -6,9 +6,9 @@ class TabBarMaterialWidget extends StatelessWidget {
   final ValueChanged<int> onChangedTab;
 
   const TabBarMaterialWidget({
-    @required this.passedIndex,
-    @required this.onChangedTab,
-    Key key,
+    required this.passedIndex,
+    required this.onChangedTab,
+    Key? key,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -48,9 +48,9 @@ class TabBarMaterialWidget extends StatelessWidget {
   }
 
   Widget buildTabItem({
-    @required int index,
-    @required SvgPicture icon,
-    String label,
+    required int index,
+    required SvgPicture icon,
+    required String label,
   }) {
     final isSelected = index == passedIndex;
     final color = isSelected ? Colors.white : Color(0xFFA585FF);

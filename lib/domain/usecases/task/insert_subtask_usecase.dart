@@ -4,7 +4,7 @@ import 'package:diana/data/remote_models/subtask/subtask_result.dart';
 import 'package:diana/domain/repos/task_repo.dart';
 
 class InsertSubTaskUseCase {
-  final TaskRepo taskRepo;
+  final TaskRepo? taskRepo;
 
   InsertSubTaskUseCase({this.taskRepo});
 
@@ -13,6 +13,6 @@ class InsertSubTaskUseCase {
     bool isDone,
     String taskId,
   ) {
-    return taskRepo.insertSubtask(name, isDone, taskId);
+    return taskRepo!.insertSubtask(name, isDone, taskId);
   }
 }

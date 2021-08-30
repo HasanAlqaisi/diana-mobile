@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 class DateHelper {
-  static int mapWeekDayToDjangoWay(int weekDay) {
+  static int? mapWeekDayToDjangoWay(int weekDay) {
     return (weekDay > 7 || weekDay < 1) ? null : weekDay - 1;
   }
 
@@ -9,15 +9,15 @@ class DateHelper {
     return "${date.year}-${date.month}-${date.day}";
   }
 
-  static List<DateTime> getDatesFromWeekDays(List<int> djangoWeekDays,
-      [String time]) {
+  static List<DateTime> getDatesFromWeekDays(List<int>? djangoWeekDays,
+      [String? time]) {
     List<DateTime> dates = [];
 
-    djangoWeekDays.forEach((djangoWeekDay) {
+    djangoWeekDays?.forEach((djangoWeekDay) {
       if (djangoWeekDay < 0) return;
       final weekDay = djangoWeekDay + 1;
-      final hour = int.tryParse(time?.split(':')?.first);
-      final minutes = int.tryParse(time?.split(':')[1]);
+      final hour = int.tryParse(time!.split(':').first);
+      final minutes = int.tryParse(time.split(':')[1]);
       DateTime dateOfWeek = getFirstDayOfWeek(DateTime.now());
       DateTime lastDateOfWeek = getLastDayOfWeek(DateTime.now());
 
@@ -49,7 +49,7 @@ class DateHelper {
         .add(Duration(days: DateTime.daysPerWeek - currentDate.weekday));
   }
 
-  static String stringDateOrNull(DateTime date) {
+  static String? stringDateOrNull(DateTime? date) {
     return date == null ? null : date.toString();
   }
 

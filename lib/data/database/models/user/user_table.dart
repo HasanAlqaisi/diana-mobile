@@ -22,11 +22,11 @@ class UserTable extends Table {
 
   static UserTableCompanion fromUser(User user) {
     return UserTableCompanion(
-      id: Value(user.userId),
+      id: Value(user.userId!),
       firstName: Value(user.firstName),
       lastName: Value(user.lastName),
-      username: Value(user.username),
-      email: Value(user.email),
+      username: Value(user.username!),
+      email: Value(user.email!),
       picture: Value(user.picture),
       birthdate: Value(user.birthdate),
       timeZone: Value(user.timeZone),

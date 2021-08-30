@@ -6,12 +6,12 @@ part 'tag_response.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class TagResponse extends Equatable {
-  final int count;
+  final int? count;
 
-  final String next;
+  final String? next;
 
-  final String previous;
-  final List<TagResult> results;
+  final String? previous;
+  final List<TagResult>? results;
 
   TagResponse({this.count, this.next, this.previous, this.results});
 
@@ -21,7 +21,7 @@ class TagResponse extends Equatable {
   Map<String, dynamic> toJson() => _$TagResponseToJson(this);
 
   @override
-  List<Object> get props => [count, next, previous, results];
+  List<Object?> get props => [count, next, previous, results];
 
   @override
   bool get stringify => true;

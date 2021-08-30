@@ -16,16 +16,14 @@ class HabitlogTable extends Table {
   Set<Column> get primaryKey => {id};
 
   static List<HabitlogTableCompanion> fromHabitResults(
-      List<HabitResult> habitResults) {
+      List<HabitResult>? habitResults) {
     List<HabitlogTableCompanion> histories = [];
     habitResults?.forEach((habit) {
-      habit?.history?.forEach((history) {
+      habit.history?.forEach((history) {
         histories.add(HabitlogTableCompanion(
-          id: Value(history.habitlogId),
-          habitId: Value(history.habitId),
-          doneAt: Value(history.doneAt != null
-              ? DateTime.tryParse(history.doneAt)
-              : null),
+          id: Value(history.habitlogId!),
+          habitId: Value(history.habitId!),
+          doneAt: Value(DateTime.tryParse(history.doneAt!)!),
         ));
       });
     });
@@ -34,12 +32,10 @@ class HabitlogTable extends Table {
 
   static List<HabitlogTableCompanion> fromHabitResult(HabitResult habitResult) {
     List<HabitlogTableCompanion> histories = [];
-    habitResult.history.map((history) => histories.add(HabitlogTableCompanion(
-          id: Value(history.habitlogId),
-          habitId: Value(history.habitId),
-          doneAt: Value(history.doneAt != null
-              ? DateTime.tryParse(history.doneAt)
-              : null),
+    habitResult.history!.map((history) => histories.add(HabitlogTableCompanion(
+          id: Value(history.habitlogId!),
+          habitId: Value(history.habitId!),
+          doneAt: Value(DateTime.tryParse(history.doneAt!)!),
         )));
 
     return histories;

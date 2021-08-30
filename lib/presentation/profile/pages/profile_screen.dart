@@ -101,7 +101,7 @@ class ProfileScreen extends StatelessWidget {
                                                 ),
                                               ));
                                         },
-                                        imageUrl: user?.picture,
+                                        imageUrl: user?.picture ?? "",
                                         placeholder: (context, s) => ClipRRect(
                                           borderRadius: BorderRadius.circular(45),
                                           child: Container(
@@ -141,12 +141,12 @@ class ProfileScreen extends StatelessWidget {
                                     labelStyle:
                                         TextStyle(color: Color(0xFF612EF3)),
                                     errorText: _.failure is UserFieldsFailure
-                                        ? (_.failure as UserFieldsFailure)
+                                        ? (_.failure as UserFieldsFailure?)
                                             ?.firstName
                                             ?.first
                                         : null),
                                 validator: (value) {
-                                  if (value.trim().isEmpty) {
+                                  if (value!.trim().isEmpty) {
                                     return requireFieldMessage;
                                   }
                                   return null;
@@ -171,12 +171,12 @@ class ProfileScreen extends StatelessWidget {
                                     labelStyle:
                                         TextStyle(color: Color(0xFF612EF3)),
                                     errorText: _.failure is UserFieldsFailure
-                                        ? (_.failure as UserFieldsFailure)
+                                        ? (_.failure as UserFieldsFailure?)
                                             ?.lastName
                                             ?.first
                                         : null),
                                 validator: (value) {
-                                  if (value.trim().isEmpty) {
+                                  if (value!.trim().isEmpty) {
                                     return requireFieldMessage;
                                   }
                                   return null;
@@ -201,12 +201,12 @@ class ProfileScreen extends StatelessWidget {
                                       labelStyle:
                                           TextStyle(color: Color(0xFF612EF3)),
                                       errorText: _.failure is UserFieldsFailure
-                                          ? (_.failure as UserFieldsFailure)
+                                          ? (_.failure as UserFieldsFailure?)
                                               ?.email
                                               ?.first
                                           : null),
                                   validator: (value) {
-                                    if (value.trim().isEmpty) {
+                                    if (value!.trim().isEmpty) {
                                       return requireFieldMessage;
                                     }
                                     return null;
@@ -225,7 +225,7 @@ class ProfileScreen extends StatelessWidget {
                                     lastDate: DateTime.now(),
                                   );
                                   _.birthControlerField.text =
-                                      dateToDjangotring(birthdate);
+                                      dateToDjangotring(birthdate)!;
                                 },
                                 readOnly: true,
                                 keyboardType: TextInputType.text,
@@ -242,7 +242,7 @@ class ProfileScreen extends StatelessWidget {
                                     labelStyle:
                                         TextStyle(color: Color(0xFF612EF3)),
                                     errorText: _.failure is UserFieldsFailure
-                                        ? (_.failure as UserFieldsFailure)
+                                        ? (_.failure as UserFieldsFailure?)
                                             ?.birthdate
                                             ?.first
                                         : null),
@@ -286,7 +286,7 @@ class ProfileScreen extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(
                                         left: 8.0, right: 8.0, top: 16.0),
-                                    child: Text('Version 1.2.0',
+                                    child: Text('Version 1.3.0',
                                         style: TextStyle(
                                             color: Color(0xFFB0B0B0))),
                                   ),

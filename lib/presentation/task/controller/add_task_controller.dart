@@ -18,11 +18,11 @@ import 'package:get/get.dart';
 class AddTaskController extends GetxController {
   static AddTaskController get to => Get.find();
 
-  final RequestTokenUsecase requestTokenUsecase;
-  final GetTagsUseCase getTagsUseCase;
-  final InsertTagUseCase insertTagUseCase;
-  final InsertTaskUseCase insertTaskUseCase;
-  final EditTaskUseCase editTaskUseCase;
+  final RequestTokenUsecase? requestTokenUsecase;
+  final GetTagsUseCase? getTagsUseCase;
+  final InsertTagUseCase? insertTagUseCase;
+  final InsertTaskUseCase? insertTaskUseCase;
+  final EditTaskUseCase? editTaskUseCase;
 
   final formKey = GlobalKey<FormState>();
   final taskTitleController = TextEditingController();
@@ -40,14 +40,14 @@ class AddTaskController extends GetxController {
   var subtasks = <SubtaskField>[].obs;
   RxBool shouldRemind = false.obs;
   bool taskEditMode = false;
-  Failure failure;
-  TaskWithSubtasks taskData;
-  TaskWithTags tagData;
-  String taskName, note, tag;
+  Failure? failure;
+  TaskWithSubtasks? taskData;
+  TaskWithTags? tagData;
+  String? taskName, note, tag;
   Rx<DateTime> date = DateTime(0).obs;
   Rx<DateTime> deadline = DateTime(0).obs;
-  List<String> subtasksNames = [];
-  var selectedTags = <String>[].obs;
+  List<String?> subtasksNames = [];
+  RxList<String?> selectedTags = <String>[].obs;
   RxInt priority = 0.obs;
   // var selectedTags = <int>[].obs;
 
@@ -61,7 +61,7 @@ class AddTaskController extends GetxController {
       body: () async {
         failure = null;
         update();
-        return await getTagsUseCase();
+        return await getTagsUseCase!();
       },
       failedBody: (failure) {
         this.failure = failure;
@@ -72,7 +72,7 @@ class AddTaskController extends GetxController {
   }
 
   void setTaskInfo() {
-    final data = (Get.arguments as List<dynamic>);
+    final data = (Get.arguments as List<dynamic>?);
 
     if (data != null && data.isNotEmpty) {
       taskData = data[0] as TaskWithSubtasks;
@@ -80,9 +80,9 @@ class AddTaskController extends GetxController {
     }
     if (taskData != null && tagData != null) {
       taskEditMode = true;
-      taskTitleController.text = taskData.task.name;
-      noteController.text = taskData.task.note;
-      taskData.subtasks.forEach((subtask) {
+      taskTitleController.text = taskData!.task!.name;
+      noteController.text = taskData!.task!.note ?? "";
+      taskData!.subtasks!.forEach((subtask) {
         subtasks.add(
           SubtaskField(
             key: UniqueKey(),
@@ -92,20 +92,22 @@ class AddTaskController extends GetxController {
           ),
         );
       });
-      priority.value = taskData.task.priority;
-      date.value = taskData.task.date ?? DateTime(0);
-      shouldRemind.value = taskData.task.reminder != null ? true : false;
+      priority.value = taskData!.task!.priority!;
+      date.value = taskData!.task!.date ?? DateTime(0);
+      shouldRemind.value = taskData!.task!.reminder != null ? true : false;
       if (shouldRemind.value) {
         date.value = DateTime(
           date.value.year,
           date.value.month,
           date.value.day,
-          taskData.task.reminder.hour,
-          taskData.task.reminder.minute,
+          taskData!.task!.reminder!.hour,
+          taskData!.task!.reminder!.minute,
         );
       }
-      this.selectedTags.assignAll(tagData.tags.map((tag) => tag.name).toList());
-      deadline.value = taskData.task.deadline ?? DateTime(0);
+      this
+          .selectedTags
+          .assignAll(tagData!.tags!.map((tag) => tag!.name).toList());
+      deadline.value = taskData!.task!.deadline ?? DateTime(0);
     } else {
       taskEditMode = false;
     }
@@ -115,7 +117,7 @@ class AddTaskController extends GetxController {
     subtasks.remove(index);
   }
 
-  void updateSelectedTags({int index, String tagName}) {
+  void updateSelectedTags({int? index, String? tagName}) {
     if (selectedTags.contains(tagName)) {
       print('onSelect: removing from the list...');
 
@@ -131,7 +133,7 @@ class AddTaskController extends GetxController {
       body: () async {
         failure = null;
         update();
-        return await insertTagUseCase(tag, priority.value);
+        return await insertTagUseCase!(tag!, priority.value);
       },
       failedBody: (failure) {
         this.failure = failure;
@@ -147,33 +149,33 @@ class AddTaskController extends GetxController {
         failure = null;
         update();
         if (!taskEditMode) {
-          return await insertTaskUseCase(
-            taskName,
-            note,
-            date.value?.year != 0
+          return await insertTaskUseCase!(
+            taskName!,
+            note!,
+            date.value.year != 0
                 ? date.value.toString().split(' ').first
                 : null,
-            selectedTags,
+            selectedTags as List<String>,
             subtasksNames,
             shouldRemind.value ? dateAndTimeToDjango(date.value) : null,
-            deadline.value?.year != 0
+            deadline.value.year != 0
                 ? dateAndTimeToDjango(deadline.value)
                 : null,
             priority.value,
             false,
           );
         } else {
-          return await editTaskUseCase(
-            taskData.task.id,
-            taskName,
-            note,
+          return await editTaskUseCase!(
+            taskData!.task!.id,
+            taskName!,
+            note!,
             date.value.year != 0
                 ? date.value.toString().split(' ').first
                 : null,
-            selectedTags,
+            selectedTags as List<String>,
             subtasksNames,
             shouldRemind.value ? dateAndTimeToDjango(date.value) : null,
-            deadline.value?.year != 0
+            deadline.value.year != 0
                 ? dateAndTimeToDjango(deadline.value)
                 : null,
             priority.value,
@@ -216,7 +218,7 @@ class AddTaskController extends GetxController {
     return chips;
   }
 
-  String dateFieldFormatter(DateTime date) {
+  String dateFieldFormatter(DateTime? date) {
     if (date?.year == 0) {
       return 'Choose a date';
     } else {

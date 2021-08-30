@@ -9,9 +9,9 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 class LoginController extends GetxController {
-  final LoginUserUsecase loginUserUseCase;
+  final LoginUserUsecase? loginUserUseCase;
   String username = '', password = '';
-  Failure failure;
+  Failure? failure;
   bool isLoading = false;
 
   var formKey = GlobalKey<FormState>();
@@ -20,17 +20,17 @@ class LoginController extends GetxController {
 
   void onLoginPressed() async {
     if (isLoading) return;
-    if (formKey.currentState.validate()) {
+    if (formKey.currentState!.validate()) {
       isLoading = true;
       failure = null;
       update();
 
-      final result = await loginUserUseCase(username, password);
+      final result = await loginUserUseCase!(username, password);
       isLoading = false;
       update();
 
       result.fold((failure) {
-        Fluttertoast.showToast(msg: failureToString(failure));
+        Fluttertoast.showToast(msg: failureToString(failure)!);
       }, (_) => Get.offAndToNamed(Nav.route));
     }
   }

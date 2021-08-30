@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class TasksTab extends StatelessWidget {
-  final TaskType type;
+  final TaskType? type;
 
-  const TasksTab({Key key, this.type}) : super(key: key);
+  const TasksTab({Key? key, this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class TasksTab extends StatelessWidget {
               controller.textController.text = '';
             },
             errorText: controller.failure is TaskFieldsFailure
-                ? (controller.failure as TaskFieldsFailure)?.name?.first
+                ? (controller.failure as TaskFieldsFailure?)?.name?.first
                 : null,
           ),
         ),
@@ -77,7 +77,7 @@ class TasksTab extends StatelessWidget {
     return chips;
   }
 
-  Widget _buildTaskList({TaskType taskType}) {
+  Widget _buildTaskList({TaskType? taskType}) {
     if (taskType == TaskType.today) {
       return TasksList(type: TaskType.today);
     } else if (taskType == TaskType.inbox) {

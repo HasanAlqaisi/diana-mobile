@@ -15,16 +15,16 @@ import 'package:get/route_manager.dart';
 
 class ExpandableTaskItem extends StatelessWidget {
   final TaskWithSubtasks taskWithSubtasks;
-  final TaskWithTags taskWithTags;
-  final TaskType type;
+  final TaskWithTags? taskWithTags;
+  final TaskType? type;
 
   final controller = TaskController.to;
 
   ExpandableTaskItem({
-    Key key,
-    @required this.taskWithSubtasks,
-    @required this.taskWithTags,
-    @required this.type,
+    Key? key,
+    required this.taskWithSubtasks,
+    required this.taskWithTags,
+    required this.type,
   }) : super(key: key);
 
   @override
@@ -32,7 +32,7 @@ class ExpandableTaskItem extends StatelessWidget {
     return Obx(
       () => ExpansionTile(
         title: Text(
-          taskWithSubtasks?.task?.name,
+          taskWithSubtasks.task!.name,
           style: TextStyle(
               color: _colorNameAndNote(),
               decoration: type != TaskType.done
@@ -40,9 +40,9 @@ class ExpandableTaskItem extends StatelessWidget {
                   : TextDecoration.lineThrough),
         ),
         // ignore: null_aware_in_condition
-        subtitle: taskWithSubtasks?.task?.note != null &&
-                taskWithSubtasks.task.note.isNotEmpty
-            ? Text(taskWithSubtasks.task.note,
+        subtitle: taskWithSubtasks.task?.note != null &&
+                taskWithSubtasks.task!.note!.isNotEmpty
+            ? Text(taskWithSubtasks.task!.note!,
                 style: TextStyle(
                     color: _colorNameAndNote(),
                     decoration: type != TaskType.done
@@ -56,7 +56,7 @@ class ExpandableTaskItem extends StatelessWidget {
         tilePadding: EdgeInsets.symmetric(horizontal: 16),
         onExpansionChanged: (isExpanded) {
           if (isExpanded) {
-            controller.selectedTask.value = taskWithSubtasks.task.id;
+            controller.selectedTask.value = taskWithSubtasks.task!.id;
           } else {
             controller.selectedTask.value = '';
           }
@@ -85,7 +85,7 @@ class ExpandableTaskItem extends StatelessWidget {
   Widget _buildTrailing() {
     final selectedTask = controller.selectedTask.value;
 
-    if (selectedTask == taskWithSubtasks.task.id) {
+    if (selectedTask == taskWithSubtasks.task!.id) {
       return _buildSelectedTaskIcons();
     } else {
       return _buildUnselectedTaskIcons();
@@ -98,8 +98,8 @@ class ExpandableTaskItem extends StatelessWidget {
       children: [
         if (type != TaskType.done && type != TaskType.missed)
           PriorityWidget(
-            priority: taskWithSubtasks?.task?.priority,
-            color: _priorityColor(taskWithSubtasks?.task),
+            priority: taskWithSubtasks.task?.priority,
+            color: _priorityColor(taskWithSubtasks.task!),
           ),
         SizedBox(width: 5),
         Padding(
@@ -109,7 +109,7 @@ class ExpandableTaskItem extends StatelessWidget {
             icon: Icon(Icons.check_circle, color: _colorMarkIcon(), size: 30.0),
             onPressed: () async {
               showLoaderDialog();
-              await controller.makeTaskDone(taskWithSubtasks.task.id);
+              await controller.makeTaskDone(taskWithSubtasks.task!.id);
               Get.back();
             },
           ),
@@ -128,7 +128,7 @@ class ExpandableTaskItem extends StatelessWidget {
           highlightColor: Colors.transparent,
           onPressed: () async {
             showLoaderDialog();
-            await controller.onDeleteTaskClicked(taskWithSubtasks.task.id);
+            await controller.onDeleteTaskClicked(taskWithSubtasks.task!.id);
             Get.back();
           },
         ),

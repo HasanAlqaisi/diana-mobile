@@ -7,9 +7,9 @@ class TabBarCupertinoWidget extends StatefulWidget {
   final ValueChanged<int> onChangedTab;
 
   const TabBarCupertinoWidget({
-    @required this.index,
-    @required this.onChangedTab,
-    Key key,
+    required this.index,
+    required this.onChangedTab,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -17,7 +17,7 @@ class TabBarCupertinoWidget extends StatefulWidget {
 }
 
 class _TabBarCupertinoWidgetState extends State<TabBarCupertinoWidget> {
-  ValueListenable<ScaffoldGeometry> geometryListenable;
+  late ValueListenable<ScaffoldGeometry> geometryListenable;
 
   final items = <BottomNavigationBarItem>[
     BottomNavigationBarItem(
@@ -63,14 +63,14 @@ class _TabBarCupertinoWidgetState extends State<TabBarCupertinoWidget> {
     );
   }
 
-  int getIndex(int index) {
+  int? getIndex(int index) {
     if (index == 1) return null;
 
     final newIndex = index > 1 ? index - 1 : index;
     return newIndex;
   }
 
-  Widget buildNotchedCupertino({@required Widget child}) {
+  Widget buildNotchedCupertino({required Widget child}) {
     final colorCupertinoBorder = CupertinoDynamicColor.withBrightness(
       color: Color(0x4C000000),
       darkColor: Color(0x29000000),
@@ -99,13 +99,11 @@ class _TabBarCupertinoWidgetState extends State<TabBarCupertinoWidget> {
 
 class _BottomAppBarPainter extends CustomPainter {
   const _BottomAppBarPainter({
-    @required this.color,
-    @required this.geometry,
-    @required this.shape,
-    @required this.notchMargin,
-  })  : assert(geometry != null),
-        assert(shape != null),
-        assert(notchMargin != null);
+    required this.color,
+    required this.geometry,
+    required this.shape,
+    required this.notchMargin,
+  });
 
   final ValueListenable<ScaffoldGeometry> geometry;
   final NotchedShape shape;
@@ -117,9 +115,9 @@ class _BottomAppBarPainter extends CustomPainter {
     // button is the floating action button's bounding rectangle in the
     // coordinate system whose origin is at the appBar's top left corner,
     // or null if there is no floating action button.
-    final Rect button = geometry.value.floatingActionButtonArea?.translate(
+    final Rect? button = geometry.value.floatingActionButtonArea?.translate(
       0.0,
-      geometry.value.bottomNavigationBarTop * -1.0,
+      geometry.value.bottomNavigationBarTop! * -1.0,
     );
 
     final paint = Paint()
@@ -139,13 +137,10 @@ class _BottomAppBarPainter extends CustomPainter {
 
 class _BottomAppBarClipper extends CustomClipper<Path> {
   const _BottomAppBarClipper({
-    @required this.geometry,
-    @required this.shape,
-    @required this.notchMargin,
-  })  : assert(geometry != null),
-        assert(shape != null),
-        assert(notchMargin != null),
-        super(reclip: geometry);
+    required this.geometry,
+    required this.shape,
+    required this.notchMargin,
+  }) : super(reclip: geometry);
 
   final ValueListenable<ScaffoldGeometry> geometry;
   final NotchedShape shape;
@@ -156,9 +151,9 @@ class _BottomAppBarClipper extends CustomClipper<Path> {
     // button is the floating action button's bounding rectangle in the
     // coordinate system whose origin is at the appBar's top left corner,
     // or null if there is no floating action button.
-    final Rect button = geometry.value.floatingActionButtonArea?.translate(
+    final Rect? button = geometry.value.floatingActionButtonArea?.translate(
       0.0,
-      geometry.value.bottomNavigationBarTop * -1.0,
+      geometry.value.bottomNavigationBarTop! * -1.0,
     );
     return shape.getOuterPath(Offset.zero & size, button?.inflate(notchMargin));
   }

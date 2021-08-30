@@ -57,13 +57,13 @@ class RegisterForm extends StatelessWidget {
                   labelText: 'First name',
                   keyboardType: TextInputType.name,
                   errorText: controller.failure is UserFieldsFailure
-                      ? (controller.failure as UserFieldsFailure)
+                      ? (controller.failure as UserFieldsFailure?)
                           ?.firstName
                           ?.first
                       : null,
                   validateRules: (value) {
                     controller.firstName = value;
-                    if (value.trim().isEmpty) {
+                    if (value != null && value.trim().isEmpty) {
                       return requireFieldMessage;
                     }
                     return null;
@@ -77,13 +77,13 @@ class RegisterForm extends StatelessWidget {
                   labelText: 'Last name',
                   keyboardType: TextInputType.name,
                   errorText: controller.failure is UserFieldsFailure
-                      ? (controller.failure as UserFieldsFailure)
+                      ? (controller.failure as UserFieldsFailure?)
                           ?.lastName
                           ?.first
                       : null,
                   validateRules: (value) {
                     controller.lastName = value;
-                    if (value.trim().isEmpty) {
+                    if (value != null && value.trim().isEmpty) {
                       return requireFieldMessage;
                     }
                     return null;
@@ -98,13 +98,13 @@ class RegisterForm extends StatelessWidget {
                   hintText: 'John203',
                   keyboardType: TextInputType.name,
                   errorText: controller.failure is UserFieldsFailure
-                      ? (controller.failure as UserFieldsFailure)
+                      ? (controller.failure as UserFieldsFailure?)
                           ?.username
                           ?.first
                       : null,
                   validateRules: (value) {
                     controller.username = value;
-                    if (value.trim().isEmpty) {
+                    if (value != null && value.trim().isEmpty) {
                       return requireFieldMessage;
                     }
                     return null;
@@ -119,13 +119,15 @@ class RegisterForm extends StatelessWidget {
                   labelText: 'email',
                   hintText: 'example@email.com',
                   errorText: controller.failure is UserFieldsFailure
-                      ? (controller.failure as UserFieldsFailure)?.email?.first
+                      ? (controller.failure as UserFieldsFailure?)?.email?.first
                       : null,
                   validateRules: (value) {
                     controller.email = value;
-                    return GetUtils.isEmail(value)
-                        ? null
-                        : enterValidEmailMessage;
+                    if (value != null)
+                      return GetUtils.isEmail(value)
+                          ? null
+                          : enterValidEmailMessage;
+                    return null;
                   },
                 ),
               ),
@@ -140,14 +142,14 @@ class RegisterForm extends StatelessWidget {
                           lastDate: DateTime.now(),
                         );
                         controller.birthString.value =
-                            dateToDjangotring(controller.birthdate);
+                            dateToDjangotring(controller.birthdate)!;
                       },
                       isReadOnly: true,
                       isObsecure: false,
                       keyboardType: TextInputType.text,
                       hintText: controller.birthString.value,
                       errorText: controller.failure is UserFieldsFailure
-                          ? (controller.failure as UserFieldsFailure)
+                          ? (controller.failure as UserFieldsFailure?)
                               ?.birthdate
                               ?.first
                           : null,
@@ -161,13 +163,13 @@ class RegisterForm extends StatelessWidget {
                   hintText: '********',
                   keyboardType: TextInputType.text,
                   errorText: controller.failure is UserFieldsFailure
-                      ? (controller.failure as UserFieldsFailure)
+                      ? (controller.failure as UserFieldsFailure?)
                           ?.password
                           ?.first
                       : null,
                   validateRules: (value) {
                     controller.password = value;
-                    if (value.trim().isEmpty) {
+                    if (value != null && value.trim().isEmpty) {
                       return requireFieldMessage;
                     }
                     return null;

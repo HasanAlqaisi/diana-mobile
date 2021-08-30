@@ -18,14 +18,14 @@ abstract class TaskTagLocalSoucre {
 }
 
 class TaskTagLocalSoucreImpl extends TaskTagLocalSoucre {
-  final TaskTagDao taskTagDao;
+  final TaskTagDao? taskTagDao;
 
   TaskTagLocalSoucreImpl({this.taskTagDao});
 
   @override
   Future<void> insertTaskTag(TaskTagData taskTag) {
     try {
-      return taskTagDao.insertTaskTag(taskTag);
+      return taskTagDao!.insertTaskTag(taskTag);
     } on InvalidDataException {
       rethrow;
     }
@@ -33,26 +33,26 @@ class TaskTagLocalSoucreImpl extends TaskTagLocalSoucre {
 
   @override
   Stream<TagWithTasks> watchAllTaskForTag(String id) {
-    return taskTagDao.watchAllTaskForTag(id);
+    return taskTagDao!.watchAllTaskForTag(id);
   }
 
   @override
   Stream<TagWithTasks> watchCompletedTasksForTag(String id) {
-    return taskTagDao.watchCompletedTasksForTag(id);
+    return taskTagDao!.watchCompletedTasksForTag(id);
   }
 
   @override
   Stream<TagWithTasks> watchMissedTasksForTag(String id) {
-    return taskTagDao.watchMissedTasksForTag(id);
+    return taskTagDao!.watchMissedTasksForTag(id);
   }
 
   @override
   Stream<TagWithTasks> watchTodayTasksForTag(String id) {
-    return taskTagDao.watchTodayTasksForTag(id);
+    return taskTagDao!.watchTodayTasksForTag(id);
   }
 
   @override
   Future<int> deleteTaskTag(String taskId, tagId) {
-    return taskTagDao.deleteTaskTag(taskId, tagId);
+    return taskTagDao!.deleteTaskTag(taskId, tagId);
   }
 }

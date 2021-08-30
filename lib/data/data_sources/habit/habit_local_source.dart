@@ -12,24 +12,24 @@ abstract class HabitLocalSource {
   Future<void> insertHabits(HabitResponse habits);
 
   Stream<Future<List<HabitWitLogsWithDays>>> watchTodayHabits(
-      String userId, int todayInt);
+      String? userId, int todayInt);
 
-  Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits(String userId);
+  Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits(String? userId);
 
   Future<void> insertHabit(HabitResult habit);
 
   Future<int> deleteHabit(String habitId);
 
-  Future<void> deleteAndinsertHabitlogs(List<HabitResult> habitlogs);
+  Future<void> deleteAndinsertHabitlogs(List<HabitResult>? habitlogs);
 
-  Future<void> insertHabitlogs(List<HabitResult> habitlogs);
+  Future<void> insertHabitlogs(List<HabitResult>? habitlogs);
 
   Future<void> insertHabitlog(HabitResult habitlog);
 }
 
 class HabitLocalSourceImpl extends HabitLocalSource {
-  final HabitDao habitDao;
-  final HabitlogDao habitlogDao;
+  final HabitDao? habitDao;
+  final HabitlogDao? habitlogDao;
 
   HabitLocalSourceImpl({
     this.habitDao,
@@ -39,7 +39,7 @@ class HabitLocalSourceImpl extends HabitLocalSource {
   @override
   Future<void> deleteAndinsertHabits(HabitResponse habits) {
     try {
-      return habitDao.deleteAndinsertHabits(habits);
+      return habitDao!.deleteAndinsertHabits(habits);
     } on InvalidDataException {
       rethrow;
     }
@@ -48,41 +48,41 @@ class HabitLocalSourceImpl extends HabitLocalSource {
   @override
   Future<void> insertHabits(HabitResponse habits) {
     try {
-      return habitDao.insertHabits(habits);
+      return habitDao!.insertHabits(habits);
     } on InvalidDataException {
       rethrow;
     }
   }
 
   @override
-  Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits(String userId) {
-    return habitDao.watchAllHabits(userId);
+  Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits(String? userId) {
+    return habitDao!.watchAllHabits(userId);
   }
 
   @override
   Stream<Future<List<HabitWitLogsWithDays>>> watchTodayHabits(
-      String userId, int todayInt) {
-    return habitDao.watchTodayHabits(userId, todayInt);
+      String? userId, int todayInt) {
+    return habitDao!.watchTodayHabits(userId, todayInt);
   }
 
   @override
   Future<int> deleteHabit(String habitId) {
-    return habitDao.deleteHabit(habitId);
+    return habitDao!.deleteHabit(habitId);
   }
 
   @override
   Future<void> insertHabit(HabitResult habit) {
     try {
-      return habitDao.insertHabit(habit);
+      return habitDao!.insertHabit(habit);
     } on InvalidDataException {
       rethrow;
     }
   }
 
   @override
-  Future<void> deleteAndinsertHabitlogs(List<HabitResult> habitResults) {
+  Future<void> deleteAndinsertHabitlogs(List<HabitResult>? habitResults) {
     try {
-      return habitlogDao.deleteAndinsertHabitlogs(habitResults);
+      return habitlogDao!.deleteAndinsertHabitlogs(habitResults);
     } on InvalidDataException {
       rethrow;
     }
@@ -91,16 +91,16 @@ class HabitLocalSourceImpl extends HabitLocalSource {
   @override
   Future<void> insertHabitlog(HabitResult habitResult) {
     try {
-      return habitlogDao.insertHabitlogs([habitResult]);
+      return habitlogDao!.insertHabitlogs([habitResult]);
     } on InvalidDataException {
       rethrow;
     }
   }
 
   @override
-  Future<void> insertHabitlogs(List<HabitResult> habitResults) {
+  Future<void> insertHabitlogs(List<HabitResult>? habitResults) {
     try {
-      return habitlogDao.insertHabitlogs(habitResults);
+      return habitlogDao!.insertHabitlogs(habitResults);
     } on InvalidDataException {
       rethrow;
     }

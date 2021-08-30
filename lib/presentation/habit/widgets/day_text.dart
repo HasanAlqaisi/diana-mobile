@@ -6,10 +6,10 @@ class DayText extends StatelessWidget {
   final bool hasBorder;
 
   const DayText({
-    Key key,
-    @required this.text,
-    @required this.color,
-    @required this.hasBorder,
+    Key? key,
+    required this.text,
+    required this.color,
+    required this.hasBorder,
   }) : super(key: key);
 
   @override

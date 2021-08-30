@@ -4,7 +4,7 @@ import 'package:diana/data/remote_models/subtask/subtask_result.dart';
 import 'package:diana/domain/repos/task_repo.dart';
 
 class EditSubTaskUseCase {
-  final TaskRepo taskRepo;
+  final TaskRepo? taskRepo;
 
   EditSubTaskUseCase({this.taskRepo});
 
@@ -14,6 +14,6 @@ class EditSubTaskUseCase {
     bool isDone,
     String taskId,
   ) {
-    return taskRepo.editSubtask(subtaskId, name, isDone, taskId);
+    return taskRepo!.editSubtask(subtaskId, name, isDone, taskId);
   }
 }

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class UserProgressImage extends StatelessWidget {
-  final UserData user;
+  final UserData? user;
 
-  const UserProgressImage({Key key, this.user}) : super(key: key);
+  const UserProgressImage({Key? key, this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class UserProgressImage extends StatelessWidget {
                       ),
                     ));
                   },
-                  imageUrl: user.picture,
+                  imageUrl: user!.picture!,
                   placeholder: (context, str) => _buildPlaceholderImage())
               : _buildPlaceholderImage()),
     );

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class RoundedTextField extends StatelessWidget {
-  final String labelText;
-  final String hintText;
-  final String errorText;
-  final bool isObsecure;
-  final bool isReadOnly;
-  final Function onTap;
+  final String? labelText;
+  final String? hintText;
+  final String? errorText;
+  final bool? isObsecure;
+  final bool? isReadOnly;
+  final Function? onTap;
 
-  final TextInputType keyboardType;
-  final Function(String value) validateRules;
+  final TextInputType? keyboardType;
+  final Function(String? value)? validateRules;
 
   RoundedTextField(
       {this.labelText,
@@ -27,7 +27,7 @@ class RoundedTextField extends StatelessWidget {
       onTap: () {
         onTap?.call();
       },
-      obscureText: this.isObsecure,
+      obscureText: this.isObsecure!,
       keyboardType: keyboardType ?? TextInputType.text,
       readOnly: isReadOnly ?? false,
       decoration: InputDecoration(

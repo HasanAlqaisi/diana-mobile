@@ -2,11 +2,11 @@ import 'package:diana/data/database/relations/task_with_subtasks/task_with_subta
 import 'package:diana/domain/repos/task_repo.dart';
 
 class WatchMissedTasksUseCase {
-  final TaskRepo taskRepo;
+  final TaskRepo? taskRepo;
 
   WatchMissedTasksUseCase(this.taskRepo);
 
   Stream<List<TaskWithSubtasks>> call(List<String> tags) {
-    return taskRepo.watchMissedTasks(tags);
+    return taskRepo!.watchMissedTasks(tags);
   }
 }

@@ -15,7 +15,7 @@ import 'package:diana/presentation/task/controller/add_task_controller.dart';
 class AddTaskScreen extends StatelessWidget {
   static const route = '/add_task';
 
-  final data = (Get.arguments as List<dynamic>);
+  final data = (Get.arguments as List<dynamic>?);
 
   @override
   Widget build(BuildContext context) {
@@ -66,12 +66,12 @@ class AddTaskScreen extends StatelessWidget {
                                 color: Color(0xFFA687FF), width: 0.5),
                           ),
                           errorText: _.failure is TaskFieldsFailure
-                              ? (_.failure as TaskFieldsFailure)?.name?.first
+                              ? (_.failure as TaskFieldsFailure?)?.name?.first
                               : null,
                         ),
                         validator: (title) {
                           _.taskName = title;
-                          if (title.trim().isEmpty) return requireFieldMessage;
+                          if (title!.trim().isEmpty) return requireFieldMessage;
                           return null;
                         },
                       ),
@@ -122,7 +122,7 @@ class AddTaskScreen extends StatelessWidget {
                                 color: Color(0xFFA687FF), width: 0.5),
                           ),
                           errorText: _.failure is TaskFieldsFailure
-                              ? (_.failure as TaskFieldsFailure)?.note?.first
+                              ? (_.failure as TaskFieldsFailure?)?.note?.first
                               : null,
                         ),
                         validator: (note) {
@@ -285,9 +285,10 @@ class AddTaskScreen extends StatelessWidget {
                           children: [
                             Checkbox(
                               value: _.shouldRemind.value &&
-                                  _.date.value?.year != 0,
+                                  _.date.value.year != 0,
                               onChanged: (newValue) {
-                                _.shouldRemind.value = newValue;
+                                if(_.date.value.year != 0)
+                                _.shouldRemind.value = newValue!;
                               },
                               checkColor: Colors.black,
                               activeColor: Colors.white,
@@ -296,7 +297,7 @@ class AddTaskScreen extends StatelessWidget {
                               'Remind me',
                               style: TextStyle(
                                 color: _.shouldRemind.value &&
-                                        _.date.value?.year != 0
+                                        _.date.value.year != 0
                                     ? Colors.white
                                     : Color(0xFF4A15B5),
                                 fontSize: 16,
@@ -305,7 +306,7 @@ class AddTaskScreen extends StatelessWidget {
                             ),
                             Visibility(
                               visible: _.shouldRemind.value &&
-                                  _.date.value?.year != 0,
+                                  _.date.value.year != 0,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 14.0),
@@ -333,7 +334,7 @@ class AddTaskScreen extends StatelessWidget {
                                         });
                                       },
                                       child: Text(
-                                        '${_.date.value?.hour}:${_.date.value?.minute}',
+                                        '${_.date.value.hour}:${_.date.value.minute}',
                                         style: TextStyle(color: Colors.white),
                                       )),
                                 ),
@@ -409,7 +410,7 @@ class AddTaskScreen extends StatelessWidget {
                         style: TextStyle(color: Color(0xFFA687FF)),
                         decoration: InputDecoration(
                           errorText: _.failure is TagFieldsFailure
-                              ? (_.failure as TagFieldsFailure)?.name?.first
+                              ? (_.failure as TagFieldsFailure?)?.name?.first
                               : null,
                           hintText: 'New Tag...',
                           hintStyle: TextStyle(color: Color(0xFFA687FF)),
@@ -439,7 +440,7 @@ class AddTaskScreen extends StatelessWidget {
                       stream: TaskController.to.watchAllTags(),
                       initialData: [],
                       builder: (context, snapshot) {
-                        final data = snapshot?.data;
+                        final data = snapshot.data;
                         if (data != null && data.isNotEmpty) {
                           return SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
@@ -466,7 +467,7 @@ class AddTaskScreen extends StatelessWidget {
                           iconSize: 60.0,
                           highlightColor: Colors.transparent,
                           onPressed: () async {
-                            if (_.formKey.currentState.validate()) {
+                            if (_.formKey.currentState!.validate()) {
                               showLoaderDialog();
                               await _.onTaskPlusClicked();
                               Get.back();

@@ -6,11 +6,11 @@ import 'package:diana/data/remote_models/auth/user.dart';
 import 'package:diana/domain/repos/auth_repo.dart';
 
 class UploadProfileImageUsecase {
-  final AuthRepo authRepo;
+  final AuthRepo? authRepo;
 
   UploadProfileImageUsecase(this.authRepo);
 
   Future<Either<Failure, User>> call(File image) {
-    return authRepo.uploadProfileImage(image);
+    return authRepo!.uploadProfileImage(image);
   }
 }

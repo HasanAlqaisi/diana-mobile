@@ -11,18 +11,18 @@ abstract class HabitRepo {
 
   Future<Either<Failure, HabitResult>> insertHabit(
     String name,
-    List<int> days,
-    String time,
+    List<int>? days,
+    String? time,
   );
 
   Future<Either<Failure, HabitResult>> editHabit(
     String habitId,
     String name,
     List<int> days,
-    String time,
+    String? time,
   );
 
-  Future<Either<Failure, bool>> deleteHabit(String habitId, List<DateTime> dates);
+  Future<Either<Failure, bool>> deleteHabit(String habitId, List<DateTime>? dates);
 
   Future<Either<Failure, HabitlogResponse>> getHabitlogs(
     String habitId,

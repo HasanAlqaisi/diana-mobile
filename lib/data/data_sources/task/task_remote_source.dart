@@ -7,18 +7,18 @@ import 'package:diana/data/remote_models/task/task_result.dart';
 import 'package:http/http.dart' as http;
 
 abstract class TaskRemoteSource {
-  Future<TaskResponse> getTasks(int offset);
+  Future<TaskResponse> getTasks(int? offset);
 
   Future<TaskResult> insertTask(
     String name,
-    String note,
-    List<String> tags,
-    List<String> checkList,
-    String date,
-    String reminder,
-    String deadline,
-    int priority,
-    bool done,
+    String? note,
+    List<String>? tags,
+    List<String?>? checkList,
+    String? date,
+    String? reminder,
+    String? deadline,
+    int? priority,
+    bool? done,
   );
 
   Future<TaskResult> editTask(
@@ -26,10 +26,10 @@ abstract class TaskRemoteSource {
     String name,
     String note,
     List<String> tags,
-    List<String> checkList,
-    String date,
-    String reminder,
-    String deadline,
+    List<String?> checkList,
+    String? date,
+    String? reminder,
+    String? deadline,
     int priority,
     bool done,
   );
@@ -40,13 +40,13 @@ abstract class TaskRemoteSource {
 }
 
 class TaskRemoteSourceImpl extends TaskRemoteSource {
-  final http.Client client;
+  final http.Client? client;
 
   TaskRemoteSourceImpl({this.client});
 
   @override
-  Future<TaskResponse> getTasks(int offset) async {
-    final response = await client.get(
+  Future<TaskResponse> getTasks(int? offset) async {
+    final response = await client!.get(
       Uri.parse('$baseUrl/task/?limit=100&offset=$offset'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -66,27 +66,27 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
   @override
   Future<TaskResult> insertTask(
     String name,
-    String note,
-    List<String> tags,
-    List<String> checkList,
-    String date,
-    String reminder,
-    String deadline,
-    int priority,
-    bool done,
+    String? note,
+    List<String>? tags,
+    List<String?>? checkList,
+    String? date,
+    String? reminder,
+    String? deadline,
+    int? priority,
+    bool? done,
   ) async {
     print("""
             title: $name,
         note: $note,
-        with_tags: ${tags ?? []},
-        with_subtasks: ${checkList ?? []},
+        with_tags: $tags,
+        with_subtasks: $checkList,
         date: $date,
         reminder: $reminder,
         deadline: $deadline,
-        priority: ${priority ?? 0},
-        done: ${done ?? false},
+        priority: $priority,
+        done: $done,
     """);
-    final response = await client.post(Uri.parse('$baseUrl/task/'),
+    final response = await client!.post(Uri.parse('$baseUrl/task/'),
         headers: {
           'Authorization': 'Bearer $kToken',
           'Content-type': 'application/json',
@@ -123,10 +123,10 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     String name,
     String note,
     List<String> tags,
-    List<String> checkList,
-    String date,
-    String reminder,
-    String deadline,
+    List<String?> checkList,
+    String? date,
+    String? reminder,
+    String? deadline,
     int priority,
     bool done,
   ) async {
@@ -141,7 +141,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
     priority: $priority
     done: $done""");
 
-    final response = await client.put(
+    final response = await client!.put(
       Uri.parse('$baseUrl/task/$taskId/'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -178,7 +178,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
 
   @override
   Future<bool> deleteTask(String taskId) async {
-    final response = await client.delete(
+    final response = await client!.delete(
       Uri.parse('$baseUrl/task/$taskId/'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -198,7 +198,7 @@ class TaskRemoteSourceImpl extends TaskRemoteSource {
 
   @override
   Future<TaskResult> makeTaskDone(String taskId) async {
-    final response = await client.patch(
+    final response = await client!.patch(
       Uri.parse('$baseUrl/task/$taskId/'),
       headers: {
         'Authorization': 'Bearer $kToken',

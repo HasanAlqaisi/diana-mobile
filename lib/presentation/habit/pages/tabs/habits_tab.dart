@@ -6,10 +6,10 @@ import 'package:diana/presentation/task/widgets/quick_add_field.dart';
 import 'package:flutter/widgets.dart';
 
 class HabitsTab extends StatelessWidget {
-  final HabitType habitType;
+  final HabitType? habitType;
   final controller = HabitController.to;
 
-  HabitsTab({Key key, this.habitType}) : super(key: key);
+  HabitsTab({Key? key, this.habitType}) : super(key: key);
  
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class HabitsTab extends StatelessWidget {
               controller.insertHabit(habitName: habitName, days: []);
             },
             errorText: controller.failure is HabitFieldsFailure
-                ? (controller.failure as HabitFieldsFailure)?.name?.first
+                ? (controller.failure as HabitFieldsFailure?)?.name?.first
                 : null,
           ),
         ),

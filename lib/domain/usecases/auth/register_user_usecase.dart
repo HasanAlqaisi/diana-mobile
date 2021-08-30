@@ -4,7 +4,7 @@ import 'package:diana/data/remote_models/auth/user.dart';
 import 'package:diana/domain/repos/auth_repo.dart';
 
 class RegisterUserUsecase {
-  final AuthRepo authRepo;
+  final AuthRepo? authRepo;
 
   RegisterUserUsecase(this.authRepo);
 
@@ -16,7 +16,7 @@ class RegisterUserUsecase {
     String birthdate,
     String password,
   ) {
-    return authRepo.registerUser(
+    return authRepo!.registerUser(
         firstName, lastName, username, email, birthdate, password);
   }
 }

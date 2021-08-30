@@ -17,7 +17,7 @@ class SubTaskDao extends DatabaseAccessor<AppDatabase> with _$SubTaskDaoMixin {
       await delete(subTaskTable).go();
       await batch((batch) {
         batch.insertAll(subTaskTable,
-            SubTaskTable.fromSubTaskResponse(subtaskResponse.results),
+            SubTaskTable.fromSubTaskResponse(subtaskResponse.results!),
             mode: InsertMode.replace);
       });
     });
@@ -26,7 +26,7 @@ class SubTaskDao extends DatabaseAccessor<AppDatabase> with _$SubTaskDaoMixin {
   Future<void> insertSubTasks(SubtaskResponse subtaskResponse) async {
     await batch((batch) {
       batch.insertAll(subTaskTable,
-          SubTaskTable.fromSubTaskResponse(subtaskResponse.results),
+          SubTaskTable.fromSubTaskResponse(subtaskResponse.results!),
           mode: InsertMode.replace);
     });
   }

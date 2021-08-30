@@ -4,7 +4,7 @@ import 'package:diana/data/remote_models/task/task_result.dart';
 import 'package:diana/domain/repos/task_repo.dart';
 
 class EditTaskUseCase {
-  final TaskRepo taskRepo;
+  final TaskRepo? taskRepo;
 
   EditTaskUseCase({this.taskRepo});
 
@@ -12,15 +12,15 @@ class EditTaskUseCase {
     String taskId,
     String name,
     String note,
-    String date,
+    String? date,
     List<String> tags,
-    List<String> checklist,
-    String reminder,
-    String deadline,
+    List<String?> checklist,
+    String? reminder,
+    String? deadline,
     int priority,
     bool done,
   ) {
-    return taskRepo.editTask(
+    return taskRepo!.editTask(
         taskId, name, note, date, tags, checklist, reminder, deadline, priority, done);
   }
 }

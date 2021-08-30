@@ -20,20 +20,20 @@ class SubTaskTable extends Table {
       List<SubtaskResult> subtasks) {
     return subtasks
         .map((subtask) => SubTaskTableCompanion(
-              id: Value(subtask.id),
-              taskId: Value(subtask.taskId),
-              name: Value(subtask.name),
-              done: Value(subtask.done),
+              id: Value(subtask.id!),
+              taskId: Value(subtask.taskId!),
+              name: Value(subtask.name!),
+              done: Value(subtask.done!),
             ))
         .toList();
   }
 
   static SubTaskTableCompanion fromSubTaskResult(SubtaskResult subtask) {
     return SubTaskTableCompanion(
-      id: Value(subtask.id),
-      taskId: Value(subtask.taskId),
-      name: Value(subtask.name),
-      done: Value(subtask.done),
+      id: Value(subtask.id!),
+      taskId: Value(subtask.taskId!),
+      name: Value(subtask.name!),
+      done: Value(subtask.done!),
     );
   }
 }

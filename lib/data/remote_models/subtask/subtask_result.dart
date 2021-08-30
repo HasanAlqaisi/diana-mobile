@@ -5,12 +5,12 @@ part 'subtask_result.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class SubtaskResult extends Equatable {
-  final String id;
+  final String? id;
   @JsonKey(name: 'title')
-  final String name;
-  final bool done;
+  final String? name;
+  final bool? done;
   @JsonKey(name: 'task')
-  final String taskId;
+  final String? taskId;
 
   SubtaskResult({this.id, this.name, this.done, this.taskId});
 
@@ -20,7 +20,7 @@ class SubtaskResult extends Equatable {
   Map<String, dynamic> toJson() => _$SubtaskResultToJson(this);
 
   @override
-  List<Object> get props => [id, name, done, taskId];
+  List<Object?> get props => [id, name, done, taskId];
 
   @override
   bool get stringify => true;

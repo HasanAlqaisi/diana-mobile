@@ -7,13 +7,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class SubtaskField extends StatelessWidget {
   final int index;
   final Function(SubtaskField) removeField;
-  final String text;
+  final String? text;
 
   SubtaskField({
-    Key key,
+    Key? key,
     this.text,
-    @required this.index,
-    @required this.removeField,
+    required this.index,
+    required this.removeField,
   }) : super(key: key);
 
   @override
@@ -38,7 +38,7 @@ class SubtaskField extends StatelessWidget {
                 borderSide: BorderSide(color: Color(0xFFA687FF), width: 0.5),
               ),
               errorText: controller.failure is SubtaskFieldsFailure
-                  ? (controller.failure as SubtaskFieldsFailure)?.name?.first
+                  ? (controller.failure as SubtaskFieldsFailure?)?.name?.first
                   : null,
               prefixIcon: GestureDetector(
                 onTap: () {
@@ -50,7 +50,7 @@ class SubtaskField extends StatelessWidget {
               ),
             ),
             validator: (subtaskName) {
-              if (subtaskName.trim().isEmpty) return requireFieldMessage;
+              if (subtaskName!.trim().isEmpty) return requireFieldMessage;
               if (!controller.subtasksNames.contains(subtaskName))
                 controller.subtasksNames.add(subtaskName);
               return null;

@@ -23,9 +23,9 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
       // Insert data for habit, days
       await batch((batch) {
         batch.insertAll(
-            habitTable, HabitTable.fromHabitResponse(habits.results),
+            habitTable, HabitTable.fromHabitResponse(habits.results!),
             mode: InsertMode.replace);
-        batch.insertAll(daysTable, DaysTable.fromHabitResponse(habits.results),
+        batch.insertAll(daysTable, DaysTable.fromHabitResponse(habits.results)!,
             mode: InsertMode.replace);
       });
     });
@@ -36,9 +36,9 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
       // Insert data for habit, days
       await batch((batch) {
         batch.insertAll(
-            habitTable, HabitTable.fromHabitResponse(habits.results),
+            habitTable, HabitTable.fromHabitResponse(habits.results!),
             mode: InsertMode.replace);
-        batch.insertAll(daysTable, DaysTable.fromHabitResponse(habits.results),
+        batch.insertAll(daysTable, DaysTable.fromHabitResponse(habits.results)!,
             mode: InsertMode.replace);
       });
     });
@@ -61,7 +61,7 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
   }
 
   Stream<Future<List<HabitWitLogsWithDays>>> watchTodayHabits(
-      String userId, int todayInt) {
+      String? userId, int todayInt) {
     return ((select(habitTable)..where((tbl) => tbl.userId.equals(userId)))
             .join([
       leftOuterJoin(
@@ -79,7 +79,7 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
                   daysTable.daySix.equals(todayInt))))
         .watch()
         .map((rows) async {
-      final result = <HabitData, List<HabitlogData>>{};
+      final result = <HabitData?, List<HabitlogData>>{};
       for (final row in rows) {
         final habit = row.readTableOrNull(habitTable);
         final habitLog = row.readTableOrNull(habitlogTable);
@@ -93,14 +93,14 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
             habit: entry.key,
             habitLogs: entry.value,
             days: await (select(daysTable)
-                  ..where((tbl) => tbl.habitId.equals(entry.key.id)))
+                  ..where((tbl) => tbl.habitId.equals(entry.key!.id)))
                 .getSingle(),
           )
       ];
     });
   }
 
-  Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits(String userId) {
+  Stream<Future<List<HabitWitLogsWithDays>>> watchAllHabits(String? userId) {
     return ((select(habitTable)..where((tbl) => tbl.userId.equals(userId)))
         .join([
           leftOuterJoin(
@@ -109,7 +109,7 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
         ])
         .watch()
         .map((rows) async {
-          final result = <HabitData, List<HabitlogData>>{};
+          final result = <HabitData?, List<HabitlogData>>{};
           for (final row in rows) {
             final habit = row.readTableOrNull(habitTable);
             final habitLog = row.readTableOrNull(habitlogTable);
@@ -123,7 +123,7 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
                 habit: entry.key,
                 habitLogs: entry.value,
                 days: await (select(daysTable)
-                      ..where((tbl) => tbl.habitId.equals(entry.key.id)))
+                      ..where((tbl) => tbl.habitId.equals(entry.key!.id)))
                     .getSingle(),
               )
           ];

@@ -18,13 +18,13 @@ abstract class HabitlogRemoteSource {
 }
 
 class HabitlogRemoteSourceImpl extends HabitlogRemoteSource {
-  final http.Client client;
+  final http.Client? client;
 
   HabitlogRemoteSourceImpl({this.client});
 
   @override
   Future<HabitlogResponse> getHabitlogs(int offset, String habitId) async {
-    final response = await client.get(
+    final response = await client!.get(
       Uri.parse('$baseUrl/habitlog/?limit=100&offset=$offset&habit=$habitId/'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -43,7 +43,7 @@ class HabitlogRemoteSourceImpl extends HabitlogRemoteSource {
 
   @override
   Future<HabitlogResult> insertHabitlog(String habitId) async {
-    final response = await client.post(
+    final response = await client!.post(
       Uri.parse('$baseUrl/habitlog/'),
       headers: {
         'Authorization': 'Bearer $kToken',

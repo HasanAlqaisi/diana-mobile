@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RegistrationController extends GetxController {
-  final RegisterUserUsecase registerUserUseCase;
-  String firstName = '', lastName = '', username = '', email, password = '';
-  DateTime birthdate;
+  final RegisterUserUsecase? registerUserUseCase;
+  String? firstName = '', lastName = '', username = '', email, password = '';
+  DateTime? birthdate;
   RxString birthString = 'YYYY-mm-DD'.obs;
-  Failure failure;
+  Failure? failure;
   bool isLoading = false;
 
   var formKey = GlobalKey<FormState>();
@@ -20,13 +20,13 @@ class RegistrationController extends GetxController {
   void onSignupPressed() async {
     if (isLoading) return;
 
-    if (formKey.currentState.validate()) {
+    if (formKey.currentState!.validate()) {
       isLoading = true;
       failure = null;
       update();
 
-      final result = await registerUserUseCase(
-          firstName, lastName, username, email, birthString.value, password);
+      final result = await (registerUserUseCase!(
+          firstName!, lastName!, username!, email!, birthString.value, password!));
       isLoading = false;
       update();
 

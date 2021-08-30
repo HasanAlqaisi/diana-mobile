@@ -4,11 +4,11 @@ import 'package:diana/domain/repos/task_repo.dart';
 import 'package:diana/data/remote_models/tag/tag_response.dart';
 
 class GetTagsUseCase {
-  final TaskRepo taskRepo;
+  final TaskRepo? taskRepo;
 
   GetTagsUseCase({this.taskRepo});
 
   Future<Either<Failure, TagResponse>> call() {
-    return taskRepo.getTags();
+    return taskRepo!.getTags();
   }
 }

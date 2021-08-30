@@ -15,7 +15,7 @@ class Home extends StatelessWidget {
           if (controller.isLogged == null) {
             return Container(color: Colors.white);
           }
-          if (controller.isLogged) {
+          if (controller.isLogged!) {
             return Nav();
           } else {
             return LoginScreen();

@@ -7,8 +7,8 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/route_manager.dart';
 
 PreferredSizeWidget buildDianaAppBar({
-  @required TabBar tabBar,
-  @required Rx<UserData> user,
+  required TabBar tabBar,
+  required Rx<UserData> user,
 }) {
   return AppBar(
     title: Padding(
@@ -19,7 +19,7 @@ PreferredSizeWidget buildDianaAppBar({
             children: [
               TextSpan(
                   text: 'Hey, ', style: TextStyle(fontWeight: FontWeight.w300)),
-              TextSpan(text: '${user?.value?.firstName ?? ''}'),
+              TextSpan(text: '${user.value.firstName ?? ''}'),
             ],
           ),
         ),

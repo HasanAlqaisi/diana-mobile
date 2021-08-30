@@ -15,10 +15,10 @@ class TaskTagTable extends Table {
   @override
   Set<Column> get primaryKey => {taskId, tagId};
 
-  static TaskTagTableCompanion fromTaskResult(TaskResult task, String tagId) {
+  static TaskTagTableCompanion fromTaskResult(TaskResult task, String? tagId) {
     return TaskTagTableCompanion(
-      taskId: Value(task.taskId),
-      tagId: Value(tagId),
+      taskId: Value(task.taskId!),
+      tagId: Value(tagId!),
     );
   }
 }

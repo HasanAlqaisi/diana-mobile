@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-String dateToDjangotring(DateTime localDate) {
+String? dateToDjangotring(DateTime? localDate) {
   if (localDate == null) {
     log('localDate is null', name: 'dateToDjangotring');
     return null;
@@ -8,7 +8,7 @@ String dateToDjangotring(DateTime localDate) {
   return '${localDate.year}-${localDate.month}-${localDate.day}';
 }
 
-String dateAndTimeToDjango(DateTime localDate) {
+String? dateAndTimeToDjango(DateTime? localDate) {
   if (localDate == null) {
     log('localDate is null', name: 'dateAndTimeToDjango');
     return null;

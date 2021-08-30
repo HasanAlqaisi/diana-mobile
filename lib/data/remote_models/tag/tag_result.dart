@@ -5,11 +5,11 @@ part 'tag_result.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class TagResult extends Equatable {
-  final String id;
-  final String name;
-  final int color;
+  final String? id;
+  final String? name;
+  final int? color;
   @JsonKey(name: 'user')
-  final String userId;
+  final String? userId;
 
   TagResult({this.id, this.name, this.color, this.userId});
 
@@ -19,7 +19,7 @@ class TagResult extends Equatable {
   Map<String, dynamic> toJson() => _$TagResultToJson(this);
 
   @override
-  List<Object> get props => [id, name, color, userId];
+  List<Object?> get props => [id, name, color, userId];
 
   @override
   bool get stringify => true;

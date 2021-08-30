@@ -27,17 +27,17 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
       // Insert data for task, tasktag
       await batch((batch) {
         batch.insertAll(
-            taskTable, TaskTable.fromTaskResponse(taskResponse.results),
+            taskTable, TaskTable.fromTaskResponse(taskResponse.results!),
             mode: InsertMode.replace);
 
-        taskResponse.results.forEach((task) {
+        taskResponse.results!.forEach((task) {
           batch.insertAll(
-              subTaskTable, SubTaskTable.fromSubTaskResponse(task.checkList),
+              subTaskTable, SubTaskTable.fromSubTaskResponse(task.checkList!),
               mode: InsertMode.replace);
         });
 
-        taskResponse.results.forEach(
-          (task) => task.tags.forEach(
+        taskResponse.results!.forEach(
+          (task) => task.tags!.forEach(
             (tag) => batch.insert(
               taskTagTable,
               TaskTagTable.fromTaskResult(task, tag.id),
@@ -54,17 +54,17 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
       // Insert data for task, tasktag
       await batch((batch) {
         batch.insertAll(
-            taskTable, TaskTable.fromTaskResponse(taskResponse.results),
+            taskTable, TaskTable.fromTaskResponse(taskResponse.results!),
             mode: InsertMode.replace);
 
-        taskResponse.results.forEach((task) {
+        taskResponse.results!.forEach((task) {
           batch.insertAll(
-              subTaskTable, SubTaskTable.fromSubTaskResponse(task.checkList),
+              subTaskTable, SubTaskTable.fromSubTaskResponse(task.checkList!),
               mode: InsertMode.replace);
         });
 
-        taskResponse.results.forEach(
-          (task) => task.tags.forEach(
+        taskResponse.results!.forEach(
+          (task) => task.tags!.forEach(
             (tag) => batch.insert(
               taskTagTable,
               TaskTagTable.fromTaskResult(task, tag.id),
@@ -79,14 +79,14 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
   /// Return today incompleted tasks with its subtasks, for specific user
   /// How do we know it's for today? compare time with date field
   Stream<List<TaskWithSubtasks>> watchTodayTasks(
-      String userId, List<String> tags) {
+      String? userId, List<String> tags) {
     // We can't use the currentDate generated from room
     // Because currentDate will take the current date value and
     // Convert it to UTC, but in our date column we are only saving
     // the date field (without time), so we won't care about timezone
     // That's why we make our currentDate version
     final currentDate = DateTime.now();
-    return (((select(taskTable)
+    return (select(taskTable)
           ..where((tbl) {
             return tbl.userId.equals(userId) &
                 SqlIsNull(tbl.doneAt).isNull() &
@@ -105,7 +105,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
         ])
         .watch()
         .map((rows) {
-          final result = <TaskData, List<SubTaskData>>{};
+          final result = <TaskData?, List<SubTaskData>>{};
           for (final row in rows) {
             final task = row.readTableOrNull(taskTable);
             final subtask = row.readTableOrNull(subTaskTable);
@@ -117,18 +117,19 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
             for (final entry in result.entries)
               TaskWithSubtasks(task: entry.key, subtasks: entry.value)
           ];
-        })));
+        });
   }
 
   /// Return all incompleted tasks with its subtasks
   Stream<List<TaskWithSubtasks>> watchAllTasks(
-      String userId, List<String> tags) {
+      String? userId, List<String> tags) {
     return ((select(taskTable)
           ..where((tbl) =>
               tbl.userId.equals(userId) &
               SqlIsNull(tbl.doneAt).isNull() &
               (tbl.deadline.isBiggerThan(currentDateAndTime) &
-                      tbl.deadline.isBiggerThan(tbl.date) |
+                      (SqlIsNull(tbl.date).isNull() |
+                          tbl.deadline.isBiggerThan(tbl.date)) |
                   SqlIsNull(tbl.deadline).isNull()))
           ..orderBy([
             (u) =>
@@ -140,7 +141,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
         ])
         .watch()
         .map((rows) {
-          final result = <TaskData, List<SubTaskData>>{};
+          final result = <TaskData?, List<SubTaskData>>{};
           for (final row in rows) {
             final task = row.readTableOrNull(taskTable);
             final subtask = row.readTableOrNull(subTaskTable);
@@ -156,7 +157,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
   }
 
   Stream<List<TaskWithSubtasks>> watchCompletedTasks(
-      String userId, List<String> tags) {
+      String? userId, List<String> tags) {
     return ((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))
           ..where((tbl) => SqlIsNull(tbl.doneAt).isNotNull()))
         .join([
@@ -165,7 +166,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
         ])
         .watch()
         .map((rows) {
-          final result = <TaskData, List<SubTaskData>>{};
+          final result = <TaskData?, List<SubTaskData>>{};
           for (final row in rows) {
             final task = row.readTableOrNull(taskTable);
             final subtask = row.readTableOrNull(subTaskTable);
@@ -181,7 +182,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
   }
 
   Stream<List<TaskWithSubtasks>> watchMissedTasks(
-      String userId, List<String> tags) {
+      String? userId, List<String> tags) {
     return ((select(taskTable)..where((tbl) => tbl.userId.equals(userId)))
           ..where(
             (tbl) =>
@@ -195,7 +196,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
         ])
         .watch()
         .map((rows) {
-          final result = <TaskData, List<SubTaskData>>{};
+          final result = <TaskData?, List<SubTaskData>>{};
           for (final row in rows) {
             final task = row.readTableOrNull(taskTable);
             final subtask = row.readTableOrNull(subTaskTable);
@@ -222,10 +223,10 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
             mode: InsertMode.replace);
 
         batch.insertAll(subTaskTable,
-            SubTaskTable.fromSubTaskResponse(taskResult.checkList),
+            SubTaskTable.fromSubTaskResponse(taskResult.checkList!),
             mode: InsertMode.replace);
 
-        taskResult.tags.forEach(
+        taskResult.tags!.forEach(
           (tag) => batch.insert(
             taskTagTable,
             TaskTagTable.fromTaskResult(taskResult, tag.id),
@@ -236,12 +237,12 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
     });
   }
 
-  Stream<List<TagData>> watchAllTags(String userId) {
+  Stream<List<TagData>> watchAllTags(String? userId) {
     return ((select(tagTable)..where((tbl) => tbl.userId.equals(userId)))
         .watch());
   }
 
-  Stream<TaskWithTags> watchTagsForClass(String userId, String taskId) {
+  Stream<TaskWithTags> watchTagsForClass(String? userId, String taskId) {
     final taskQuery = select(taskTable)
       ..where((task) => task.userId.equals(userId) & task.id.equals(taskId));
     final contentQuery = select(taskTagTable).join([
@@ -257,7 +258,7 @@ class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
     return Rx.combineLatest2(
         taskStream,
         contentStream,
-        (TaskData task, List<TagData> tags) =>
+        (TaskData task, List<TagData?> tags) =>
             TaskWithTags(task: task, tags: tags));
   }
 }

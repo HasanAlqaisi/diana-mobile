@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class RoundedButton extends StatelessWidget {
-  final Widget child;
-  final Function onPressed;
+  final Widget? child;
+  final Function? onPressed;
 
   const RoundedButton({this.onPressed, this.child});
 

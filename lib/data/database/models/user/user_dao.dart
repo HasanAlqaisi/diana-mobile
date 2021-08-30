@@ -17,7 +17,7 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
     await delete(userTable).go();
   }
 
-  Stream<UserData> watchUser(String userId) {
+  Stream<UserData> watchUser(String? userId) {
     return (select(userTable)..where((tbl) => tbl.id.equals(userId)))
         .watchSingle();
   }

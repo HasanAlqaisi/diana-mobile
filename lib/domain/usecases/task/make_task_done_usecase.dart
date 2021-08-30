@@ -4,11 +4,11 @@ import 'package:diana/data/remote_models/task/task_result.dart';
 import 'package:diana/domain/repos/task_repo.dart';
 
 class MakeTaskDoneUseCase {
-  final TaskRepo taskRepo;
+  final TaskRepo? taskRepo;
 
   MakeTaskDoneUseCase({this.taskRepo});
 
   Future<Either<Failure, TaskResult>> call(String taskId) {
-    return taskRepo.makeTaskDone(taskId);
+    return taskRepo!.makeTaskDone(taskId);
   }
 }

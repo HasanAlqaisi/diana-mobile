@@ -21,18 +21,18 @@ abstract class TaskLocalSource {
   Future<void> insertTasks(TaskResponse taskResponse);
 
   Stream<List<TaskWithSubtasks>> watchTodayTasks(
-      String userId, List<String> tags);
+      String? userId, List<String> tags);
 
   Stream<List<TaskWithSubtasks>> watchAllTasks(
-      String userId, List<String> tags);
+      String? userId, List<String> tags);
 
   Stream<List<TaskWithSubtasks>> watchCompletedTasks(
-      String userId, List<String> tags);
+      String? userId, List<String> tags);
 
   Stream<List<TaskWithSubtasks>> watchMissedTasks(
-      String userId, List<String> tags);
+      String? userId, List<String> tags);
 
-  Stream<List<TagData>> watchAllTags(String userId);
+  Stream<List<TagData>> watchAllTags(String? userId);
 
   Future<int> deleteTag(String tagId);
 
@@ -54,13 +54,13 @@ abstract class TaskLocalSource {
 
   Future<void> insertTags(TagResponse tagResponse);
 
-  Stream<TaskWithTags> watchTagsForTask(String userId, String taskId);
+  Stream<TaskWithTags> watchTagsForTask(String? userId, String taskId);
 }
 
 class TaskLocalSourceImpl extends TaskLocalSource {
-  final TaskDao taskDao;
-  final TagDao tagDao;
-  final SubTaskDao subTaskDao;
+  final TaskDao? taskDao;
+  final TagDao? tagDao;
+  final SubTaskDao? subTaskDao;
 
   TaskLocalSourceImpl({
     this.taskDao,
@@ -73,7 +73,7 @@ class TaskLocalSourceImpl extends TaskLocalSource {
     TaskResponse taskResponse,
   ) {
     try {
-      return taskDao.deleteAndinsertTasks(taskResponse);
+      return taskDao!.deleteAndinsertTasks(taskResponse);
     } on InvalidDataException {
       rethrow;
     }
@@ -82,7 +82,7 @@ class TaskLocalSourceImpl extends TaskLocalSource {
   @override
   Future<void> insertTasks(TaskResponse taskResponse) {
     try {
-      return taskDao.insertTasks(taskResponse);
+      return taskDao!.insertTasks(taskResponse);
     } on InvalidDataException {
       rethrow;
     }
@@ -90,37 +90,37 @@ class TaskLocalSourceImpl extends TaskLocalSource {
 
   @override
   Stream<List<TaskWithSubtasks>> watchAllTasks(
-      String userId, List<String> tags) {
-    return taskDao.watchAllTasks(userId, tags);
+      String? userId, List<String> tags) {
+    return taskDao!.watchAllTasks(userId, tags);
   }
 
   @override
   Stream<List<TaskWithSubtasks>> watchCompletedTasks(
-      String userId, List<String> tags) {
-    return taskDao.watchCompletedTasks(userId, tags);
+      String? userId, List<String> tags) {
+    return taskDao!.watchCompletedTasks(userId, tags);
   }
 
   @override
   Stream<List<TaskWithSubtasks>> watchMissedTasks(
-      String userId, List<String> tags) {
-    return taskDao.watchMissedTasks(userId, tags);
+      String? userId, List<String> tags) {
+    return taskDao!.watchMissedTasks(userId, tags);
   }
 
   @override
   Stream<List<TaskWithSubtasks>> watchTodayTasks(
-      String userId, List<String> tags) {
-    return taskDao.watchTodayTasks(userId, tags);
+      String? userId, List<String> tags) {
+    return taskDao!.watchTodayTasks(userId, tags);
   }
 
   @override
   Future<int> deleteTag(String tagId) {
-    return tagDao.deleteTag(tagId);
+    return tagDao!.deleteTag(tagId);
   }
 
   @override
   Future<int> insertTag(TagResult tagResult) {
     try {
-      return tagDao.insertTag(tagResult);
+      return tagDao!.insertTag(tagResult);
     } on InvalidDataException {
       rethrow;
     }
@@ -128,28 +128,28 @@ class TaskLocalSourceImpl extends TaskLocalSource {
 
   @override
   Future<int> deleteTask(String taskId) {
-    return taskDao.deleteTask(taskId);
+    return taskDao!.deleteTask(taskId);
   }
 
   @override
   Future<void> insertTask(TaskResult taskResult) {
-    return taskDao.insertTask(taskResult);
+    return taskDao!.insertTask(taskResult);
   }
 
   @override
   Future<int> deleteSubTask(String subtaskId) {
-    return subTaskDao.deleteSubTask(subtaskId);
+    return subTaskDao!.deleteSubTask(subtaskId);
   }
 
   @override
   Future<int> insertSubTask(SubtaskResult subtaskResult) {
-    return subTaskDao.insertSubTask(subtaskResult);
+    return subTaskDao!.insertSubTask(subtaskResult);
   }
 
   @override
   Future<void> deleteAndInsertSubTasks(SubtaskResponse subtaskResponse) {
     try {
-      return subTaskDao.deleteAndinsertSubTasks(subtaskResponse);
+      return subTaskDao!.deleteAndinsertSubTasks(subtaskResponse);
     } on InvalidDataException {
       rethrow;
     }
@@ -158,7 +158,7 @@ class TaskLocalSourceImpl extends TaskLocalSource {
   @override
   Future<void> insertSubTasks(SubtaskResponse subtaskResponse) {
     try {
-      return subTaskDao.insertSubTasks(subtaskResponse);
+      return subTaskDao!.insertSubTasks(subtaskResponse);
     } on InvalidDataException {
       rethrow;
     }
@@ -167,7 +167,7 @@ class TaskLocalSourceImpl extends TaskLocalSource {
   @override
   Future<void> deleteAndInsertTags(TagResponse tagResponse) {
     try {
-      return tagDao.deleteAndinsertTags(tagResponse);
+      return tagDao!.deleteAndinsertTags(tagResponse);
     } on InvalidDataException {
       rethrow;
     }
@@ -176,19 +176,19 @@ class TaskLocalSourceImpl extends TaskLocalSource {
   @override
   Future<void> insertTags(TagResponse tagResponse) {
     try {
-      return tagDao.insertTags(tagResponse);
+      return tagDao!.insertTags(tagResponse);
     } on InvalidDataException {
       rethrow;
     }
   }
 
   @override
-  Stream<List<TagData>> watchAllTags(String userId) {
-    return taskDao.watchAllTags(userId);
+  Stream<List<TagData>> watchAllTags(String? userId) {
+    return taskDao!.watchAllTags(userId);
   }
 
   @override
-  Stream<TaskWithTags> watchTagsForTask(String userId, String taskId) {
-    return taskDao.watchTagsForClass(userId, taskId);
+  Stream<TaskWithTags> watchTagsForTask(String? userId, String taskId) {
+    return taskDao!.watchTagsForClass(userId, taskId);
   }
 }

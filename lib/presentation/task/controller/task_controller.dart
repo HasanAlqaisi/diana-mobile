@@ -32,31 +32,31 @@ import 'package:get/instance_manager.dart';
 class TaskController extends GetxController {
   static TaskController get to => Get.find();
 
-  final RequestTokenUsecase requestTokenUsecase;
-  final GetTagsUseCase getTagsUseCase;
-  final GetTasksUseCase getTasksUseCase;
-  final WatchTodayTasksUseCase watchTodayTasksUseCase;
-  final WatchAllTasksUseCase watchAllTasksUseCase;
-  final WatchCompletedTasksUseCase watchCompletedTasksUseCase;
-  final WatchMissedTasksUseCase watchMissedTasksUseCase;
-  final WatchAllTagsUseCase watchAllTagsUseCase;
-  final InsertTaskUseCase insertTaskUseCase;
-  final WatchTagsForTaskUseCase watchTagsForTaskUseCase;
-  final GetSubtasksUseCase getSubtasksUseCase;
-  final EditTaskUseCase editTaskUseCase;
-  final DeleteTaskUseCase deleteTaskUseCase;
-  final MakeTaskDoneUseCase makeTaskDoneUseCase;
-  final EditSubTaskUseCase editSubTaskUseCase;
-  final GetUserUsecase getUserUsecase;
-  final WatchUserUsecase watchUserUsecase;
+  final RequestTokenUsecase? requestTokenUsecase;
+  final GetTagsUseCase? getTagsUseCase;
+  final GetTasksUseCase? getTasksUseCase;
+  final WatchTodayTasksUseCase? watchTodayTasksUseCase;
+  final WatchAllTasksUseCase? watchAllTasksUseCase;
+  final WatchCompletedTasksUseCase? watchCompletedTasksUseCase;
+  final WatchMissedTasksUseCase? watchMissedTasksUseCase;
+  final WatchAllTagsUseCase? watchAllTagsUseCase;
+  final InsertTaskUseCase? insertTaskUseCase;
+  final WatchTagsForTaskUseCase? watchTagsForTaskUseCase;
+  final GetSubtasksUseCase? getSubtasksUseCase;
+  final EditTaskUseCase? editTaskUseCase;
+  final DeleteTaskUseCase? deleteTaskUseCase;
+  final MakeTaskDoneUseCase? makeTaskDoneUseCase;
+  final EditSubTaskUseCase? editSubTaskUseCase;
+  final GetUserUsecase? getUserUsecase;
+  final WatchUserUsecase? watchUserUsecase;
 
   final textController = TextEditingController();
 
-  Failure failure;
+  Failure? failure;
   RxString selectedTask = ''.obs;
   RxBool isExpanded = false.obs;
   var tags = <String>[].obs;
-  var selectedTags = <int>[];
+  var selectedTags = <int?>[];
 
   final user = UserData(email: '', id: '', username: '').obs;
   final todayTasks = <TaskWithSubtasks>[].obs;
@@ -93,7 +93,7 @@ class TaskController extends GetxController {
 
     await API.doRequest(
       body: () async {
-        return await getUserUsecase();
+        return await getUserUsecase!();
       },
       failedBody: (failure) {
         handleUserApiFailure(failure);
@@ -101,7 +101,7 @@ class TaskController extends GetxController {
       successBody: () async {
         await API.doRequest(
           body: () async {
-            return await getTagsUseCase();
+            return await getTagsUseCase!();
           },
           failedBody: (failure) {
             handleTagApiFailure(failure);
@@ -109,7 +109,7 @@ class TaskController extends GetxController {
           successBody: () async {
             await API.doRequest(
               body: () async {
-                return await getTasksUseCase();
+                return await getTasksUseCase!();
               },
               failedBody: (failure) {
                 handleTaskApiFailure(failure);
@@ -130,7 +130,7 @@ class TaskController extends GetxController {
     super.onClose();
   }
 
-  void updateSelectedTags({bool isSelected, int index, int length}) {
+  void updateSelectedTags({bool? isSelected, int? index, int? length}) {
     if (selectedTags.contains(index)) {
       selectedTags.remove(index);
     } else {
@@ -141,20 +141,20 @@ class TaskController extends GetxController {
 
   Future<void> addTask(
     String name, {
-    String note,
-    String date,
-    List<String> tags,
-    List<String> checklist,
-    String reminder,
-    String deadline,
-    int priority,
-    bool done,
+    String? note,
+    String? date,
+    List<String>? tags,
+    List<String>? checklist,
+    String? reminder,
+    String? deadline,
+    int? priority,
+    bool? done,
   }) async {
     await API.doRequest(
       body: () async {
         failure = null;
         update();
-        return await insertTaskUseCase(name, note, date, tags, checklist,
+        return await insertTaskUseCase!(name, note, date, tags, checklist,
             reminder, deadline, priority, done);
       },
       failedBody: (failure) {
@@ -181,7 +181,7 @@ class TaskController extends GetxController {
       body: () async {
         failure = null;
         update();
-        return await editTaskUseCase(taskId, name, note, date, tags, checklist,
+        return await editTaskUseCase!(taskId, name, note, date, tags, checklist,
             reminder, deadline, priority, done);
       },
       failedBody: (failure) {
@@ -192,10 +192,10 @@ class TaskController extends GetxController {
     );
   }
 
-  Future<void> makeTaskDone(String taskId) async {
+  Future<void> makeTaskDone(String? taskId) async {
     await API.doRequest(
       body: () async {
-        return await makeTaskDoneUseCase(taskId);
+        return await makeTaskDoneUseCase!(taskId!);
       },
       failedBody: (failure) {
         handleTaskApiFailure(failure);
@@ -203,10 +203,10 @@ class TaskController extends GetxController {
     );
   }
 
-  Future<void> onDeleteTaskClicked(String taskId) async {
+  Future<void> onDeleteTaskClicked(String? taskId) async {
     await API.doRequest(
       body: () async {
-        return await deleteTaskUseCase(taskId);
+        return await deleteTaskUseCase!(taskId!);
       },
       failedBody: (failure) {
         handleTaskApiFailure(failure);
@@ -217,7 +217,7 @@ class TaskController extends GetxController {
   Future<void> changeSubtaskState(SubTaskData subTask) async {
     await API.doRequest(
       body: () async {
-        return await editSubTaskUseCase(
+        return await editSubTaskUseCase!(
             subTask.id, subTask.name, !subTask.done, subTask.taskId);
       },
       failedBody: (failure) {
@@ -226,44 +226,44 @@ class TaskController extends GetxController {
     );
   }
 
-  Stream<UserData> _watchUser() {
-    return watchUserUsecase();
+  Stream<UserData>? _watchUser() {
+    return watchUserUsecase!();
   }
 
-  Stream<List<TaskWithSubtasks>> watchTodayTasks(List<String> tags) {
-    return watchTodayTasksUseCase(tags);
+  Stream<List<TaskWithSubtasks>>? watchTodayTasks(List<String> tags) {
+    return watchTodayTasksUseCase!(tags);
   }
 
-  Stream<List<TaskWithSubtasks>> watchAllTasks(List<String> tags) {
-    return watchAllTasksUseCase(tags);
+  Stream<List<TaskWithSubtasks>>? watchAllTasks(List<String> tags) {
+    return watchAllTasksUseCase!(tags);
   }
 
-  Stream<List<TaskWithSubtasks>> watchCompletedTasks(List<String> tags) {
-    return watchCompletedTasksUseCase(tags);
+  Stream<List<TaskWithSubtasks>>? watchCompletedTasks(List<String> tags) {
+    return watchCompletedTasksUseCase!(tags);
   }
 
-  Stream<List<TaskWithSubtasks>> watchMissedTasks(List<String> tags) {
-    return watchMissedTasksUseCase(tags);
+  Stream<List<TaskWithSubtasks>>? watchMissedTasks(List<String> tags) {
+    return watchMissedTasksUseCase!(tags);
   }
 
-  Stream<List<TagData>> watchAllTags() {
-    return watchAllTagsUseCase();
+  Stream<List<TagData>>? watchAllTags() {
+    return watchAllTagsUseCase!();
   }
 
-  Stream<TaskWithTags> watchTagsForTask(String taskId) {
-    return watchTagsForTaskUseCase(taskId).asBroadcastStream();
+  Stream<TaskWithTags> watchTagsForTask(String? taskId) {
+    return watchTagsForTaskUseCase!(taskId!).asBroadcastStream();
   }
 
   void _bindStreams() {
-    user.bindStream(_watchUser());
-    todayTasks.bindStream(watchTodayTasks(tags));
-    inboxTasks.bindStream(watchAllTasks(tags));
-    doneTasks.bindStream(watchCompletedTasks(tags));
-    missedTasks.bindStream(watchMissedTasks(tags));
-    tagsData.bindStream(watchAllTags());
+    user.bindStream(_watchUser()!);
+    todayTasks.bindStream(watchTodayTasks(tags)!);
+    inboxTasks.bindStream(watchAllTasks(tags)!);
+    doneTasks.bindStream(watchCompletedTasks(tags)!);
+    missedTasks.bindStream(watchMissedTasks(tags)!);
+    tagsData.bindStream(watchAllTags()!);
   }
 
-  RxList<TaskWithSubtasks> classifyTask(TaskType type) {
+  RxList<TaskWithSubtasks>? classifyTask(TaskType? type) {
     if (type == TaskType.today) {
       return todayTasks;
     } else if (type == TaskType.inbox) {

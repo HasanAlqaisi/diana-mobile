@@ -7,20 +7,20 @@ import 'package:diana/data/remote_models/tag/tag_result.dart';
 import 'package:http/http.dart' as http;
 
 abstract class TagRemoteSource {
-  Future<TagResponse> getTags(int offset);
+  Future<TagResponse> getTags(int? offset);
   Future<TagResult> insertTags(String name, int color);
   Future<TagResult> editTag(String id, String name, int color);
   Future<bool> deleteTag(String id);
 }
 
 class TagRemoteSourceImpl extends TagRemoteSource {
-  final http.Client client;
+  final http.Client? client;
 
   TagRemoteSourceImpl({this.client});
 
   @override
-  Future<TagResponse> getTags(int offset) async {
-    final response = await client.get(
+  Future<TagResponse> getTags(int? offset) async {
+    final response = await client!.get(
       Uri.parse('$baseUrl/tag/?limit=100&offset=$offset'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -38,7 +38,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
 
   @override
   Future<TagResult> insertTags(String name, int color) async {
-    final response = await client.post(
+    final response = await client!.post(
       Uri.parse('$baseUrl/tag/'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -64,7 +64,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
 
   @override
   Future<TagResult> editTag(String id, String name, int color) async {
-    final response = await client.put(
+    final response = await client!.put(
       Uri.parse('$baseUrl/tag/$id/'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -90,7 +90,7 @@ class TagRemoteSourceImpl extends TagRemoteSource {
 
   @override
   Future<bool> deleteTag(String id) async {
-    final response = await client.delete(
+    final response = await client!.delete(
       Uri.parse('$baseUrl/tag/$id/'),
       headers: {
         'Authorization': 'Bearer $kToken',

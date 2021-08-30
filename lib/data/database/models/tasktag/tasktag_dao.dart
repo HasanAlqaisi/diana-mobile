@@ -35,7 +35,7 @@ class TaskTagDao extends DatabaseAccessor<AppDatabase> with _$TaskTagDaoMixin {
     return Rx.combineLatest2(
         tagStream,
         contentStream,
-        (TagData tag, List<TaskData> tasks) =>
+        (TagData tag, List<TaskData?> tasks) =>
             TagWithTasks(tag: tag, tasks: tasks));
   }
 
@@ -54,7 +54,7 @@ class TaskTagDao extends DatabaseAccessor<AppDatabase> with _$TaskTagDaoMixin {
     return Rx.combineLatest2(
         tagStream,
         contentStream,
-        (TagData tag, List<TaskData> tasks) =>
+        (TagData tag, List<TaskData?> tasks) =>
             TagWithTasks(tag: tag, tasks: tasks));
   }
 
@@ -66,16 +66,15 @@ class TaskTagDao extends DatabaseAccessor<AppDatabase> with _$TaskTagDaoMixin {
       ..where(taskTagTable.tagId.equals(id));
 
     final tagStream = tagQuery.watchSingle();
-    final contentStream = (contentQuery..where(taskTable.doneAt.isNotIn(null)))
-        .watch()
-        .map((rows) {
+    final contentStream =
+        (contentQuery..where(taskTable.doneAt.isNotNull())).watch().map((rows) {
       return rows.map((row) => row.readTableOrNull(taskTable)).toList();
     });
 
     return Rx.combineLatest2(
         tagStream,
         contentStream,
-        (TagData tag, List<TaskData> tasks) =>
+        (TagData tag, List<TaskData?> tasks) =>
             TagWithTasks(tag: tag, tasks: tasks));
   }
 
@@ -97,7 +96,7 @@ class TaskTagDao extends DatabaseAccessor<AppDatabase> with _$TaskTagDaoMixin {
     return Rx.combineLatest2(
         tagStream,
         contentStream,
-        (TagData tag, List<TaskData> tasks) =>
+        (TagData tag, List<TaskData?> tasks) =>
             TagWithTasks(tag: tag, tasks: tasks));
   }
 

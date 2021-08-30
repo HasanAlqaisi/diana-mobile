@@ -11,10 +11,10 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 class HomeController extends GetxController {
   static HomeController get to => Get.find();
 
-  final GetTokenUseCase getTokenUseCase;
-  final GetRefreshTokenUseCase getRefreshTokenUseCase;
-  final GetUserIdUseCase getUserIdUseCase;
-  bool isLogged;
+  final GetTokenUseCase? getTokenUseCase;
+  final GetRefreshTokenUseCase? getRefreshTokenUseCase;
+  final GetUserIdUseCase? getUserIdUseCase;
+  bool? isLogged;
 
   HomeController(
     this.getTokenUseCase,
@@ -26,9 +26,9 @@ class HomeController extends GetxController {
   void onInit() async {
     super.onInit();
     log('getting refresh token, userid, token', name: Home.route);
-    kRefreshToken = await getRefreshTokenUseCase();
-    kUserId = await getUserIdUseCase();
-    kToken = await getTokenUseCase();
+    kRefreshToken = await getRefreshTokenUseCase!();
+    kUserId = await getUserIdUseCase!();
+    kToken = await getTokenUseCase!();
     log('got them\nrefresh token is $kRefreshToken\nuserid is : $kUserId\ntoken is $kToken',
         name: Home.route);
     isLogged = kToken != null ? true : false;

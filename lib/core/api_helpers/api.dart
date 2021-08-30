@@ -8,21 +8,21 @@ import 'package:get/route_manager.dart';
 import 'package:diana/injection_container.dart' as di;
 
 class API {
-  static RequestTokenUsecase _requestTokenUsecase =
+  static RequestTokenUsecase? _requestTokenUsecase =
       di.sl<RequestTokenUsecase>();
-  static int offsetExtractor(String url) {
+  static int? offsetExtractor(String? url) {
     if (url != null) {
       final uri = Uri.parse(url);
-      final offestString = uri.queryParameters['offset'];
+      final offestString = uri.queryParameters['offset']!;
       return int.tryParse(offestString);
     }
     return null;
   }
 
   static Future<void> doRequest({
-    Future<dynamic> body(),
-    void failedBody(Failure fail),
-    Function successBody,
+    required Future<dynamic> body(),
+    void failedBody(Failure fail)?,
+    Function? successBody,
   }) async {
     // execute the actuall body request
     return (await body.call())?.fold((fail) async {
@@ -35,7 +35,7 @@ class API {
       // then request a new token for him
       if (fail is UnAuthFailure) {
         log('Requesting token', name: 'doRequest');
-        final requestTokenResult = await _requestTokenUsecase();
+        final requestTokenResult = await _requestTokenUsecase!();
         // If the token requesting failed, check why
         // If it is also authentication issue, log him out
         requestTokenResult.fold((requestTokenFail) {
@@ -52,7 +52,7 @@ class API {
           }
         },
             // If the token requesting went well, execute the body again!
-            (r) async => (await body?.call()).fold((fail) {
+            (r) async => (await body.call()).fold((fail) {
                   failedBody?.call(fail);
                 }, (r) async => await successBody?.call()));
       } else {

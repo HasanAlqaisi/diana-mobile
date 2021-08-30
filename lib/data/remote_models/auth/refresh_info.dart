@@ -5,8 +5,8 @@ part 'refresh_info.g.dart';
 
 @JsonSerializable()
 class RefreshInfo extends Equatable {
-  final String access;
-  final String refresh;
+  final String? access;
+  final String? refresh;
 
   RefreshInfo({
     this.access,
@@ -19,7 +19,7 @@ class RefreshInfo extends Equatable {
   Map<String, dynamic> toJson() => _$RefreshInfoToJson(this);
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [access, refresh];
   }
 

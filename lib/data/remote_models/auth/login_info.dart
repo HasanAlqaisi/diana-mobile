@@ -8,10 +8,10 @@ part 'login_info.g.dart';
 @JsonSerializable(explicitToJson: true)
 class LoginInfo extends Equatable {
   @JsonKey(name: 'access_token')
-  final String accessToken;
+  final String? accessToken;
   @JsonKey(name: 'refresh_token')
-  final String refreshToken;
-  final User user;
+  final String? refreshToken;
+  final User? user;
 
   LoginInfo({this.accessToken, this.refreshToken, this.user});
 
@@ -21,7 +21,7 @@ class LoginInfo extends Equatable {
   Map<String, dynamic> toJson() => _$LoginInfoToJson(this);
 
   @override
-  List<Object> get props => [accessToken, refreshToken, user];
+  List<Object?> get props => [accessToken, refreshToken, user];
 
   @override
   bool get stringify => true;

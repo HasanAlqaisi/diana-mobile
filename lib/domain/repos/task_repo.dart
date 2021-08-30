@@ -42,25 +42,25 @@ abstract class TaskRepo {
 
   Future<Either<Failure, TaskResult>> insertTask(
     String name,
-    String note,
-    String date,
-    List<String> tags,
-    List<String> checklist,
-    String reminder,
-    String deadline,
-    int priority,
-    bool done,
+    String? note,
+    String? date,
+    List<String>? tags,
+    List<String?>? checklist,
+    String? reminder,
+    String? deadline,
+    int? priority,
+    bool? done,
   );
 
   Future<Either<Failure, TaskResult>> editTask(
     String taskId,
     String name,
     String note,
-    String date,
+    String? date,
     List<String> tags,
-    List<String> checklist,
-    String reminder,
-    String deadline,
+    List<String?> checklist,
+    String? reminder,
+    String? deadline,
     int priority,
     bool done,
   );

@@ -44,15 +44,15 @@ abstract class AuthRepo {
 
   Future<Either<Failure, RefreshInfo>> requestToken();
 
-  Future<String> getToken();
+  Future<String?> getToken();
 
   Future<void> deleteToken();
 
-  Future<String> getRefreshToken();
+  Future<String?> getRefreshToken();
 
   Future<void> deleteRefreshToken();
 
-  Future<String> getUserId();
+  Future<String?> getUserId();
 
   Future<void> deleteUserId();
 }

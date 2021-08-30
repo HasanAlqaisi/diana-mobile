@@ -25,15 +25,15 @@ import 'package:get/route_manager.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileController extends GetxController {
-  final GetUserUsecase getUserUsecase;
-  final EditUserUsecase editUserUsecase;
-  final WatchUserUsecase watchUserUsecase;
-  final LogoutUserUsecase logoutUserUsecase;
-  final DeleteTokenUsecase deleteTokenUsecase;
-  final DeleteRefreshTokenUsecase deleteRefreshTokenUsecase;
-  final DeleteUserIdUsecase deleteUserIdUsecase;
-  final ChangePassUsecase changePassUsecase;
-  final UploadProfileImageUsecase uploadProfileImageUsecase;
+  final GetUserUsecase? getUserUsecase;
+  final EditUserUsecase? editUserUsecase;
+  final WatchUserUsecase? watchUserUsecase;
+  final LogoutUserUsecase? logoutUserUsecase;
+  final DeleteTokenUsecase? deleteTokenUsecase;
+  final DeleteRefreshTokenUsecase? deleteRefreshTokenUsecase;
+  final DeleteUserIdUsecase? deleteUserIdUsecase;
+  final ChangePassUsecase? changePassUsecase;
+  final UploadProfileImageUsecase? uploadProfileImageUsecase;
 
   final formKey = GlobalKey<FormState>();
   final passwordFormKey = GlobalKey<FormState>();
@@ -43,10 +43,10 @@ class ProfileController extends GetxController {
   final emailControlerField = TextEditingController();
   final birthControlerField = TextEditingController();
 
-  File image;
-  String pass1, pass2;
-  Failure failure;
-  Rx<Failure> changepassFailure = ChangePassFieldsFailure().obs;
+  File? image;
+  String? pass1, pass2;
+  Failure? failure;
+  Rx<Failure?> changepassFailure = ChangePassFieldsFailure().obs;
 
   var isImageUploading = false.obs;
 
@@ -69,7 +69,7 @@ class ProfileController extends GetxController {
       body: () async {
         failure = null;
         update();
-        return await getUserUsecase();
+        return await getUserUsecase!();
       },
       failedBody: (failure) {
         this.failure = failure;
@@ -82,18 +82,18 @@ class ProfileController extends GetxController {
       if (loading) {
         showLoaderDialog();
       } else {
-        if (Get.isDialogOpen) Get.back();
+        if (Get.isDialogOpen!) Get.back();
       }
     });
   }
 
-  Future<void> uploadProfileImage(File image) async {
+  Future<void> uploadProfileImage(File? image) async {
     return await API.doRequest(
       body: () async {
         failure = null;
         update();
         isImageUploading(true);
-        return await uploadProfileImageUsecase(image);
+        return await uploadProfileImageUsecase!(image!);
       },
       successBody: () {
         isImageUploading(false);
@@ -114,7 +114,7 @@ class ProfileController extends GetxController {
         body: () async {
           failure = null;
           update();
-          return await editUserUsecase(
+          return await editUserUsecase!(
             firstNameControlerField.text,
             lastNameControlerField.text,
             emailControlerField.text,
@@ -131,29 +131,31 @@ class ProfileController extends GetxController {
     Get.back();
   }
 
-  void setInfo(UserData user) {
-    firstNameControlerField.text = user?.firstName;
-    lastNameControlerField.text = user?.lastName;
-    usernameControlerField.text = user?.username;
-    emailControlerField.text = user?.email;
-    birthControlerField.text = user?.birthdate;
+  void setInfo(UserData? user) {
+    firstNameControlerField.text = user?.firstName ?? '';
+    lastNameControlerField.text = user?.lastName ?? '';
+    usernameControlerField.text = user?.username ?? '';
+    emailControlerField.text = user?.email ?? '';
+    birthControlerField.text = user?.birthdate ?? '';
   }
 
   Future<void> onProfileTapped() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    image = File(pickedFile?.path);
-    await uploadProfileImage(image);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      image = File(pickedFile.path);
+      await uploadProfileImage(image);
+    }
   }
 
-  Stream<UserData> watchUser() => watchUserUsecase();
+  Stream<UserData>? watchUser() => watchUserUsecase!();
 
   Future<void> onLogoutClicked() async {
     return await API.doRequest(
       body: () async {
         failure = null;
         update();
-        return await logoutUserUsecase();
+        return await logoutUserUsecase!();
       },
       failedBody: (failure) {
         this.failure = failure;
@@ -162,9 +164,9 @@ class ProfileController extends GetxController {
       },
       successBody: () async {
         await Future.wait([
-          deleteTokenUsecase(),
-          deleteRefreshTokenUsecase(),
-          deleteUserIdUsecase(),
+          deleteTokenUsecase!(),
+          deleteRefreshTokenUsecase!(),
+          deleteUserIdUsecase!(),
         ]);
         Get.offAllNamed(LoginScreen.route);
       },
@@ -176,7 +178,7 @@ class ProfileController extends GetxController {
       body: () async {
         changepassFailure.value = null;
         update();
-        return await changePassUsecase(pass1, pass2);
+        return await changePassUsecase!(pass1!, pass2!);
       },
       failedBody: (failure) {
         changepassFailure.value = failure;
@@ -206,14 +208,14 @@ class ProfileController extends GetxController {
                     isObsecure: true,
                     validateRules: (value) {
                       pass1 = value;
-                      if (value.trim().isEmpty) {
+                      if (value != null && value.trim().isEmpty) {
                         return requireFieldMessage;
                       }
                       return null;
                     },
                     errorText: changepassFailure.value
                             is ChangePassFieldsFailure
-                        ? (changepassFailure.value as ChangePassFieldsFailure)
+                        ? (changepassFailure.value as ChangePassFieldsFailure?)
                             ?.pass1
                             ?.first
                         : null,
@@ -223,13 +225,13 @@ class ProfileController extends GetxController {
                   labelText: 'Confirm password',
                   isObsecure: true,
                   errorText: changepassFailure.value is ChangePassFieldsFailure
-                      ? (changepassFailure.value as ChangePassFieldsFailure)
+                      ? (changepassFailure.value as ChangePassFieldsFailure?)
                           ?.pass2
                           ?.first
                       : null,
                   validateRules: (value) {
                     pass2 = value;
-                    if (value.trim().isEmpty) {
+                    if (value != null && value.trim().isEmpty) {
                       return requireFieldMessage;
                     }
                     return null;
@@ -246,7 +248,7 @@ class ProfileController extends GetxController {
                 child: Text('close')),
             TextButton(
                 onPressed: () async {
-                  if (passwordFormKey.currentState.validate()) {
+                  if (passwordFormKey.currentState!.validate()) {
                     await changePass();
                   }
                 },

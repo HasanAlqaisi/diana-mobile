@@ -11,11 +11,11 @@ import 'package:get/route_manager.dart';
 import 'day_text.dart';
 
 class HabitsList extends StatelessWidget {
-  final HabitType type;
+  final HabitType? type;
 
   HabitsList({
-    Key key,
-    @required this.type,
+    Key? key,
+    required this.type,
   }) : super(key: key);
 
   @override
@@ -26,9 +26,9 @@ class HabitsList extends StatelessWidget {
         stream: controller.watch(habitType: type),
         builder: (context, snapshot) {
           return FutureBuilder<List<HabitWitLogsWithDays>>(
-            future: snapshot?.data,
+            future: snapshot.data,
             builder: (context, asyncData) {
-              final data = asyncData.hasData ? asyncData?.requireData : null;
+              final data = asyncData.hasData ? asyncData.requireData : null;
               if (data != null && data.isNotEmpty) {
                 for (int i = 0; i < data.length; i++) {
                   data[i].doneDays =
@@ -40,7 +40,7 @@ class HabitsList extends StatelessWidget {
                   child: ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: data?.length ?? 0,
+                    itemCount: data.length,
                     itemBuilder: (context, index) {
                       final isHabitDone =
                           controller.isHabitDone(data[index].doneDays);
@@ -72,7 +72,7 @@ class HabitsList extends StatelessWidget {
                               ),
                               child: Obx(
                                 () => ExpansionTile(
-                                  title: Text(data[index].habit.name,
+                                  title: Text(data[index].habit!.name,
                                       style: isHabitDone
                                           ? TextStyle(
                                               color: Color(0xFF7EF0FF),
@@ -94,7 +94,7 @@ class HabitsList extends StatelessWidget {
                                     if (isExpanded) {
                                       print('tapped to Expanded');
                                       controller.selectedHabit.value =
-                                          data[index].habit.id;
+                                          data[index].habit!.id;
                                     } else {
                                       print('tapped to close');
                                       controller.selectedHabit.value = '';
@@ -207,10 +207,10 @@ class HabitsList extends StatelessWidget {
         });
   }
 
-  Widget _buildTrailing(HabitWitLogsWithDays data, bool isHabitDone) {
+  Widget? _buildTrailing(HabitWitLogsWithDays data, bool isHabitDone) {
     final controller = HabitController.to;
     final selectedHabit = controller.selectedHabit.value;
-    if (selectedHabit == data.habit.id) {
+    if (selectedHabit == data.habit!.id) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -222,19 +222,19 @@ class HabitsList extends StatelessWidget {
             highlightColor: Colors.transparent,
             constraints: BoxConstraints(minWidth: 20, minHeight: 20),
             onPressed: () async {
-              List<DateTime> dates;
-              if (data.habit.time != null)
+              List<DateTime>? dates;
+              if (data.habit!.time != null)
                 dates = DateHelper.getDatesFromWeekDays([
-                  data.days.dayZero ?? -1,
-                  data.days.dayOne ?? -1,
-                  data.days.dayTwo ?? -1,
-                  data.days.dayThree ?? -1,
-                  data.days.dayFour ?? -1,
-                  data.days.dayFive ?? -1,
-                  data.days.daySix ?? -1,
-                ], data.habit.time);
+                  data.days!.dayZero ?? -1,
+                  data.days!.dayOne ?? -1,
+                  data.days!.dayTwo ?? -1,
+                  data.days!.dayThree ?? -1,
+                  data.days!.dayFour ?? -1,
+                  data.days!.dayFive ?? -1,
+                  data.days!.daySix ?? -1,
+                ], data.habit!.time);
 
-              await controller.deleteHabit(data.habit.id, dates);
+              await controller.deleteHabit(data.habit!.id, dates);
             },
           ),
           IconButton(
@@ -261,7 +261,7 @@ class HabitsList extends StatelessWidget {
           children: [
             GestureDetector(
                 onTap: () async {
-                  await controller.onHabitMarked(data.habit.id);
+                  await controller.onHabitMarked(data.habit!.id);
                 },
                 child:
                     Icon(Icons.check_circle, color: Colors.grey, size: 30.0)),

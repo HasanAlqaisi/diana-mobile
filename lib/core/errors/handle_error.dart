@@ -3,16 +3,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 handleTaskApiFailure(failure) {
   if (failure is UnknownFailure) {
-    Fluttertoast.showToast(msg: failure.message);
+    Fluttertoast.showToast(msg: failure.message!);
   } else if (failure is NotFoundFailure) {
     Fluttertoast.showToast(msg: 'Item not found!');
   } else if (failure is NoInternetFailure) {
     Fluttertoast.showToast(msg: 'No Internet Connection!');
   } else if (failure is TaskFieldsFailure) {
-    final nonFields = failure?.nonFields?.first;
-    final date = failure?.date?.first;
-    final reminder = failure?.reminder?.first;
-    final deadline = failure?.deadline?.first;
+    final nonFields = failure.nonFields?.first;
+    final date = failure.date?.first;
+    final reminder = failure.reminder?.first;
+    final deadline = failure.deadline?.first;
     if (nonFields != null)
       Fluttertoast.showToast(msg: nonFields);
     else if (date != null)
@@ -21,13 +21,13 @@ handleTaskApiFailure(failure) {
       Fluttertoast.showToast(msg: reminder);
     else if (deadline != null) Fluttertoast.showToast(msg: deadline);
   } else if (failure is TagFieldsFailure) {
-    Fluttertoast.showToast(msg: failure?.name?.first);
+    Fluttertoast.showToast(msg: failure.name?.first ?? "");
   }
 }
 
 handleSubtaskApiFailure(failure) {
   if (failure is UnknownFailure) {
-    Fluttertoast.showToast(msg: failure.message);
+    Fluttertoast.showToast(msg: failure.message!);
   } else if (failure is NotFoundFailure) {
     Fluttertoast.showToast(msg: 'Item not found!');
   } else if (failure is NoInternetFailure) {
@@ -37,7 +37,7 @@ handleSubtaskApiFailure(failure) {
 
 handleTagApiFailure(failure) {
   if (failure is UnknownFailure) {
-    Fluttertoast.showToast(msg: failure.message);
+    Fluttertoast.showToast(msg: failure.message!);
   } else if (failure is NotFoundFailure) {
     Fluttertoast.showToast(msg: 'Item not found!');
   } else if (failure is NoInternetFailure) {
@@ -47,7 +47,7 @@ handleTagApiFailure(failure) {
 
 handleHabitApiFailure(failure) {
   if (failure is UnknownFailure) {
-    Fluttertoast.showToast(msg: failure.message);
+    Fluttertoast.showToast(msg: failure.message!);
   } else if (failure is NotFoundFailure) {
     Fluttertoast.showToast(msg: 'Item not found!');
   } else if (failure is NoInternetFailure) {
@@ -57,13 +57,13 @@ handleHabitApiFailure(failure) {
 
 handleUserApiFailure(failure) {
   if (failure is UnknownFailure) {
-    Fluttertoast.showToast(msg: failure.message);
+    Fluttertoast.showToast(msg: failure.message!);
   } else if (failure is NoInternetFailure) {
     Fluttertoast.showToast(msg: 'No Internet Connection!');
   } else if (failure is NonFieldsFailure) {
-    return failure?.errors?.first;
+    return failure.errors?.first;
   } else if (failure is UserFieldsFailure) {
-    final image = failure?.image?.first;
+    final image = failure.image?.first;
     if (image != null) Fluttertoast.showToast(msg: image);
   }
 }

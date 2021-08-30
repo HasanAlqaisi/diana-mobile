@@ -6,20 +6,20 @@ part 'user.g.dart';
 @JsonSerializable()
 class User extends Equatable {
   @JsonKey(name: 'pk')
-  final String userId;
+  final String? userId;
   @JsonKey(name: 'first_name')
-  final String firstName;
+  final String? firstName;
   @JsonKey(name: 'last_name')
-  final String lastName;
-  final String username;
-  final String email;
-  final String birthdate;
+  final String? lastName;
+  final String? username;
+  final String? email;
+  final String? birthdate;
   @JsonKey(name: 'image')
-  final String picture;
+  final String? picture;
   @JsonKey(name: 'timezone')
-  final String timeZone;
+  final String? timeZone;
   @JsonKey(name: 'daily_progress')
-  final double dailyProgress;
+  final double? dailyProgress;
 
   User(this.picture,
       {this.userId,
@@ -36,7 +36,7 @@ class User extends Equatable {
   Map<String, dynamic> toJson() => _$UserToJson(this);
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [
       userId,
       firstName,

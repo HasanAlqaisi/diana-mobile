@@ -7,7 +7,7 @@ import 'package:diana/data/remote_models/subtask/subtask_result.dart';
 import 'package:http/http.dart' as http;
 
 abstract class SubtaskRemoteSource {
-  Future<SubtaskResponse> getSubtasks(String taskId, int offset);
+  Future<SubtaskResponse> getSubtasks(String taskId, int? offset);
 
   Future<SubtaskResult> insertSubtask(
     String name,
@@ -26,13 +26,13 @@ abstract class SubtaskRemoteSource {
 }
 
 class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
-  final http.Client client;
+  final http.Client? client;
 
   SubtaskRemoteSourceImpl({this.client});
 
   @override
-  Future<SubtaskResponse> getSubtasks(String taskId, int offset) async {
-    final response = await client.get(
+  Future<SubtaskResponse> getSubtasks(String taskId, int? offset) async {
+    final response = await client!.get(
       Uri.parse('$baseUrl/subtask/?limit=100&offset=$offset'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -54,7 +54,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
   @override
   Future<SubtaskResult> insertSubtask(
       String name, bool isDone, String taskId) async {
-    final response = await client.post(
+    final response = await client!.post(
       Uri.parse('$baseUrl/subtask/'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -81,7 +81,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
   @override
   Future<SubtaskResult> editSubtask(
       String subtaskId, String name, bool isDone, String taskId) async {
-    final response = await client.put(
+    final response = await client!.put(
       Uri.parse('$baseUrl/subtask/$subtaskId/'),
       headers: {
         'Authorization': 'Bearer $kToken',
@@ -111,7 +111,7 @@ class SubtaskRemoteSourceImpl extends SubtaskRemoteSource {
 
   @override
   Future<bool> deleteSubtask(String subtaskId) async {
-    final response = await client.delete(
+    final response = await client!.delete(
       Uri.parse('$baseUrl/subtask/$subtaskId/'),
       headers: {
         'Authorization': 'Bearer $kToken',
