@@ -143,8 +143,8 @@ class TaskRepoImpl extends TaskRepo {
       String subtaskId, String name, bool isDone, String taskId) async {
     if (await netWorkInfo!.isConnected()) {
       try {
-        final result = await subtaskRemoteSource!.editSubtask(
-            subtaskId, name, isDone, taskId);
+        final result = await subtaskRemoteSource!
+            .editSubtask(subtaskId, name, isDone, taskId);
 
         log('API result is $result', name: 'editSubtask');
 
@@ -210,8 +210,8 @@ class TaskRepoImpl extends TaskRepo {
   ) async {
     if (await netWorkInfo!.isConnected()) {
       try {
-        final result = await taskRemoteSource!.editTask(taskId, name, note, tags,
-            checklist, date, reminder, deadline, priority, done);
+        final result = await taskRemoteSource!.editTask(taskId, name, note,
+            tags, checklist, date, reminder, deadline, priority, done);
 
         log('API result is $result', name: 'editTask');
 

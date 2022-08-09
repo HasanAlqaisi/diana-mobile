@@ -17,8 +17,8 @@ class TagsRow extends StatelessWidget {
         spacing: 6.0,
         children: tagsList
                 ?.map((tag) => Chip(
-                      label:
-                          Text(tag!, style: TextStyle(color: Color(0xFF8E8E8E))),
+                      label: Text(tag!,
+                          style: TextStyle(color: Color(0xFF8E8E8E))),
                       labelPadding: EdgeInsets.symmetric(horizontal: 12),
                       backgroundColor: Color(0xFFEDEDED),
                     ))

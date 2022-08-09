@@ -45,8 +45,8 @@ class TasksList extends StatelessWidget {
                             )
                           : null,
                       child: StreamBuilder<TaskWithTags>(
-                        stream:
-                            controller.watchTagsForTask(tasks()[index].task!.id),
+                        stream: controller
+                            .watchTagsForTask(tasks()[index].task!.id),
                         builder: (context, taskWithTagsSnapshot) {
                           return ExpandableTaskItem(
                               taskWithSubtasks: tasks()[index],

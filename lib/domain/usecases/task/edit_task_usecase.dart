@@ -20,7 +20,7 @@ class EditTaskUseCase {
     int priority,
     bool done,
   ) {
-    return taskRepo!.editTask(
-        taskId, name, note, date, tags, checklist, reminder, deadline, priority, done);
+    return taskRepo!.editTask(taskId, name, note, date, tags, checklist,
+        reminder, deadline, priority, done);
   }
 }

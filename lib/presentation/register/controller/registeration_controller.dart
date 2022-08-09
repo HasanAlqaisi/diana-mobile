@@ -25,8 +25,8 @@ class RegistrationController extends GetxController {
       failure = null;
       update();
 
-      final result = await (registerUserUseCase!(
-          firstName!, lastName!, username!, email!, birthString.value, password!));
+      final result = await (registerUserUseCase!(firstName!, lastName!,
+          username!, email!, birthString.value, password!));
       isLoading = false;
       update();
 

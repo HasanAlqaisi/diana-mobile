@@ -109,7 +109,7 @@ class HabitController extends GetxController {
   }
 
   Color dayColor(int djangoWeekDay, HabitWitLogsWithDays habit) {
-    print(habit.habit!.name+ habit.days.toString());
+    print(habit.habit!.name + habit.days.toString());
     if (habit.days?.dayZero == djangoWeekDay ||
         habit.days?.dayOne == djangoWeekDay ||
         habit.days?.dayTwo == djangoWeekDay ||
@@ -181,8 +181,8 @@ class HabitController extends GetxController {
           return await insertHabitUseCase!(
               habitName!, days, time != null && time.isNotEmpty ? time : null);
         } else {
-          return await editHabitUseCase!(
-              habitId!, habitName!, days as List<int>, time!.isNotEmpty ? time : null);
+          return await editHabitUseCase!(habitId!, habitName!,
+              days as List<int>, time!.isNotEmpty ? time : null);
         }
       },
       successBody: () {

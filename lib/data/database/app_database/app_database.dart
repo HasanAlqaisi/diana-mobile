@@ -6,11 +6,11 @@ import 'package:diana/data/database/models/tag/tag_table.dart';
 import 'package:diana/data/database/models/task/task_table.dart';
 import 'package:diana/data/database/models/tasktag/tasktag_table.dart';
 import 'package:diana/data/database/models/user/user_table.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 
 part 'app_database.g.dart';
 
-@UseMoor(
+@DriftDatabase(
   tables: [
     HabitTable,
     HabitlogTable,

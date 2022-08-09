@@ -1,6 +1,6 @@
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/remote_models/task/task_result.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 
 @DataClassName('TaskTagData')
 class TaskTagTable extends Table {

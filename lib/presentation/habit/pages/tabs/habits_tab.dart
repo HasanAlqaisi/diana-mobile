@@ -10,7 +10,7 @@ class HabitsTab extends StatelessWidget {
   final controller = HabitController.to;
 
   HabitsTab({Key? key, this.habitType}) : super(key: key);
- 
+
   @override
   Widget build(BuildContext context) {
     return ListView(

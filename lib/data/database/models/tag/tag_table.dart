@@ -1,5 +1,5 @@
 import 'package:diana/data/database/app_database/app_database.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 import 'package:diana/data/remote_models/tag/tag_result.dart';
 
 @DataClassName('TagData')

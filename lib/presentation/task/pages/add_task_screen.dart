@@ -287,8 +287,8 @@ class AddTaskScreen extends StatelessWidget {
                               value: _.shouldRemind.value &&
                                   _.date.value.year != 0,
                               onChanged: (newValue) {
-                                if(_.date.value.year != 0)
-                                _.shouldRemind.value = newValue!;
+                                if (_.date.value.year != 0)
+                                  _.shouldRemind.value = newValue!;
                               },
                               checkColor: Colors.black,
                               activeColor: Colors.white,

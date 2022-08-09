@@ -2,11 +2,11 @@ import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/models/tag/tag_table.dart';
 import 'package:diana/data/remote_models/tag/tag_result.dart';
 import 'package:diana/data/remote_models/tag/tag_response.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 
 part 'tag_dao.g.dart';
 
-@UseDao(tables: [TagTable])
+@DriftAccessor(tables: [TagTable])
 class TagDao extends DatabaseAccessor<AppDatabase> with _$TagDaoMixin {
   TagDao(AppDatabase db) : super(db);
 
@@ -25,7 +25,8 @@ class TagDao extends DatabaseAccessor<AppDatabase> with _$TagDaoMixin {
     return transaction(() async {
       await delete(tagTable).go();
       await batch((batch) {
-        batch.insertAll(tagTable, TagTable.fromTagResponse(tagResponse.results!),
+        batch.insertAll(
+            tagTable, TagTable.fromTagResponse(tagResponse.results!),
             mode: InsertMode.replace);
       });
     });

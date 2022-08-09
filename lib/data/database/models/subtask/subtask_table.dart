@@ -1,6 +1,6 @@
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/remote_models/subtask/subtask_result.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 
 @DataClassName('SubTaskData')
 class SubTaskTable extends Table {

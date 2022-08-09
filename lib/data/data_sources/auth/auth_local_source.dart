@@ -1,7 +1,7 @@
 import 'package:diana/core/constants/constants.dart';
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 
 import 'package:diana/data/database/models/user/user_dao.dart';
 import 'package:diana/data/remote_models/auth/user.dart';

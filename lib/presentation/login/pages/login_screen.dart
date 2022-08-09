@@ -2,7 +2,6 @@ import 'package:diana/presentation/login/controller/login_controller.dart';
 import 'package:diana/core/global_widgets/rounded_button.dart';
 import 'package:diana/core/global_widgets/rounded_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:diana/injection_container.dart' as di;
 
 import 'package:diana/core/constants/constants.dart';

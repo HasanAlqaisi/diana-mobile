@@ -5,13 +5,13 @@ import 'package:diana/data/database/models/habit_log/habitlog_table.dart';
 import 'package:diana/data/database/relations/habit_with_habitlogs/habit_with_habitlogs.dart';
 import 'package:diana/data/remote_models/habit/habit_response.dart';
 import 'package:diana/data/remote_models/habit/habit_result.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 
 part 'habit_dao.g.dart';
 
 /// [HabitlogTable] contains the logs of the week
 /// [DaysTable] contains the days that this habit schedualed
-@UseDao(tables: [HabitTable, HabitlogTable, DaysTable])
+@DriftAccessor(tables: [HabitTable, HabitlogTable, DaysTable])
 class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
   HabitDao(AppDatabase db) : super(db);
 
@@ -69,14 +69,14 @@ class HabitDao extends DatabaseAccessor<AppDatabase> with _$HabitDaoMixin {
       leftOuterJoin(daysTable, daysTable.habitId.equalsExp(habitTable.id))
     ])
 
-              /// Check if the current weekday is somewhere in daystable
-              ..where((daysTable.dayZero.equals(todayInt) |
-                  daysTable.dayOne.equals(todayInt) |
-                  daysTable.dayTwo.equals(todayInt) |
-                  daysTable.dayThree.equals(todayInt) |
-                  daysTable.dayFour.equals(todayInt) |
-                  daysTable.dayFive.equals(todayInt) |
-                  daysTable.daySix.equals(todayInt))))
+          /// Check if the current weekday is somewhere in daystable
+          ..where((daysTable.dayZero.equals(todayInt) |
+              daysTable.dayOne.equals(todayInt) |
+              daysTable.dayTwo.equals(todayInt) |
+              daysTable.dayThree.equals(todayInt) |
+              daysTable.dayFour.equals(todayInt) |
+              daysTable.dayFive.equals(todayInt) |
+              daysTable.daySix.equals(todayInt))))
         .watch()
         .map((rows) async {
       final result = <HabitData?, List<HabitlogData>>{};

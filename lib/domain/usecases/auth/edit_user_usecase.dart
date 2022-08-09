@@ -1,4 +1,3 @@
-
 import 'package:dartz/dartz.dart';
 import 'package:diana/core/errors/failure.dart';
 import 'package:diana/data/remote_models/auth/user.dart';

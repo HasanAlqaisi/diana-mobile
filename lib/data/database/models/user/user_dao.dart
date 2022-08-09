@@ -1,11 +1,11 @@
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/models/user/user_table.dart';
 import 'package:diana/data/remote_models/auth/user.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 
 part 'user_dao.g.dart';
 
-@UseDao(tables: [UserTable])
+@DriftAccessor(tables: [UserTable])
 class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
   UserDao(AppDatabase db) : super(db);
 

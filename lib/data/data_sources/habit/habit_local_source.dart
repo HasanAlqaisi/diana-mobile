@@ -1,4 +1,4 @@
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 
 import 'package:diana/data/database/models/habit/habit_dao.dart';
 import 'package:diana/data/database/models/habit_log/habitlog_dao.dart';

@@ -76,8 +76,8 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:path/path.dart' as p;
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
-import 'package:moor/ffi.dart' as ffi;
-import 'package:moor/moor.dart';
+import 'package:drift/native.dart' as ffi;
+import 'package:drift/drift.dart';
 import 'package:path_provider/path_provider.dart';
 import 'core/constants/constants.dart';
 import 'core/network/network_info.dart';
@@ -124,7 +124,8 @@ void externalLibsInjection() {
           AndroidNotificationDetails(
         'taskReminder',
         'Task Reminder',
-        'Here you can manage how Diana helps you remember your tasks',
+        channelDescription:
+            'Here you can manage how Diana helps you remember your tasks',
         importance: Importance.max,
         priority: Priority.high,
         showWhen: true,
@@ -144,7 +145,8 @@ void externalLibsInjection() {
           AndroidNotificationDetails(
         'habitReminder',
         'Habit Reminder',
-        'Here you can manage how Diana helps you remember your habits',
+        channelDescription:
+            'can manage how Diana helps you remember your habits',
         importance: Importance.max,
         priority: Priority.high,
         showWhen: true,
@@ -299,7 +301,7 @@ Future<void> databaseInjection() async {
       // for your app.
       final dbFolder = await getApplicationDocumentsDirectory();
       final file = File(p.join(dbFolder.path, 'db.sqlite'));
-      return ffi.VmDatabase(file);
+      return ffi.NativeDatabase(file);
     });
   });
 

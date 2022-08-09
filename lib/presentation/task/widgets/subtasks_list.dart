@@ -31,7 +31,7 @@ class SubtasksList extends StatelessWidget {
                 child: Text(
                   subtask.name,
                   style: TextStyle(
-                    decoration: subtask.done|| type == TaskType.done
+                    decoration: subtask.done || type == TaskType.done
                         ? TextDecoration.lineThrough
                         : null,
                     color: _colorSubtaskName(
@@ -43,8 +43,7 @@ class SubtasksList extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     Icons.check,
-                    color:
-                        subtask.done? Color(0xFF1ADACE) : Color(0xFFB0B0B0),
+                    color: subtask.done ? Color(0xFF1ADACE) : Color(0xFFB0B0B0),
                   ),
                   onPressed: () async {
                     showLoaderDialog();

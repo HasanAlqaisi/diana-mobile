@@ -1,7 +1,7 @@
 import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/models/tasktag/tasktag_dao.dart';
 import 'package:diana/data/database/relations/tag_with_tasks/tag_with_tasks.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 
 abstract class TaskTagLocalSoucre {
   Future<void> insertTaskTag(TaskTagData taskTag);

@@ -2,11 +2,11 @@ import 'package:diana/data/database/app_database/app_database.dart';
 import 'package:diana/data/database/models/subtask/subtask_table.dart';
 import 'package:diana/data/remote_models/subtask/subtask_response.dart';
 import 'package:diana/data/remote_models/subtask/subtask_result.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 
 part 'subtask_dao.g.dart';
 
-@UseDao(tables: [SubTaskTable])
+@DriftAccessor(tables: [SubTaskTable])
 class SubTaskDao extends DatabaseAccessor<AppDatabase> with _$SubTaskDaoMixin {
   SubTaskDao(AppDatabase db) : super(db);
 

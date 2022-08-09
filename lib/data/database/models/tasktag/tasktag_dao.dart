@@ -3,12 +3,12 @@ import 'package:diana/data/database/models/tag/tag_table.dart';
 import 'package:diana/data/database/models/task/task_table.dart';
 import 'package:diana/data/database/models/tasktag/tasktag_table.dart';
 import 'package:diana/data/database/relations/tag_with_tasks/tag_with_tasks.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'tasktag_dao.g.dart';
 
-@UseDao(tables: [TaskTable, TagTable, TaskTagTable])
+@DriftAccessor(tables: [TaskTable, TagTable, TaskTagTable])
 class TaskTagDao extends DatabaseAccessor<AppDatabase> with _$TaskTagDaoMixin {
   TaskTagDao(AppDatabase db) : super(db);
 

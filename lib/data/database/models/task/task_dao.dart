@@ -7,12 +7,12 @@ import 'package:diana/data/database/relations/task_with_subtasks/task_with_subta
 import 'package:diana/data/database/relations/task_with_tags/task_with_tags.dart';
 import 'package:diana/data/remote_models/task/task_response.dart';
 import 'package:diana/data/remote_models/task/task_result.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'task_dao.g.dart';
 
-@UseDao(tables: [TaskTable, SubTaskTable, TaskTagTable, TagTable])
+@DriftAccessor(tables: [TaskTable, SubTaskTable, TaskTagTable, TagTable])
 class TaskDao extends DatabaseAccessor<AppDatabase> with _$TaskDaoMixin {
   TaskDao(AppDatabase db) : super(db);
 

@@ -22,7 +22,8 @@ abstract class HabitRepo {
     String? time,
   );
 
-  Future<Either<Failure, bool>> deleteHabit(String habitId, List<DateTime>? dates);
+  Future<Either<Failure, bool>> deleteHabit(
+      String habitId, List<DateTime>? dates);
 
   Future<Either<Failure, HabitlogResponse>> getHabitlogs(
     String habitId,
