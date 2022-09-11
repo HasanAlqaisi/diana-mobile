@@ -34,6 +34,14 @@ def keystoreProperties = new Properties()
 android {
     compileSdkVersion 33
 
+    android {
+ packagingOptions {
+    jniLibs {
+        useLegacyPackaging = true
+    }
+  }
+}
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
